@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import Layout from 'layouts/layout'
 import Button from 'components/Button'
 import {emailLogin} from 'clients/auth'
@@ -23,6 +22,11 @@ export default function Login() {
     event.preventDefault()
     const uid = await emailLogin(email, password)
     router.push(`/users/${uid}`)
+  }
+
+  const toSignup = (event) => {
+    event.preventDefault()
+    router.push(`/signup`)
   }
 
   return (
@@ -60,10 +64,8 @@ export default function Login() {
           </div>
           <hr></hr>
           <div className="mt-8 mb-8">
-            <Button fullWidth={true} color="gray">
-              <Link href="/signup">
-                <a>新規作成</a>
-              </Link>
+            <Button onClick={toSignup} fullWidth={true} color="gray">
+              新規作成
             </Button>
           </div>
         </form>
