@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import Head from 'next/head'
-import Layout from '../layouts/layout'
-import {emailSignup} from '../clients/auth'
-import {createUser} from '../clients/user'
+import Layout from 'layouts/layout'
+import {emailSignup} from 'clients/auth'
+import {createUser} from 'clients/user'
 
 export default function Home() {
   const [email, setEmail] = useState('')
