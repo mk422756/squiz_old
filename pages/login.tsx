@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import Head from 'next/head'
 import Layout from 'layouts/layout'
 import Button from 'components/Button'
 import {emailLogin} from 'clients/auth'
@@ -31,10 +30,6 @@ export default function Login() {
 
   return (
     <Layout>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main className="mx-4 my-8 border rounded">
         <div className="mx-4 my-8 text-center text-2xl font-semibold">
           ログイン

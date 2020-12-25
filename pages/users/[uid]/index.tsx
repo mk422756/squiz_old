@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import Head from 'next/head'
 import Layout from 'layouts/layout'
 import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
@@ -39,10 +38,6 @@ export default function UserPage() {
   return (
     <Layout>
       <div>
-        <Head>
-          <title>Create Next App</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <main>
           <div className="m-4 flow-root">
             <div className="h-16 w-16 float-left">
