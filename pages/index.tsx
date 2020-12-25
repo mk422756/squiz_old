@@ -1,8 +1,25 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Layout from '../layouts/layout'
+import {useState, useEffect} from 'react'
+import styles from 'styles/Home.module.css'
+import Layout from 'layouts/layout'
+import {getCollections} from 'clients/collection'
 
 export default function Home() {
+  const [collections, setCollections] = useState([])
+  useEffect(() => {
+    let unmounted = false
+
+    ;(async () => {
+      const collections = await getCollections()
+      if (!unmounted) {
+        console.log(collections)
+        setCollections(collections)
+      }
+    })()
+
+    return () => {
+      unmounted = true
+    }
+  }, [])
   return (
     <Layout>
       <div className={styles.container}>

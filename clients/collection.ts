@@ -1,5 +1,6 @@
-import firebase from '../lib/firebase'
+import firebase from 'lib/firebase'
 import cuid from 'cuid'
+import {Collection} from 'models/collection'
 
 const db = firebase.firestore()
 
@@ -17,4 +18,34 @@ export const createCollection = async (
     updatedAt: new Date(),
   })
   return id
+}
+
+export const getCollection = async (id: string): Promise<Collection | null> => {
+  const snapshot = await db.collection('collections').doc(id).get()
+  if (!snapshot.exists) {
+    return
+  }
+  return snapshotToCollection(snapshot)
+}
+
+export const getCollections = async (): Promise<Collection[]> => {
+  const snapshot = await db.collection('collections').get()
+
+  return snapshot.docs.map((doc) => {
+    return snapshotToCollection(doc)
+  })
+}
+
+const snapshotToCollection = (
+  snapshot: firebase.firestore.DocumentSnapshot
+): Collection => {
+  const data = snapshot.data()
+  return {
+    id: snapshot.id,
+    title: data.title || '',
+    description: data.description || '',
+    creatorId: data.creatorId,
+    createdAt: data.createdAt?.toDate() || new Date(),
+    updatedAt: data.createdAt?.toDate() || new Date(),
+  }
 }
