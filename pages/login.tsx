@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Head from 'next/head'
 import Layout from 'layouts/layout'
+import Button from 'components/Button'
 import {emailLogin} from 'clients/auth'
 
 export default function Login() {
@@ -27,7 +28,7 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div>
             <label>
               メールアドレス:
@@ -40,7 +41,7 @@ export default function Login() {
               <input type="password" onChange={changePassword} />
             </label>
           </div>
-          <input type="submit" value="Submit" />
+          <Button onClick={handleSubmit}>ログイン</Button>
         </form>
       </main>
     </Layout>
