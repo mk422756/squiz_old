@@ -2,7 +2,13 @@ module.exports = {
   purge: ['./pages/**/*.tsx', './components/**/*.tsx'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#63B9ED',
+        'primary-dark': '#3A97CF',
+        accent: '#F87089',
+      },
+    },
   },
   variants: {
     extend: {},
