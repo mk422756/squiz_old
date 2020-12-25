@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Layout from 'layouts/layout'
-import Button from 'components/Button'
+import Button from 'components/buttons'
 import {emailSignup} from 'clients/auth'
 import {createUser} from 'clients/user'
 import {useRouter} from 'next/router'
