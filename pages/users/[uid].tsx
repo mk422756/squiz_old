@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Layout from 'layouts/layout'
 import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
-import {getCurrentUser} from 'clients/auth'
+import {getCurrentUser, logout} from 'clients/auth'
 import Image from 'next/image'
 
 export default function UserPage() {
@@ -31,6 +31,11 @@ export default function UserPage() {
     }
   }, [uid])
 
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
   return (
     <Layout>
       <div>
@@ -57,7 +62,9 @@ export default function UserPage() {
             <div className="mx-4 my-6 text-blue-400">
               <span>編集</span>
               <span className="ml-3">問題集作成</span>
-              <span className="ml-3">ログアウト</span>
+              <button className="ml-3" onClick={handleLogout}>
+                ログアウト
+              </button>
             </div>
           )}
           <hr></hr>
