@@ -37,7 +37,7 @@ const LoginLink = () => {
 
 export default function Header() {
   return (
-    <header className="container mx-auto flex justify-between bg-primary">
+    <header className="mx-auto flex justify-between bg-primary">
       <div className="my-3 mx-4 float-left">
         <Link href="/">
           <a className="text-white text-3xl">SQUIZ</a>

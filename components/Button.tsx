@@ -1,9 +1,28 @@
-const Button = (props) => {
+type ButtonProps = {
+  onClick?: any
+  children?: any
+  fullWidth?: boolean
+  color?: string
+}
+
+const Button = (props: ButtonProps) => {
+  let className =
+    'rounded-md py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline shadow tracking-wide font-semibold'
+
+  if (props.fullWidth === true) {
+    className += ' w-full'
+  } else {
+    className += ' px-8'
+  }
+
+  if (props.color === 'gray') {
+    className += ' bg-gray-200 hover:bg-gray-300 text-gray-700'
+  } else {
+    className += ' bg-primary hover:bg-primary-dark text-white'
+  }
+
   return (
-    <button
-      onClick={props.onClick}
-      className="border border-primary bg-primary text-white rounded-md px-8 py-2 transition duration-500 ease select-none hover:bg-primary-dark focus:outline-none focus:shadow-outline shadow tracking-wide"
-    >
+    <button onClick={props.onClick} className={className}>
       {props.children}
     </button>
   )

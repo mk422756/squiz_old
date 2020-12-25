@@ -4,12 +4,13 @@ import {useAuthState as _useAuthState} from 'react-firebase-hooks/auth'
 const auth = firebase.auth()
 
 export const emailSignup = async (email: string, password: string) => {
-  const ret = await auth.createUserWithEmailAndPassword(email, password)
-  return ret.user.uid
+  const credential = await auth.createUserWithEmailAndPassword(email, password)
+  return credential.user.uid
 }
 
 export const emailLogin = async (email: string, password: string) => {
-  await auth.signInWithEmailAndPassword(email, password)
+  const credential = await auth.signInWithEmailAndPassword(email, password)
+  return credential.user.uid
 }
 
 export const logout = async () => {
