@@ -7,7 +7,7 @@ const LoginLink = () => {
   const isLogin = getIsLogin()
   const user = getCurrentUser()
   return (
-    <>
+    <div>
       {isLogin ? (
         <ul>
           <li className="mx-4 inline-block h-6 w-6 align-middle">
@@ -31,7 +31,7 @@ const LoginLink = () => {
           <a className="text-white">ログイン</a>
         </Link>
       )}
-    </>
+    </div>
   )
 }
 

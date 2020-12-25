@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import Layout from 'layouts/layout'
+import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
 import {getCurrentUser, logout} from 'clients/auth'
@@ -56,7 +57,11 @@ export default function UserPage() {
           {isMyPage && (
             <div className="mx-4 my-6 text-blue-400">
               <span>編集</span>
-              <span className="ml-3">問題集作成</span>
+              <span className="ml-3">
+                <Link href={`${uid}/create_collection`}>
+                  <a>問題集作成</a>
+                </Link>
+              </span>
               <button className="ml-3" onClick={handleLogout}>
                 ログアウト
               </button>

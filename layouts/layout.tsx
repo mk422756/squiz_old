@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Header from 'components/headers'
+import Header from 'components/Header'
 function Layout({children}) {
   return (
     <>
