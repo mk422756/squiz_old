@@ -30,7 +30,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <main className="mx-4 my-8 border rounded">
+      <main className="mx-4 my-8 border rounded bg-white">
         <div className="mx-4 my-8 text-center text-2xl font-semibold">
           ログイン
         </div>

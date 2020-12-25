@@ -38,38 +38,36 @@ export default function UserPage() {
 
   return (
     <Layout>
-      <div>
-        <main>
-          <div className="m-4 flow-root">
-            <div className="h-16 w-16 float-left">
-              <Image
-                className="rounded-full bg-white"
-                src="/user_avatar.png"
-                width="120"
-                height="120"
-                alt="ユーザーイメージ"
-              />
-            </div>
-            <div className="float-left ml-4 mt-2">
-              <p className="font-semibold">{user?.name}</p>
-            </div>
+      <main className="bg-white">
+        <div className="p-4 flow-root">
+          <div className="h-16 w-16 float-left">
+            <Image
+              className="rounded-full bg-white"
+              src="/user_avatar.png"
+              width="120"
+              height="120"
+              alt="ユーザーイメージ"
+            />
           </div>
-          {isMyPage && (
-            <div className="mx-4 my-6 text-blue-400">
-              <span>編集</span>
-              <span className="ml-3">
-                <Link href={`${uid}/create_collection`}>
-                  <a>問題集作成</a>
-                </Link>
-              </span>
-              <button className="ml-3" onClick={handleLogout}>
-                ログアウト
-              </button>
-            </div>
-          )}
-          <hr></hr>
-        </main>
-      </div>
+          <div className="float-left ml-4 mt-2">
+            <p className="font-semibold">{user?.name}</p>
+          </div>
+        </div>
+        {isMyPage && (
+          <div className="mx-4 my-6 text-blue-400">
+            <span>編集</span>
+            <span className="ml-3">
+              <Link href={`${uid}/create_collection`}>
+                <a>問題集作成</a>
+              </Link>
+            </span>
+            <button className="ml-3" onClick={handleLogout}>
+              ログアウト
+            </button>
+          </div>
+        )}
+        <hr></hr>
+      </main>
     </Layout>
   )
 }

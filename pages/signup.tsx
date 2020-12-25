@@ -27,7 +27,7 @@ export default function Signup() {
 
   return (
     <Layout>
-      <main className="mx-4 my-8 border rounded">
+      <main className="mx-4 my-8 border rounded bg-white">
         <div className="mx-4 my-8 text-center text-2xl font-semibold">
           新規登録
         </div>
