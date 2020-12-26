@@ -7,6 +7,7 @@ import {getCurrentUser} from 'clients/auth'
 import {faHeart} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {dateToYYYYMMDD} from 'utils/dateUtils'
 
 export default function CollectionPage() {
   const [isMyCollection, setIsMyCollection] = useState(false)
@@ -57,8 +58,7 @@ export default function CollectionPage() {
           <div className="pt-4 text-sm font-semibold">合計 100 問</div>
           <div className="text-xs text-gray-500">
             {/* TODO セクション更新の最新を取得する */}
-            {/* 最終更新日 {dateToYYYYMMDD(collection.updatedAt)} */}
-            最終更新日 {collection.updatedAt.toString()}
+            最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
           </div>
           <div className="pt-4">
             <span className="inline-block h-5 w-5 align-middle">
