@@ -8,6 +8,65 @@ import {faHeart} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
+import Modal from 'react-modal'
+import Button from 'components/Button'
+import {createSection} from 'clients/section'
+
+Modal.setAppElement('#modal')
+
+const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
+  const [title, setTitle] = useState('')
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      bottom: 'auto',
+      right: '10%',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  }
+
+  const onTitleChanged = (event) => {
+    setTitle(event.target.value)
+  }
+
+  const submit = async () => {
+    await createSection(title, collectionId)
+    closeModal()
+  }
+
+  return (
+    <div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div className="w-full">
+          <h2 className="text-2xl font-semibold">セクション作成</h2>
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="セクション名"
+              className="p-2 border w-full"
+              onChange={onTitleChanged}
+            />
+          </div>
+          <div className="mt-4">
+            <Button onClick={submit}>作成</Button>
+            <span className="ml-2">
+              <Button color="gray" onClick={closeModal}>
+                キャンセル
+              </Button>
+            </span>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  )
+}
 
 export default function CollectionPage() {
   const [isMyCollection, setIsMyCollection] = useState(false)
@@ -19,6 +78,14 @@ export default function CollectionPage() {
   })
   const router = useRouter()
   const {collection_id} = router.query
+  const [modalIsOpen, setIsOpen] = useState(false)
+  function openModal() {
+    setIsOpen(true)
+  }
+
+  function closeModal() {
+    setIsOpen(false)
+  }
 
   useEffect(() => {
     let unmounted = false
@@ -78,6 +145,7 @@ export default function CollectionPage() {
               ツイート
             </span>
           </div>
+
           {/* <div className="pt-4">
             <Link href={`/users/${user.id}`}>
               <a>
@@ -110,11 +178,21 @@ export default function CollectionPage() {
               >
                 削除
               </button>
-              <Link href={`/collections/${collection.id}/sections/new`}>
+              {/* <Link href={`/collections/${collection.id}/sections/new`}>
                 <a className="mx-2 underline text-gray-400">セクション作成</a>
-              </Link>
+              </Link> */}
+              <a className="mx-2 underline text-gray-400" onClick={openModal}>
+                セクション作成
+              </a>
+
+              <NewSectonModal
+                modalIsOpen={modalIsOpen}
+                closeModal={closeModal}
+                collectionId={collection_id}
+              ></NewSectonModal>
             </div>
           )}
+          <div id="modal"></div>
         </div>
       </main>
     </Layout>
