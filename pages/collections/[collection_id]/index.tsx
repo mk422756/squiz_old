@@ -3,6 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
 import {getCollection} from 'clients/collection'
+import {getSections, createSection} from 'clients/section'
 import {getCurrentUser} from 'clients/auth'
 import {faHeart} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -10,7 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
 import Modal from 'react-modal'
 import Button from 'components/Button'
-import {createSection} from 'clients/section'
+import SectionTile from 'components/SectionTile'
 
 Modal.setAppElement('#modal')
 
@@ -76,6 +77,7 @@ export default function CollectionPage() {
     description: '',
     updatedAt: new Date(),
   })
+  const [sections, setSections] = useState([])
   const router = useRouter()
   const {collection_id} = router.query
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -92,9 +94,11 @@ export default function CollectionPage() {
 
     ;(async () => {
       const collection = await getCollection(collection_id as string)
+      const sections = await getSections(collection_id as string)
       const currentUser = getCurrentUser()
       if (!unmounted) {
         setCollection(collection)
+        setSections(sections)
         if (collection.creatorId === currentUser?.uid) {
           setIsMyCollection(true)
         }
@@ -193,6 +197,15 @@ export default function CollectionPage() {
             </div>
           )}
           <div id="modal"></div>
+        </div>
+        <div>
+          <ul className="mt-2">
+            {sections.map((section) => (
+              <li key={section.id} className="mt-1">
+                <SectionTile section={section} isMySection={isMyCollection} />
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
     </Layout>
