@@ -33,7 +33,12 @@ const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
   }
 
   const submit = async () => {
-    await createSection(title, collectionId)
+    const currentUser = getCurrentUser()
+    if (!currentUser.uid) {
+      alert('エラーが発生しました。もう一度やり直してください')
+      return
+    }
+    await createSection(title, collectionId, currentUser.uid)
     closeModal()
   }
 

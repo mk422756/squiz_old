@@ -4,7 +4,11 @@ import {Section} from 'models/section'
 
 const db = firebase.firestore()
 
-export const createSection = async (title: string, collectionId: string) => {
+export const createSection = async (
+  title: string,
+  collectionId: string,
+  creatorId: string
+) => {
   const id = cuid()
   await db
     .collection('collections')
@@ -14,6 +18,7 @@ export const createSection = async (title: string, collectionId: string) => {
     .set({
       title,
       collectionId,
+      creatorId,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
