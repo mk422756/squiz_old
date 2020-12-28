@@ -13,9 +13,9 @@ import Modal from 'react-modal'
 import Button from 'components/Button'
 import SectionTile from 'components/SectionTile'
 
-Modal.setAppElement('#modal')
-
 const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
+  Modal.setAppElement('#modal')
+
   const [title, setTitle] = useState('')
   const customStyles = {
     content: {
