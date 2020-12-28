@@ -1,5 +1,6 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
+import {Quiz} from 'models/quiz'
 
 const db = firebase.firestore()
 
@@ -33,4 +34,39 @@ export const createQuiz = async (
       updatedAt: new Date(),
     })
   return id
+}
+
+export const getQuizzes = async (
+  collectionId: string,
+  sectionId: string
+): Promise<Quiz[]> => {
+  const snapshot = await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .collection('quizzes')
+    .get()
+  return snapshot.docs.map((doc) => {
+    return snapshotToQuiz(doc)
+  })
+}
+
+const snapshotToQuiz = (
+  snapshot: firebase.firestore.DocumentSnapshot
+): Quiz => {
+  const data = snapshot.data()
+  return {
+    id: snapshot.id,
+    question: data.question || '',
+    answers: data.answers || [],
+    correctAnswerIndex: data.correctAnswerIndex || [],
+    explanation: data.explanation || '',
+    type: data.explanation || '',
+    collectionId: data.collectionId,
+    sectionId: data.sectionId,
+    creatorId: data.creatorId,
+    createdAt: data.createdAt?.toDate() || new Date(),
+    updatedAt: data.createdAt?.toDate() || new Date(),
+  }
 }

@@ -2,15 +2,10 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getCollection} from 'clients/collection'
 import {getSection} from 'clients/section'
+import {getQuizzes} from 'clients/quiz'
 import {getCurrentUser} from 'clients/auth'
-import {faHeart} from '@fortawesome/free-solid-svg-icons'
-import {faTwitter} from '@fortawesome/free-brands-svg-icons'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
-import Button from 'components/Button'
-import SectionTile from 'components/SectionTile'
 
 export default function CollectionPage() {
   const [isMySection, setIsMySection] = useState(false)
@@ -21,6 +16,7 @@ export default function CollectionPage() {
     creatorId: '',
     updatedAt: new Date(),
   })
+  const [quizzes, setQuizzes] = useState([])
   const router = useRouter()
   const {collection_id, section_id} = router.query
 
@@ -28,13 +24,14 @@ export default function CollectionPage() {
     let unmounted = false
 
     ;(async () => {
-      const section = await getSection(
-        collection_id as string,
-        section_id as string
-      )
+      const [section, quizzes] = await Promise.all([
+        getSection(collection_id as string, section_id as string),
+        getQuizzes(collection_id as string, section_id as string),
+      ])
       const currentUser = getCurrentUser()
       if (!unmounted) {
         setSection(section)
+        setQuizzes(quizzes)
         if (section.creatorId === currentUser?.uid) {
           setIsMySection(true)
         }
@@ -53,7 +50,9 @@ export default function CollectionPage() {
         <div className="p-4 bg-white">
           <h1 className="text-2xl font-semibold">{section.title}</h1>
           {/* TODO 合計問題数を実装する */}
-          <div className="pt-4 text-sm font-semibold">合計 100 問</div>
+          <div className="pt-4 text-sm font-semibold">
+            合計 {quizzes.length} 問
+          </div>
           <div className="text-xs text-gray-500">
             {/* TODO セクション更新の最新を取得する */}
             最終更新日 {dateToYYYYMMDD(section.updatedAt)}
@@ -81,22 +80,21 @@ export default function CollectionPage() {
               >
                 削除
               </button>
-              {/* <Link href={`/collections/${collection.id}/sections/new`}>
-                <a className="mx-2 underline text-gray-400">セクション作成</a>
-              </Link> */}
             </div>
           )}
           <div id="modal"></div>
         </div>
-        {/* <div>
-          <ul className="mt-2">
-            {sections.map((section) => (
-              <li key={section.id} className="mt-1">
-                <SectionTile section={section} isMySection={isMyCollection} />
+        <div className="p-4 mt-2 bg-white">
+          <p className="font-semibold">問題一覧</p>
+          <ul className="mt-4">
+            {quizzes.map((quiz, index) => (
+              <li key={quiz.id} className="mt-1">
+                問題{index + 1}
+                <span className="ml-2">{quiz.question}</span>
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </main>
     </Layout>
   )
