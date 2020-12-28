@@ -36,6 +36,23 @@ export const getSections = async (collectionId: string): Promise<Section[]> => {
   })
 }
 
+export const getSection = async (
+  collectionId: string,
+  sectionId: string
+): Promise<Section | null> => {
+  const snapshot = await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .get()
+
+  if (!snapshot.exists) {
+    return
+  }
+  return snapshotToSection(snapshot)
+}
+
 const snapshotToSection = (
   snapshot: firebase.firestore.DocumentSnapshot
 ): Section => {
@@ -44,6 +61,7 @@ const snapshotToSection = (
     id: snapshot.id,
     title: data.title || '',
     collectionId: data.collectionId,
+    creatorId: data.creatorId,
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }

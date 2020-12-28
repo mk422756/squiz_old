@@ -23,7 +23,7 @@ const SectionTile = ({section, isMySection}: Props) => {
       <div>
         {isMySection && (
           <Link
-            href={`/collections/${section.collectionId}/sections/${section.id}/play`}
+            href={`/collections/${section.collectionId}/sections/${section.id}`}
           >
             <div className="bg-gray-400 p-4 rounded shadow inline-block">
               <a className="inline-block h-6 w-6 align-bottom">

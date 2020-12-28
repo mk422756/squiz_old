@@ -187,9 +187,6 @@ export default function CollectionPage() {
               >
                 削除
               </button>
-              {/* <Link href={`/collections/${collection.id}/sections/new`}>
-                <a className="mx-2 underline text-gray-400">セクション作成</a>
-              </Link> */}
               <a className="mx-2 underline text-gray-400" onClick={openModal}>
                 セクション作成
               </a>
