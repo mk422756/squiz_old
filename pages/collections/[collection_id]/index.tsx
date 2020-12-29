@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Layout from 'layouts/layout'
 import {getCollection} from 'clients/collection'
 import {getSections, createSection} from 'clients/section'
+import {getUser} from 'clients/user'
 import {getCurrentUser} from 'clients/auth'
 import {faHeart} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -80,9 +81,11 @@ export default function CollectionPage() {
     id: '',
     title: '',
     description: '',
+    isPublic: false,
     updatedAt: new Date(),
   })
   const [sections, setSections] = useState([])
+  const [user, setUser] = useState({id: '', name: ''})
   const router = useRouter()
   const {collection_id} = router.query
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -96,10 +99,11 @@ export default function CollectionPage() {
 
   useEffect(() => {
     let unmounted = false
-
     ;(async () => {
-      const collection = await getCollection(collection_id as string)
-      const sections = await getSections(collection_id as string)
+      const [collection, sections] = await Promise.all([
+        getCollection(collection_id as string),
+        getSections(collection_id as string),
+      ])
       const currentUser = getCurrentUser()
       if (!unmounted) {
         setCollection(collection)
@@ -107,6 +111,10 @@ export default function CollectionPage() {
         if (collection.creatorId === currentUser?.uid) {
           setIsMyCollection(true)
         }
+      }
+      const user = await getUser(collection.creatorId)
+      if (!unmounted) {
+        setUser(user)
       }
     })()
 
@@ -128,8 +136,7 @@ export default function CollectionPage() {
         <div className="p-4 bg-white">
           <h1 className="text-2xl font-semibold">{collection.title}</h1>
           <div className="pt-4 text-primary">#tag1 #tag2</div>
-          {/* TODO 説明文を実装する */}
-          <pre className="pt-4">description</pre>
+          <pre className="pt-4">{collection.description}</pre>
           {/* TODO 合計問題数を実装する */}
           <div className="pt-4 text-sm font-semibold">合計 100 問</div>
           <div className="text-xs text-gray-500">
@@ -155,7 +162,7 @@ export default function CollectionPage() {
             </span>
           </div>
 
-          {/* <div className="pt-4">
+          <div className="pt-4">
             <Link href={`/users/${user.id}`}>
               <a>
                 <img
@@ -163,39 +170,45 @@ export default function CollectionPage() {
                   src="/user_avatar.png"
                   alt="ユーザーイメージ"
                 />
-                <span className="ml-1 text-sm font-semibold">
-                  userId{user.id}
-                </span>
+                <span className="ml-1 text-sm font-semibold">{user.name}</span>
               </a>
             </Link>
-          </div> */}
+          </div>
 
           {isMyCollection && (
             <div className="pt-4">
-              <Link href={`/collections/${collection.id}/edit`}>
-                <a className="underline text-gray-400">編集</a>
-              </Link>
-              <button
-                type="button"
-                className="mx-2 underline text-gray-400"
-                onClick={async () => {
-                  if (window.confirm('This will be deleted')) {
-                    // TODO 削除処理
-                    router.push('/collections')
-                  }
-                }}
-              >
-                削除
-              </button>
-              <a className="mx-2 underline text-gray-400" onClick={openModal}>
-                セクション作成
-              </a>
+              <div>
+                <span className="text-gray-400">公開状況:</span>
+                <span className="text-primary ml-1">
+                  {collection.isPublic ? '公開' : '非公開'}
+                </span>
+              </div>
+              <div className="mt-1">
+                <Link href={`/collections/${collection.id}/edit`}>
+                  <a className="underline text-gray-400">編集</a>
+                </Link>
+                <button
+                  type="button"
+                  className="mx-2 underline text-gray-400"
+                  onClick={async () => {
+                    if (window.confirm('This will be deleted')) {
+                      // TODO 削除処理
+                      router.push('/collections')
+                    }
+                  }}
+                >
+                  削除
+                </button>
+                <a className="mx-2 underline text-gray-400" onClick={openModal}>
+                  セクション作成
+                </a>
 
-              <NewSectonModal
-                modalIsOpen={modalIsOpen}
-                closeModal={closeModal}
-                collectionId={collection_id}
-              ></NewSectonModal>
+                <NewSectonModal
+                  modalIsOpen={modalIsOpen}
+                  closeModal={closeModal}
+                  collectionId={collection_id}
+                ></NewSectonModal>
+              </div>
             </div>
           )}
           <div id="modal"></div>
