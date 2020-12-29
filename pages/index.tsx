@@ -3,7 +3,9 @@ import Layout from 'layouts/layout'
 import {getCollections} from 'clients/collection'
 import CollectionTile from 'components/CollectionTile'
 import Image from 'next/image'
+import Link from 'next/link'
 import Button from 'components/Button'
+import {getIsLogin} from '../clients/auth'
 
 const LandingBox = () => {
   return (
@@ -25,7 +27,11 @@ const LandingBox = () => {
         ></Image>
       </div>
       <div className="text-center my-4">
-        <Button>SQUIZとは？</Button>
+        <Button>
+          <Link href="about">
+            <a>SQUIZとは？</a>
+          </Link>
+        </Button>
       </div>
     </div>
   )
@@ -33,6 +39,7 @@ const LandingBox = () => {
 
 export default function Home() {
   const [collections, setCollections] = useState([])
+  const isLogin = getIsLogin()
   useEffect(() => {
     let unmounted = false
 
@@ -50,7 +57,7 @@ export default function Home() {
   return (
     <Layout>
       <main>
-        <LandingBox></LandingBox>
+        {!isLogin && <LandingBox></LandingBox>}
         <div className="mt-2">
           {collections.map((collection) => {
             return (
