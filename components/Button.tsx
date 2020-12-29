@@ -2,6 +2,7 @@ type ButtonProps = {
   onClick?: any
   children?: any
   fullWidth?: boolean
+  mx?: number
   color?: string
 }
 
@@ -12,7 +13,7 @@ const Button = (props: ButtonProps) => {
   if (props.fullWidth === true) {
     className += ' w-full'
   } else {
-    className += ' px-8'
+    className += ` px-8`
   }
 
   if (props.color === 'gray') {
@@ -28,4 +29,7 @@ const Button = (props: ButtonProps) => {
   )
 }
 
+Button.defaultProps = {
+  mx: 8,
+}
 export default Button

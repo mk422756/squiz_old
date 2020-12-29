@@ -39,7 +39,7 @@ const StatusBox = ({
             />
           </button>
         </div>
-        <div className="col-span-6">
+        <div className="col-span-6 break-words">
           <p className="text-sm font-semibold">{collectionTitle}</p>
           <p className="text-sm">{sectionTitle}</p>
         </div>

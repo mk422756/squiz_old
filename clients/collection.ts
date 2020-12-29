@@ -26,13 +26,15 @@ export const updateCollection = async (
   title: string,
   description: string,
   creatorId: string,
-  isPublic: boolean
+  isPublic: boolean,
+  tags: string[]
 ) => {
   await db.collection('collections').doc(id).set({
     title,
     description,
     creatorId,
     isPublic,
+    tags,
     createdAt: new Date(),
     updatedAt: new Date(),
   })
@@ -65,6 +67,7 @@ const snapshotToCollection = (
     description: data.description || '',
     isPublic: data.isPublic || false,
     creatorId: data.creatorId,
+    tags: data.tags || [],
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }

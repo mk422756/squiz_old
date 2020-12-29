@@ -4,6 +4,7 @@ export type Collection = {
   description: string
   isPublic: boolean
   creatorId: string
+  tags: string[]
   createdAt: Date
   updatedAt: Date
 }

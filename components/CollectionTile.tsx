@@ -26,16 +26,17 @@ const CollectionTile = ({collection}: Props) => {
   return (
     <div className="bg-white p-4">
       <div className="flex justify-between">
+        <div className="break-normal">
+          <Link href={`/collections/${collection.id}`}>
+            <span className="text-xl font-semibold break-all">
+              {collection.title}
+            </span>
+          </Link>
+        </div>
         <div>
           <Link href={`/collections/${collection.id}`}>
-            <span className="text-xl font-semibold">{collection.title}</span>
-          </Link>
-          <p className="text-primary">#tag1</p>
-        </div>
-        <div className="">
-          <Link href={`/collections/${collection.id}`}>
             <img
-              className=" object-cover w-16 h-16"
+              className="object-cover w-16 h-16"
               src="https://picsum.photos/300/100"
               alt="問題集イメージ"
             />

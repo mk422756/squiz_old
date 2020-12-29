@@ -5,10 +5,14 @@ import {getCollection, updateCollection} from 'clients/collection'
 import {getCurrentUser} from 'clients/auth'
 import Button from 'components/Button'
 
+const MAX_TAG_COUNT = 5
+
 export default function CollectionEditPage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(false)
+  const [tag, setTag] = useState('')
+  const [tags, setTags] = useState([])
   const router = useRouter()
   const {collection_id} = router.query
 
@@ -21,6 +25,7 @@ export default function CollectionEditPage() {
         setTitle(collection.title)
         setDescription(collection.description)
         setIsPublic(collection.isPublic)
+        setTags(collection.tags)
       }
     })()
 
@@ -42,6 +47,23 @@ export default function CollectionEditPage() {
     setIsPublic(publicity)
   }
 
+  const onChangeTag = (event) => {
+    setTag(event.target.value)
+  }
+
+  const onClickPushTags = () => {
+    if (!tag || tags.length >= MAX_TAG_COUNT) {
+      return
+    }
+    setTags([...tags, tag])
+    setTag('')
+  }
+
+  const onClickDeteteTags = (event) => {
+    tags.splice(event.target.id, 1)
+    setTags([...tags])
+  }
+
   const update = async () => {
     const currentUser = getCurrentUser()
     if (!currentUser.uid) {
@@ -51,7 +73,8 @@ export default function CollectionEditPage() {
       title,
       description,
       currentUser.uid,
-      isPublic
+      isPublic,
+      tags
     )
     router.push(`/collections/${collection_id as string}`)
   }
@@ -78,6 +101,39 @@ export default function CollectionEditPage() {
               className="p-2 border w-full"
             />
           </label>
+        </div>
+        <div className="my-2">
+          <span>タグ</span>
+          <div className="w-full">
+            <input
+              type="text"
+              className="p-2 border"
+              value={tag}
+              onChange={onChangeTag}
+            />
+            <Button mx={4} onClick={onClickPushTags}>
+              +
+            </Button>
+          </div>
+          <div>
+            {tags.map((tag, index) => {
+              return (
+                <div
+                  key={index}
+                  className="ml-1 mt-2 text-xs inline-flex items-center font-bold leading-sm px-3 py-1 bg-blue-200 text-blue-700 rounded-full"
+                >
+                  {tag}
+                  <button
+                    className="px-1"
+                    id={index.toString()}
+                    onClick={onClickDeteteTags}
+                  >
+                    ×
+                  </button>
+                </div>
+              )
+            })}
+          </div>
         </div>
         <div className="my-2">
           <p>公開</p>

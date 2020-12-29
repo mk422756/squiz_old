@@ -82,6 +82,7 @@ export default function CollectionPage() {
     title: '',
     description: '',
     isPublic: false,
+    tags: [],
     updatedAt: new Date(),
   })
   const [sections, setSections] = useState([])
@@ -112,6 +113,9 @@ export default function CollectionPage() {
           setIsMyCollection(true)
         }
       }
+      if (!collection?.creatorId) {
+        return
+      }
       const user = await getUser(collection.creatorId)
       if (!unmounted) {
         setUser(user)
@@ -134,8 +138,23 @@ export default function CollectionPage() {
           />
         </div>
         <div className="p-4 bg-white">
-          <h1 className="text-2xl font-semibold">{collection.title}</h1>
-          <div className="pt-4 text-primary">#tag1 #tag2</div>
+          <h1 className="text-2xl font-semibold break-words">
+            {collection.title}
+          </h1>
+          <div className="pt-4 text-primary break-words">
+            {collection.tags.map((tag) => {
+              return (
+                <>
+                  <Link href={`/tags/${tag}`}>
+                    <a>
+                      <span>#{tag}</span>
+                      <span className="ml-1" />
+                    </a>
+                  </Link>
+                </>
+              )
+            })}
+          </div>
           <pre className="pt-4">{collection.description}</pre>
           {/* TODO 合計問題数を実装する */}
           <div className="pt-4 text-sm font-semibold">合計 100 問</div>
@@ -179,7 +198,7 @@ export default function CollectionPage() {
             <div className="pt-4">
               <div>
                 <span className="text-gray-400">公開状況:</span>
-                <span className="text-primary ml-1">
+                <span className="text-red-400 ml-1">
                   {collection.isPublic ? '公開' : '非公開'}
                 </span>
               </div>
