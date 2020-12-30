@@ -153,8 +153,7 @@ export const authErrors = {
   'unverified-email': 'The operation requires a verified email.',
   'user-cancelled':
     'The user did not grant your application the permissions it requested.',
-  'user-not-found':
-    'There is no user record corresponding to this identifier. The user may have been deleted.',
+  'user-not-found': 'メールアドレスおよびパスワードをご確認ください',
   'user-disabled': 'The user account has been disabled by an administrator.',
   'user-mismatch':
     'The supplied credentials do not correspond to the previously signed in user.',

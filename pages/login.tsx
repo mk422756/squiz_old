@@ -3,11 +3,15 @@ import Layout from 'layouts/layout'
 import Button from 'components/Button'
 import {emailLogin} from 'clients/auth'
 import {useRouter} from 'next/router'
+import {useForm} from 'react-hook-form'
+import {getErrorMessage} from 'utils/firebaseErrors'
 
 export default function Login() {
+  const {register, handleSubmit, errors} = useForm()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const [error, setError] = useState('')
 
   const changeEmail = (event) => {
     setEmail(event.target.value)
@@ -17,10 +21,13 @@ export default function Login() {
     setPassword(event.target.value)
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const uid = await emailLogin(email, password)
-    router.push(`/users/${uid}`)
+  const onSubmit = async () => {
+    try {
+      const uid = await emailLogin(email, password)
+      router.push(`/users/${uid}`)
+    } catch (e) {
+      setError(getErrorMessage(e))
+    }
   }
 
   const toSignup = (event) => {
@@ -30,41 +37,70 @@ export default function Login() {
 
   return (
     <Layout>
-      <main className="mx-4 my-8 border rounded bg-white">
-        <div className="mx-4 my-8 text-center text-2xl font-semibold">
-          ログイン
-        </div>
-        <form className="m-4">
-          <div>
-            <input
-              type="email"
-              placeholder="メールアドレス"
-              className="p-2 border w-full"
-              onChange={changeEmail}
-            />
+      <div className="bg-white h-screen relative">
+        <main className="border rounded absolute inset-x-0 w-11/12 md:w-2/5 mx-auto my-8">
+          <div className="mx-4 my-8 text-center text-2xl font-semibold">
+            ログイン
           </div>
-          <div className="mt-2">
-            <input
-              type="password"
-              placeholder="パスワード"
-              className="p-2 border w-full"
-              onChange={changePassword}
-            />
-          </div>
-          <div className="text-sm text-gray-400 mt-2">パスワードを忘れた方</div>
-          <div className="mt-8 mb-8">
-            <Button onClick={handleSubmit} fullWidth={true}>
-              ログイン
-            </Button>
-          </div>
-          <hr></hr>
-          <div className="mt-8 mb-8">
-            <Button onClick={toSignup} fullWidth={true} color="gray">
-              新規作成
-            </Button>
-          </div>
-        </form>
-      </main>
+          <form className="m-4">
+            <div>
+              <input
+                type="email"
+                name="email"
+                placeholder="メールアドレス"
+                className="p-2 border w-full"
+                onChange={changeEmail}
+                ref={register({
+                  required: 'メールアドレスが入力されていません',
+                  pattern: {
+                    value: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                    message: 'メールアドレスが正しくありません',
+                  },
+                })}
+              />
+              {errors.email && (
+                <span className="text-red-400 text-sm">
+                  {errors.email && errors.email.message}
+                </span>
+              )}
+            </div>
+            <div className="mt-2">
+              <input
+                type="password"
+                name="password"
+                placeholder="パスワード"
+                className="p-2 border w-full"
+                onChange={changePassword}
+                ref={register({
+                  required: 'パスワードが入力されていません',
+                })}
+              />
+              {errors.password && (
+                <span className="text-red-400 text-sm">
+                  {errors.password.message}
+                </span>
+              )}
+            </div>
+            <div>
+              {error && <span className="text-red-400 text-sm">{error}</span>}
+            </div>
+            <div className="text-sm text-gray-400 mt-2">
+              パスワードを忘れた方
+            </div>
+            <div className="mt-8 mb-8">
+              <Button onClick={handleSubmit(onSubmit)} fullWidth={true}>
+                ログイン
+              </Button>
+            </div>
+            <hr></hr>
+            <div className="mt-8 mb-8">
+              <Button onClick={toSignup} fullWidth={true} color="gray">
+                新規作成
+              </Button>
+            </div>
+          </form>
+        </main>
+      </div>
     </Layout>
   )
 }
