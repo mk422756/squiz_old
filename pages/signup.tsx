@@ -4,11 +4,15 @@ import Button from 'components/Button'
 import {emailSignup} from 'clients/auth'
 import {createUser} from 'clients/user'
 import {useRouter} from 'next/router'
+import {useForm} from 'react-hook-form'
+import {getErrorMessage} from 'utils/firebaseErrors'
 
 export default function Signup() {
+  const {register, handleSubmit, watch, errors} = useForm()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const [error, setError] = useState('')
 
   const changeEmail = (event) => {
     setEmail(event.target.value)
@@ -18,11 +22,14 @@ export default function Signup() {
     setPassword(event.target.value)
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const uid = await emailSignup(email, password)
-    await createUser(uid)
-    router.push(`/users/${uid}`)
+  const onSubmit = async () => {
+    try {
+      const uid = await emailSignup(email, password)
+      await createUser(uid)
+      router.push(`/users/${uid}`)
+    } catch (e) {
+      setError(getErrorMessage(e))
+    }
   }
 
   return (
@@ -35,18 +42,47 @@ export default function Signup() {
           <div>
             <input
               type="email"
+              name="email"
               placeholder="メールアドレス"
               className="p-2 border w-full"
               onChange={changeEmail}
+              ref={register({
+                required: 'メールアドレスが入力されていません',
+                pattern: {
+                  value: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                  message: 'メールアドレスが正しくありません',
+                },
+              })}
             />
+            {errors.email && (
+              <span className="text-red-400 text-sm">
+                {errors.email && errors.email.message}
+              </span>
+            )}
           </div>
           <div className="mt-2">
             <input
               type="password"
+              name="password"
               placeholder="パスワード"
               className="p-2 border w-full"
               onChange={changePassword}
+              ref={register({
+                required: 'パスワードが入力されていません',
+                minLength: {
+                  value: 8,
+                  message: 'パスワードは8文字以上で入力してください',
+                },
+              })}
             />
+            {errors.password && (
+              <span className="text-red-400 text-sm">
+                {errors.password.message}
+              </span>
+            )}
+          </div>
+          <div>
+            {error && <span className="text-red-400 text-sm">{error}</span>}
           </div>
           <div className="mt-8 text-center">
             <label className="">
@@ -57,7 +93,7 @@ export default function Signup() {
             </label>
           </div>
           <div className="mt-8 mb-8">
-            <Button onClick={handleSubmit} fullWidth={true}>
+            <Button onClick={handleSubmit(onSubmit)} fullWidth={true}>
               新規登録
             </Button>
           </div>
