@@ -1,26 +1,9 @@
-import {useState, useEffect} from 'react'
 import Layout from 'layouts/layout'
-import {getCollections} from 'clients/collection'
 import Image from 'next/image'
 import Link from 'next/link'
 import Button from 'components/Button'
 
 export default function About() {
-  const [collections, setCollections] = useState([])
-  useEffect(() => {
-    let unmounted = false
-
-    ;(async () => {
-      const collections = await getCollections()
-      if (!unmounted) {
-        setCollections(collections)
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [])
   return (
     <Layout>
       <main>

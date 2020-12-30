@@ -57,6 +57,19 @@ export const getCollections = async (): Promise<Collection[]> => {
   })
 }
 
+export const getCollectionsByTag = async (
+  tag: string
+): Promise<Collection[]> => {
+  const snapshot = await db
+    .collection('collections')
+    .where('tags', 'array-contains', tag)
+    .get()
+
+  return snapshot.docs.map((doc) => {
+    return snapshotToCollection(doc)
+  })
+}
+
 const snapshotToCollection = (
   snapshot: firebase.firestore.DocumentSnapshot
 ): Collection => {
