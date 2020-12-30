@@ -6,7 +6,7 @@ function LayoutQuiz({children}) {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {children}
+      <div className="md:w-3/5 mx-auto">{children}</div>
     </div>
   )
 }
