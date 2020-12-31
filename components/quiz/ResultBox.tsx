@@ -1,16 +1,33 @@
 import Result from 'models/result'
 import Results from 'models/results'
+import {PieChart} from 'react-minimal-pie-chart'
 
 type ResultReviewBoxProps = {
   result: Result
+  index: number
 }
 
-const ResultReviewlBox = ({result}: ResultReviewBoxProps) => {
+const ResultReviewBox = ({result, index}: ResultReviewBoxProps) => {
   return (
-    <div className="my-2 p-2 bg-white">
-      <p>{result.quiz.question}</p>
-      <p>{result.isCorrect ? '正解' : '不正解'}</p>
-      <p>あなたの回答:{result.quiz.answers[result.answerIndex[0]]}</p>
+    <div className="my-2 p-4 bg-white flow-root">
+      <span className="text-lg font-semibold">問題{index}</span>
+      <p className="my-2">{result.quiz.question}</p>
+      {result.isCorrect ? (
+        <div>
+          <span className="text-green-400">○</span>
+          <span className="ml-2">
+            {result.quiz.answers[result.answerIndex[0]]}
+          </span>
+        </div>
+      ) : (
+        <div>
+          <span className="text-red-400">×</span>
+          <span className="ml-2">
+            {result.quiz.answers[result.answerIndex[0]]}
+          </span>
+        </div>
+      )}
+      {/* <p className="text-primary float-right">詳細</p> */}
     </div>
   )
 }
@@ -25,17 +42,48 @@ const ResultBox = ({results, collectionId, quizCount}: ResultBoxProps) => {
   const unanswerdCount = quizCount - results.length
   return (
     <div>
-      <div className="my-2 p-2 bg-white">
-        <h2 className="text-lg">回答スコア</h2>
-        <p className="text-lg">正解率 {results.correctRate * 100} %</p>
-        <p>問題数 {quizCount}</p>
-        <p>正解 {results.correctCount}</p>
-        <p>不正解 {results.incorrectCount}</p>
-        <p>未回答 {unanswerdCount}</p>
+      <div className="my-2 p-4 bg-white">
+        <h2 className="text-lg font-semibold">回答スコア</h2>
+        <div className="flow-root">
+          <div className="float-left w-1/2 p-4">
+            <PieChart
+              startAngle={270}
+              lineWidth={50}
+              data={[
+                {
+                  title: 'correct',
+                  value: results.correctCount,
+                  color: '#6DE3C4',
+                },
+                {
+                  title: 'incorrect',
+                  value: results.incorrectCount,
+                  color: '#DE7F3A',
+                },
+                {title: 'noanswer', value: unanswerdCount, color: '#EEEEEE'},
+              ]}
+            />
+          </div>
+          <div className="float-left ml-4">
+            <p className="text-lg font-semibold">
+              正解率 {results.correctRate * 100} %
+            </p>
+            <p className="text-sm mt-1">問題数 : {quizCount}</p>
+            <p className="text-sm mt-1">正解 : {results.correctCount}</p>
+            <p className="text-sm mt-1">不正解 : {results.incorrectCount}</p>
+            <p className="text-sm mt-1">未回答 : {unanswerdCount}</p>
+          </div>
+        </div>
       </div>
       <div>
         {results.value.map((result, i) => {
-          return <ResultReviewlBox result={result} key={i}></ResultReviewlBox>
+          return (
+            <ResultReviewBox
+              result={result}
+              index={i + 1}
+              key={i}
+            ></ResultReviewBox>
+          )
         })}
       </div>
     </div>
