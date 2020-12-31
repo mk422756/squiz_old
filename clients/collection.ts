@@ -70,6 +70,19 @@ export const getCollectionsByTag = async (
   })
 }
 
+export const getCollectionsByUserId = async (
+  userId: string
+): Promise<Collection[]> => {
+  const snapshot = await db
+    .collection('collections')
+    .where('creatorId', '==', userId)
+    .get()
+
+  return snapshot.docs.map((doc) => {
+    return snapshotToCollection(doc)
+  })
+}
+
 const snapshotToCollection = (
   snapshot: firebase.firestore.DocumentSnapshot
 ): Collection => {
