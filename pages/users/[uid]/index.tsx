@@ -55,7 +55,9 @@ export default function UserPage() {
         </div>
         {isMyPage && (
           <div className="mx-4 my-6 text-blue-400">
-            <span>編集</span>
+            <Link href={`${uid}/edit`}>
+              <a>アカウント設定</a>
+            </Link>
             <span className="ml-3">
               <Link href={`${uid}/create_collection`}>
                 <a>問題集作成</a>
