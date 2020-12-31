@@ -93,9 +93,7 @@ const PlayBox = ({
               </div>
             )}
           </div>
-          <p className="break-words mt-2">
-            <pre>{currentQuiz.explanation}</pre>
-          </p>
+          <pre className="break-words mt-2">{currentQuiz.explanation}</pre>
         </div>
       )}
     </div>

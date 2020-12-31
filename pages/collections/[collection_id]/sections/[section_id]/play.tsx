@@ -88,8 +88,8 @@ export default function CollectionPage() {
 
   return (
     <LayoutQuiz>
-      <main className="flex flex-col min-h-screen">
-        <div className="flex-grow">
+      <main className="flex flex-col h-screen">
+        <div className="flex-1 overflow-y-auto">
           <StatusBox
             quizzes={quizzes}
             collectionTitle={collection.title || ''}
@@ -116,7 +116,7 @@ export default function CollectionPage() {
             ></ResultBox>
           )}
         </div>
-        <div>
+        <div className="">
           <ControlBox
             quizzes={quizzes}
             currentQuizIndex={currentQuizIndex}

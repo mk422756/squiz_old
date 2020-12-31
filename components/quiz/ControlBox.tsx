@@ -45,7 +45,7 @@ const ControlBox = ({
     return <Button onClick={next}>次へ</Button>
   }
   return (
-    <div className="p-4 bg-white ">
+    <div className="p-4 bg-gray-100">
       {isFinished ? (
         <div>{button()}</div>
       ) : (
