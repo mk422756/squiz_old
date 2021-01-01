@@ -4,6 +4,7 @@ export type User = {
   description?: string
   twitterId?: string
   facebookId?: string
+  imageUrl?: string
   createdAt: Date
   updatedAt: Date
 }

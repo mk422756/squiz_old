@@ -5,14 +5,15 @@ import {useRouter} from 'next/router'
 import {getUser, updateUser} from 'clients/user'
 import {getCurrentUser} from 'clients/auth'
 import {useForm} from 'react-hook-form'
+import ImageCrop from 'components/ImageCrop'
 
 export default function CreateCollectionPage() {
   const {register, handleSubmit, errors} = useForm()
-  // const [user, setUser] = useState({} as any)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [twitterId, setTwitterId] = useState('')
   const [facebookId, setFacebookId] = useState('')
+  const [imageBlob, setImageBlob] = useState<Blob>(null)
   const router = useRouter()
   const {uid} = router.query
 
@@ -38,12 +39,13 @@ export default function CreateCollectionPage() {
       alert('エラーが発生しました。もう一度やり直してください')
       return
     }
-    const collectionId = await updateUser(
+    await updateUser(
       user.uid,
       name,
       description,
       twitterId,
-      facebookId
+      facebookId,
+      imageBlob
     )
     router.push(`/users/${user.uid}`)
   }
@@ -91,6 +93,9 @@ export default function CreateCollectionPage() {
           {errors.name && (
             <span className="text-red-400 text-sm">{errors.name.message}</span>
           )}
+        </div>
+        <div className="mt-2">
+          <ImageCrop setImageBlob={setImageBlob}></ImageCrop>
         </div>
         <div className="mt-2">
           <label className="text-sm font-semibold">自己紹介</label>

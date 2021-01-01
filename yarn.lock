@@ -2283,6 +2283,11 @@ cliui@^6.0.0:
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
 
+clsx@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -2453,6 +2458,11 @@ core-js@3.6.5:
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
+
+core-js@^3.6.5:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.8.1.tgz#f51523668ac8a294d1285c3b9db44025fda66d47"
+  integrity sha512-9Id2xHY1W7m8hCl8NkhQn5CufmF/WuR30BTRewvCXc1aZd3kMECwNZ69ndLbekKfakw9Rf2Xyc+QR6E7Gg+obg==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -6305,6 +6315,15 @@ react-hook-form@^6.14.0:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.14.0.tgz#d11f81f2d9d2b457806cb425a79954a1eeba1871"
   integrity sha512-yj4aqASmyxFPyDtDLKBae+AazFv5vcC5CEpDlh1+r5k5BTH/J/CTG6q0H5lSinm0B0F6P7oTmXIYB75ZmuQz6g==
+
+react-image-crop@^8.6.6:
+  version "8.6.6"
+  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-8.6.6.tgz#326f85b4da63c2f39a610f8832abea5d551a338f"
+  integrity sha512-2iQHKp12dYb6Fu2iN/Mg19BeLMgrbdOuKkU9k0RH7CHX6ZZylOlhfCM3/RsECbKnjGJRtGpXniGF+/i9CGis1A==
+  dependencies:
+    clsx "^1.1.1"
+    core-js "^3.6.5"
+    prop-types "^15.7.2"
 
 react-is@16.13.1, react-is@^16.8.1:
   version "16.13.1"

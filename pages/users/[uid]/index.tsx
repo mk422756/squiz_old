@@ -5,7 +5,6 @@ import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
 import {getCurrentUser, logout} from 'clients/auth'
 import {getCollectionsByUserId} from 'clients/collection'
-import Image from 'next/image'
 import {faTwitter, faFacebookSquare} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import CollectionTile from 'components/CollectionTile'
@@ -70,12 +69,10 @@ export default function UserPage() {
       <main>
         <div className="bg-white">
           <div className="p-4 flow-root">
-            <div className="h-16 w-16 float-left">
-              <Image
+            <div className="h-16 w-16 float-left mt-2">
+              <img
                 className="rounded-full bg-white"
-                src="/user_avatar.png"
-                width="120"
-                height="120"
+                src={user.imageUrl}
                 alt="ユーザーイメージ"
               />
             </div>

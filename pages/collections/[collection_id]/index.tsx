@@ -86,7 +86,7 @@ export default function CollectionPage() {
     updatedAt: new Date(),
   })
   const [sections, setSections] = useState([])
-  const [user, setUser] = useState({id: '', name: ''})
+  const [user, setUser] = useState({} as any)
   const router = useRouter()
   const {collection_id} = router.query
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -186,8 +186,7 @@ export default function CollectionPage() {
               <a>
                 <img
                   className="inline-block h-6 w-6 rounded-full bg-white"
-                  src="/user_avatar.png"
-                  alt="ユーザーイメージ"
+                  src={user.imageUrl}
                 />
                 <span className="ml-1 text-sm font-semibold">{user.name}</span>
               </a>

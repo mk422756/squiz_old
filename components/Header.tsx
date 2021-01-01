@@ -1,11 +1,33 @@
 import Link from 'next/link'
+import {useEffect, useState} from 'react'
 import {getIsLogin, getCurrentUser} from '../clients/auth'
+import {getUser} from '../clients/user'
 import {faBook} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 const LoginLink = () => {
+  const [user, setUser] = useState({} as any)
   const isLogin = getIsLogin()
-  const user = getCurrentUser()
+  const currentUser = getCurrentUser()
+
+  // TODO ページ遷移の度に動作するためなんとかする
+  useEffect(() => {
+    let unmounted = false
+
+    ;(async () => {
+      if (!currentUser) {
+        return
+      }
+      const _user = await getUser(currentUser.uid as string)
+      if (!unmounted) {
+        setUser(_user)
+      }
+    })()
+
+    return () => {
+      unmounted = true
+    }
+  }, [currentUser])
   return (
     <div>
       {isLogin ? (
@@ -17,11 +39,10 @@ const LoginLink = () => {
             </a>
           </li>
           <li className="inline-block">
-            <Link href={`/users/${user.uid}`}>
+            <Link href={`/users/${currentUser.uid}`}>
               <img
                 className="inline-block h-8 w-8 rounded-full bg-white"
-                src="/user_avatar.png"
-                alt="ユーザーイメージ"
+                src={user.imageUrl}
               />
             </Link>
           </li>
