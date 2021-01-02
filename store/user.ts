@@ -21,12 +21,10 @@ import storage from 'redux-persist/lib/storage'
 
 const auth = firebase.auth()
 
-type SerializeUser = Omit<User, 'updatedAt' | 'createdAt'>
-
 type UserState = {
   isLogin: boolean
   uid: string
-  user?: SerializeUser
+  user?: User
 }
 
 export const initialUserState: UserState = {
@@ -34,8 +32,8 @@ export const initialUserState: UserState = {
   uid: '',
 }
 
-const counterSlice = createSlice({
-  name: 'counter',
+const userSlice = createSlice({
+  name: 'user',
   initialState: initialUserState,
   reducers: {
     login: (state, uid) => {
@@ -44,20 +42,28 @@ const counterSlice = createSlice({
     logout: () => {
       return initialUserState
     },
-    setUser: (state, {payload}: {payload: SerializeUser}) => {
+    setUser: (state, {payload}: {payload: User}) => {
       return {...state, user: payload}
     },
   },
 })
 
-export const {actions, reducer} = counterSlice
+export const {actions, reducer} = userSlice
 export const {login, logout, setUser} = actions
 
 export const setupStore = (): EnhancedStore => {
   const middlewares = [
     ...getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+          'user/setUser',
+        ],
       },
     }),
   ]
@@ -68,13 +74,13 @@ export const setupStore = (): EnhancedStore => {
   }
 
   const persistConfig = {
-    key: 'root',
+    key: 'user',
     version: 1,
     storage,
   }
 
   const store = configureStore({
-    reducer: persistReducer(persistConfig, counterSlice.reducer),
+    reducer: persistReducer(persistConfig, userSlice.reducer),
     middleware: middlewares,
     devTools: true,
   })
@@ -83,8 +89,6 @@ export const setupStore = (): EnhancedStore => {
     if (user) {
       store.dispatch(login(user.uid))
       getUser(user.uid).then((user) => {
-        delete user.updatedAt
-        delete user.createdAt
         store.dispatch(setUser(user))
       })
       console.log('login changed')
