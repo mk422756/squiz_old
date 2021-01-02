@@ -8,6 +8,16 @@ import {createSlice} from '@reduxjs/toolkit'
 import firebase from 'lib/firebase'
 import {getUser} from 'clients/user'
 import {User} from 'models/user'
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 const auth = firebase.auth()
 
@@ -44,15 +54,27 @@ export const {actions, reducer} = counterSlice
 export const {login, logout, setUser} = actions
 
 export const setupStore = (): EnhancedStore => {
-  const middlewares = [...getDefaultMiddleware()]
+  const middlewares = [
+    ...getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+  ]
 
   // only development
   if (process.env.NODE_ENV === 'development') {
     middlewares.push(logger)
   }
 
+  const persistConfig = {
+    key: 'root',
+    version: 1,
+    storage,
+  }
+
   const store = configureStore({
-    reducer: counterSlice.reducer,
+    reducer: persistReducer(persistConfig, counterSlice.reducer),
     middleware: middlewares,
     devTools: true,
   })
