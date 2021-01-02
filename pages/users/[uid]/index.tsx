@@ -8,13 +8,15 @@ import {getCollectionsByUserId} from 'clients/collection'
 import {faTwitter, faFacebookSquare} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import CollectionTile from 'components/CollectionTile'
+import {connect} from 'react-redux'
+import {logout as storeLogout} from 'store/user'
 
 enum SELECT_TYPE {
   DESCRIPTION = 'description',
   COLLECTIONS = 'collections',
 }
 
-export default function UserPage() {
+function UserPage({storeLogout}) {
   const [user, setUser] = useState({} as any)
   const [collections, setCollections] = useState([])
   const [isMyPage, setIsMyPage] = useState(false)
@@ -50,6 +52,7 @@ export default function UserPage() {
 
   const handleLogout = () => {
     logout()
+    storeLogout()
     router.push('/')
   }
 
@@ -170,3 +173,9 @@ export default function UserPage() {
     </Layout>
   )
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {storeLogout: () => dispatch(storeLogout())}
+}
+
+export default connect(null, mapDispatchToProps)(UserPage)
