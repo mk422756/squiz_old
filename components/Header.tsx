@@ -9,18 +9,25 @@ const LoginLink = ({userState}) => {
       {userState.isLogin ? (
         <ul>
           <li className="mx-4 inline-block h-6 w-6 align-middle">
-            {/* TODO */}
-            <a>
-              <FontAwesomeIcon icon={faBook} color="white" className="fa-lg" />
-            </a>
+            <Link href={`/users/${userState.user.id}/histories`}>
+              <a>
+                <FontAwesomeIcon
+                  icon={faBook}
+                  color="white"
+                  className="fa-lg"
+                />
+              </a>
+            </Link>
           </li>
           <li className="inline-block">
             {userState.user && (
               <Link href={`/users/${userState.user.id}`}>
-                <img
-                  className="inline-block h-8 w-8 rounded-full bg-white"
-                  src={userState.user.imageUrl}
-                />
+                <a>
+                  <img
+                    className="inline-block h-8 w-8 rounded-full bg-white"
+                    src={userState.user.imageUrl}
+                  />
+                </a>
               </Link>
             )}
           </li>
