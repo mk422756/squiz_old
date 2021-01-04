@@ -4,16 +4,16 @@ import LayoutQuiz from 'layouts/layout_quiz'
 import {getCollection} from 'clients/collection'
 import {getSection} from 'clients/section'
 import {getQuizzes} from 'clients/quiz'
-import {getCurrentUser} from 'clients/auth'
+import {createHistory} from 'clients/history'
 import StatusBox from 'components/quiz/StatusBox'
 import ControlBox from 'components/quiz/ControlBox'
 import PlayBox from 'components/quiz/PlayBox'
 import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
+import {connect} from 'react-redux'
 
-export default function CollectionPage() {
-  const [isMySection, setIsMySection] = useState(false)
+function PlayPage({userState}) {
   const [collection, setCollection] = useState({id: '', title: ''})
   const [section, setSection] = useState({
     id: '',
@@ -43,14 +43,10 @@ export default function CollectionPage() {
         getSection(collection_id as string, section_id as string),
         getQuizzes(collection_id as string, section_id as string),
       ])
-      const currentUser = getCurrentUser()
       if (!unmounted) {
         setCollection(collection)
         setSection(section)
         setQuizzes(quizzes)
-        if (section.creatorId === currentUser?.uid) {
-          setIsMySection(true)
-        }
       }
     })()
 
@@ -76,10 +72,20 @@ export default function CollectionPage() {
   const finish = () => {
     setIsFinished(true)
 
-    // const userId = session.userId
-    // if (userId && section && collection) {
-    //   saveHistories(userId)
-    // }
+    if (userState.isLogin && userState.uid && section && collection) {
+      saveHistories(userState.uid)
+    }
+  }
+
+  const saveHistories = async (userId: string) => {
+    await createHistory(
+      collection.id,
+      collection.title,
+      section.id,
+      section.title,
+      userId,
+      results
+    )
   }
 
   const backToCollectionPage = () => {
@@ -132,3 +138,9 @@ export default function CollectionPage() {
     </LayoutQuiz>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {userState: state}
+}
+
+export default connect(mapStateToProps)(PlayPage)
