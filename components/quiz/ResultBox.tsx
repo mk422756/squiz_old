@@ -1,7 +1,6 @@
 import Result from 'models/result'
 import Results from 'models/results'
-import {PieChart} from 'react-minimal-pie-chart'
-
+import ResultPieChart from 'components/ResultPieChart'
 type ResultReviewBoxProps = {
   result: Result
   index: number
@@ -46,22 +45,10 @@ const ResultBox = ({results, collectionId, quizCount}: ResultBoxProps) => {
         <h2 className="text-lg font-semibold">回答スコア</h2>
         <div className="flow-root">
           <div className="float-left w-1/2 p-4">
-            <PieChart
-              startAngle={270}
-              lineWidth={50}
-              data={[
-                {
-                  title: 'correct',
-                  value: results.correctCount,
-                  color: '#6DE3C4',
-                },
-                {
-                  title: 'incorrect',
-                  value: results.incorrectCount,
-                  color: '#DE7F3A',
-                },
-                {title: 'noanswer', value: unanswerdCount, color: '#EEEEEE'},
-              ]}
+            <ResultPieChart
+              correctCount={results.correctCount}
+              incorrectCount={results.incorrectCount}
+              unanswerdCount={unanswerdCount}
             />
           </div>
           <div className="float-left ml-4">

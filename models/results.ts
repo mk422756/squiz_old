@@ -1,4 +1,5 @@
 import Result from 'models/result'
+import {calculateCorrectRate} from 'utils/calculateUtils'
 
 export default class Results {
   readonly value: Result[]
@@ -12,17 +13,11 @@ export default class Results {
   }
 
   get correctRate(): number {
-    const rate =
-      this.value
-        .map((result) => {
-          return result.isCorrect
-        })
-        .filter((isCorrect) => {
-          return isCorrect
-        }).length / this.value.length
+    const correctCount = this.value.filter((result) => {
+      return result.isCorrect
+    }).length
 
-    const roundedRate = Math.round(rate * 100) / 100
-    return roundedRate
+    return calculateCorrectRate(this.value.length, correctCount)
   }
 
   get correctCount(): number {
