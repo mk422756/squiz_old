@@ -1,7 +1,8 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import Results from 'models/results'
-import {History} from 'models/history'
+import {History, HistoryDetail, HistoryDetails} from 'models/history'
+import histories from 'pages/users/[uid]/histories'
 
 const db = firebase.firestore()
 
@@ -16,6 +17,7 @@ export const createHistory = async (
   const id = cuid()
   const resultsArray = results.value.map((result) => {
     return {
+      quizId: result.quiz.id,
       question: result.quiz.question,
       explanation: result.quiz.explanation,
       answers: result.quiz.answers,
@@ -66,13 +68,42 @@ export const getHistoriesByUserId = async (
     .get()
 
   return snapshot.docs.map((doc) => {
-    return snapshotToHistory(doc)
+    return snapshotToHistory(doc, userId)
   })
 }
 
+export const getHistory = async (
+  userId: string,
+  id: string
+): Promise<HistoryDetails> => {
+  const snapshot = await db
+    .collection('users')
+    .doc(userId)
+    .collection('histories')
+    .doc(id)
+    .get()
+
+  const detailSnapshot = await db
+    .collection('users')
+    .doc(userId)
+    .collection('histories')
+    .doc(id)
+    .collection('details')
+    .doc('results')
+    .get()
+
+  const history = snapshotToHistory(snapshot, userId)
+  const details = snapshotToHistoryDetails(detailSnapshot)
+  return new HistoryDetails(history, details)
+}
+
 const snapshotToHistory = (
-  snapshot: firebase.firestore.DocumentSnapshot
+  snapshot: firebase.firestore.DocumentSnapshot,
+  userId: string
 ): History => {
+  if (!snapshot.exists) {
+    return
+  }
   const data = snapshot.data()
   return {
     id: snapshot.id,
@@ -80,11 +111,32 @@ const snapshotToHistory = (
     collectionTitle: data.collectionTitle || '',
     sectionId: data.sectionId,
     sectionTitle: data.sectionTitle || '',
-    userId: data.userId,
+    userId: userId,
     correctCount: data.correctCount || 0,
     incorrectCount: data.incorrectCount || 0,
     quizCount: data.quizCount || 0,
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }
+}
+
+const snapshotToHistoryDetails = (
+  snapshot: firebase.firestore.DocumentSnapshot
+): HistoryDetail[] => {
+  if (!snapshot.exists) {
+    return
+  }
+  const data = snapshot.data()
+  const results = data.results
+  return results.map((result) => {
+    return {
+      quizId: result.quizId,
+      question: result.question,
+      answers: result.answers,
+      correctAnswerIndex: result.correctAnswerIndex,
+      answerIndex: result.answerIndex,
+      explanation: result.explanation,
+      type: result.type,
+    }
+  })
 }

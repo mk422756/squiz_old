@@ -3,6 +3,7 @@ import {History} from 'models/history'
 import {calculateCorrectRate} from 'utils/calculateUtils'
 import ResultPieChart from 'components/ResultPieChart'
 import Button from 'components/Button'
+import {dateToYYYYMMDD} from 'utils/dateUtils'
 
 type Props = {
   history: History
@@ -31,8 +32,23 @@ const HistoryTile = ({history}: Props) => {
             />
           </div>
           <div className="p-2 w-2/3 my-auto">
-            <Button fullWidth={true}>間違った問題だけ再挑戦</Button>
-            <p className="text-primary text-center mt-2">全問再挑戦</p>
+            <Button fullWidth={true}>
+              <Link
+                href={`/users/${history.userId}/histories/${history.id}/play?only_incorrect=true`}
+              >
+                <a>間違った問題だけ再挑戦</a>
+              </Link>
+            </Button>
+            <p className="text-primary text-center mt-2">
+              <Link
+                href={`/users/${history.userId}/histories/${history.id}/play?only_incorrect=false`}
+              >
+                <a>全問再挑戦</a>
+              </Link>
+            </p>
+            <p className="text-sm text-gray-400 mt-2 text-center">
+              回答日: {dateToYYYYMMDD(history.createdAt)}
+            </p>
           </div>
         </div>
       </div>
