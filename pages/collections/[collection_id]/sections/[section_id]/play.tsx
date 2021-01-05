@@ -38,6 +38,9 @@ function PlayPage({userState}) {
     let unmounted = false
 
     ;(async () => {
+      if (!collection_id || !section_id) {
+        return
+      }
       const [collection, section, quizzes] = await Promise.all([
         getCollection(collection_id as string),
         getSection(collection_id as string, section_id as string),
@@ -53,7 +56,6 @@ function PlayPage({userState}) {
     return () => {
       unmounted = true
     }
-    // TODO 二回取得しに行ってしまうので一度にまとめる
   }, [collection_id, section_id])
 
   const answer = () => {
@@ -102,6 +104,7 @@ function PlayPage({userState}) {
             collectionId={collection.id}
             sectionTitle={section.title || ''}
             currentQuizIndex={currentQuizIndex}
+            back={backToCollectionPage}
           ></StatusBox>
 
           {!isFinished ? (
@@ -128,6 +131,7 @@ function PlayPage({userState}) {
             currentQuizIndex={currentQuizIndex}
             isAnswered={isAnswered}
             isFinished={isFinished}
+            isHistoryMode={false}
             answer={answer}
             next={next}
             finish={finish}

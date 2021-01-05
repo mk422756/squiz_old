@@ -10,6 +10,7 @@ type StatusBoxProps = {
   collectionTitle: string
   sectionTitle: string
   currentQuizIndex: number
+  back: () => void
 }
 
 const StatusBox = ({
@@ -18,12 +19,13 @@ const StatusBox = ({
   collectionId,
   sectionTitle,
   currentQuizIndex,
+  back,
 }: StatusBoxProps) => {
   const router = useRouter()
 
   const close = () => {
     if (window.confirm('問題を終了します。よろしいですか？')) {
-      router.push(`/collections/${collectionId}`)
+      back()
     }
   }
 

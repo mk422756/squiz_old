@@ -7,10 +7,9 @@ import PlayBox from 'components/quiz/PlayBox'
 import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
-import {connect} from 'react-redux'
 import {getHistory} from 'clients/history'
 
-function PlayPage({userState}) {
+export default function PlayPage() {
   const [history, setHistory] = useState({} as any)
   const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
@@ -61,8 +60,8 @@ function PlayPage({userState}) {
     setIsFinished(true)
   }
 
-  const backToCollectionPage = () => {
-    router.push(`/collections/${history.collectionId}`)
+  const backToHistoriesPage = () => {
+    router.push(`/users/${history.userId}/histories`)
   }
 
   return (
@@ -75,6 +74,7 @@ function PlayPage({userState}) {
             collectionId={history.collectionId}
             sectionTitle={history.sectionTitle || ''}
             currentQuizIndex={currentQuizIndex}
+            back={backToHistoriesPage}
           ></StatusBox>
 
           {!isFinished ? (
@@ -101,19 +101,14 @@ function PlayPage({userState}) {
             currentQuizIndex={currentQuizIndex}
             isAnswered={isAnswered}
             isFinished={isFinished}
+            isHistoryMode={true}
             answer={answer}
             next={next}
             finish={finish}
-            back={backToCollectionPage}
+            back={backToHistoriesPage}
           ></ControlBox>
         </div>
       </main>
     </LayoutQuiz>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(PlayPage)

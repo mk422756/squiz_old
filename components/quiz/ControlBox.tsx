@@ -7,6 +7,7 @@ type ControlBoxProps = {
   currentQuizIndex: number
   isAnswered: boolean
   isFinished: boolean
+  isHistoryMode: boolean
   answer: () => void
   next: () => void
   finish: () => void
@@ -18,6 +19,7 @@ const ControlBox = ({
   currentQuizIndex,
   isAnswered,
   isFinished,
+  isHistoryMode,
   answer,
   next,
   finish,
@@ -33,7 +35,7 @@ const ControlBox = ({
     if (isFinished) {
       return (
         <Button onClick={back} fullWidth={true}>
-          問題集に戻る
+          {isHistoryMode ? '履歴ページ' : '問題集'}に戻る
         </Button>
       )
     }
