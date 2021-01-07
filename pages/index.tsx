@@ -5,7 +5,7 @@ import CollectionTile from 'components/CollectionTile'
 import Image from 'next/image'
 import Link from 'next/link'
 import Button from 'components/Button'
-import {getIsLogin} from '../clients/auth'
+import {connect} from 'react-redux'
 
 const LandingBox = () => {
   return (
@@ -37,9 +37,8 @@ const LandingBox = () => {
   )
 }
 
-export default function Home() {
+function Home({userState}) {
   const [collections, setCollections] = useState([])
-  const isLogin = getIsLogin()
   useEffect(() => {
     let unmounted = false
 
@@ -57,7 +56,7 @@ export default function Home() {
   return (
     <Layout>
       <main>
-        {!isLogin && <LandingBox></LandingBox>}
+        {!userState.isLogin && <LandingBox></LandingBox>}
         <div className="mt-2">
           {collections.map((collection) => {
             return (
@@ -74,3 +73,9 @@ export default function Home() {
     </Layout>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {userState: state}
+}
+
+export default connect(mapStateToProps)(Home)

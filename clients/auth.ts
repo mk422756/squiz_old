@@ -24,9 +24,3 @@ export const getCurrentUser = () => {
 export const getAuthState = () => {
   return _useAuthState(auth)
 }
-
-export const getIsLogin = () => {
-  const [user, loading, error] = getAuthState()
-  const ret = user && !loading && !error
-  return !!ret
-}
