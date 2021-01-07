@@ -142,16 +142,16 @@ export default function CollectionPage() {
             {collection.title}
           </h1>
           <div className="pt-4 text-primary break-words">
-            {collection.tags.map((tag) => {
+            {collection.tags.map((tag, index) => {
               return (
-                <>
+                <span key={index}>
                   <Link href={`/tags/${tag}`}>
                     <a>
                       <span>#{tag}</span>
                       <span className="ml-1" />
                     </a>
                   </Link>
-                </>
+                </span>
               )
             })}
           </div>
