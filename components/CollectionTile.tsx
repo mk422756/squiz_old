@@ -33,15 +33,17 @@ const CollectionTile = ({collection}: Props) => {
             </span>
           </Link>
         </div>
-        <div>
-          <Link href={`/collections/${collection.id}`}>
-            <img
-              className="object-cover w-16 h-16"
-              src="https://picsum.photos/300/100"
-              alt="問題集イメージ"
-            />
-          </Link>
-        </div>
+        {collection.imageUrl && (
+          <div>
+            <Link href={`/collections/${collection.id}`}>
+              <img
+                className="object-cover w-16 h-16"
+                src="https://picsum.photos/300/100"
+                alt="問題集イメージ"
+              />
+            </Link>
+          </div>
+        )}
       </div>
       <div>
         {/* TODO 問題集の合計問題数を取得 */}

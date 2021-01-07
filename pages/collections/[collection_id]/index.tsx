@@ -3,6 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
 import {getCollection} from 'clients/collection'
+import {useCollection} from 'hooks/collection'
 import {getSections, createSection} from 'clients/section'
 import {getUser} from 'clients/user'
 import {getCurrentUser} from 'clients/auth'
@@ -76,19 +77,13 @@ const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
 }
 
 export default function CollectionPage() {
-  const [isMyCollection, setIsMyCollection] = useState(false)
-  const [collection, setCollection] = useState({
-    id: '',
-    title: '',
-    description: '',
-    isPublic: false,
-    tags: [],
-    updatedAt: new Date(),
-  })
-  const [sections, setSections] = useState([])
-  const [user, setUser] = useState({} as any)
   const router = useRouter()
   const {collection_id} = router.query
+  const [isMyCollection, setIsMyCollection] = useState(false)
+  const collection = useCollection(collection_id as string)
+  const [sections, setSections] = useState([])
+  const [user, setUser] = useState({} as any)
+
   const [modalIsOpen, setIsOpen] = useState(false)
   function openModal() {
     setIsOpen(true)
@@ -107,7 +102,6 @@ export default function CollectionPage() {
       ])
       const currentUser = getCurrentUser()
       if (!unmounted) {
-        setCollection(collection)
         setSections(sections)
         if (collection.creatorId === currentUser?.uid) {
           setIsMyCollection(true)
@@ -130,13 +124,15 @@ export default function CollectionPage() {
   return (
     <Layout>
       <main>
-        <div>
-          <img
-            className="object-cover h-40 w-full"
-            src="https://picsum.photos/300/100"
-            alt="問題集イメージ"
-          />
-        </div>
+        {collection.imageUrl && (
+          <div>
+            <img
+              className="object-cover h-40 w-full"
+              src={collection.imageUrl}
+              alt="問題集イメージ"
+            />
+          </div>
+        )}
         <div className="p-4 bg-white">
           <h1 className="text-2xl font-semibold break-words">
             {collection.title}

@@ -5,6 +5,7 @@ export type Collection = {
   isPublic: boolean
   creatorId: string
   tags: string[]
+  imageUrl: string
   createdAt: Date
   updatedAt: Date
 }

@@ -1,6 +1,7 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import {Collection} from 'models/collection'
+import {putFile} from 'utils/firebaseStorage'
 
 const db = firebase.firestore()
 
@@ -27,14 +28,19 @@ export const updateCollection = async (
   description: string,
   creatorId: string,
   isPublic: boolean,
-  tags: string[]
+  tags: string[],
+  imageBlob?: Blob
 ) => {
+  const imageUrl = imageBlob
+    ? await putFile(`collections/${id}/collection_image`, imageBlob)
+    : ''
   await db.collection('collections').doc(id).set({
     title,
     description,
     creatorId,
     isPublic,
     tags,
+    imageUrl,
     createdAt: new Date(),
     updatedAt: new Date(),
   })
@@ -94,6 +100,7 @@ const snapshotToCollection = (
     isPublic: data.isPublic || false,
     creatorId: data.creatorId,
     tags: data.tags || [],
+    imageUrl: data.imageUrl || '',
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }

@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Layout from 'layouts/layout'
-import {getCollection, updateCollection} from 'clients/collection'
+import {useCollection} from 'hooks/collection'
+import {updateCollection} from 'clients/collection'
 import {getCurrentUser} from 'clients/auth'
 import Button from 'components/Button'
+import ImageCrop from 'components/ImageCrop'
 
 const MAX_TAG_COUNT = 5
 
@@ -13,14 +15,14 @@ export default function CollectionEditPage() {
   const [isPublic, setIsPublic] = useState(false)
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState([])
+  const [imageBlob, setImageBlob] = useState<Blob>(null)
   const router = useRouter()
   const {collection_id} = router.query
+  const collection = useCollection(collection_id as string)
 
   useEffect(() => {
     let unmounted = false
-
     ;(async () => {
-      const collection = await getCollection(collection_id as string)
       if (!unmounted) {
         setTitle(collection.title)
         setDescription(collection.description)
@@ -32,7 +34,7 @@ export default function CollectionEditPage() {
     return () => {
       unmounted = true
     }
-  }, [collection_id])
+  }, [collection])
 
   const onChangeTitle = (event) => {
     setTitle(event.target.value)
@@ -74,7 +76,8 @@ export default function CollectionEditPage() {
       description,
       currentUser.uid,
       isPublic,
-      tags
+      tags,
+      imageBlob
     )
     router.push(`/collections/${collection_id as string}`)
   }
@@ -134,6 +137,9 @@ export default function CollectionEditPage() {
               )
             })}
           </div>
+        </div>
+        <div className="mt-2 p-2">
+          <ImageCrop setImageBlob={setImageBlob}></ImageCrop>
         </div>
         <div className="my-2">
           <p>公開</p>

@@ -3,7 +3,7 @@ import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 
 export default function ImageCrop({setImageBlob}) {
-  const [crop, setCrop] = useState({aspect: 1 / 1})
+  const [crop, setCrop] = useState()
   const [src, setSrc] = useState(null)
   const [imageRef, setImageRef] = useState()
 
@@ -70,7 +70,12 @@ export default function ImageCrop({setImageBlob}) {
   return (
     <div>
       <div>
-        <input type="file" accept="image/*" onChange={onSelectFile} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onSelectFile}
+          className="w-10/12"
+        />
       </div>
       {src && (
         <div className="mt-2">
