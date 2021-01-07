@@ -25,21 +25,21 @@ const SectionTile = ({section, isMySection}: Props) => {
           <Link
             href={`/collections/${section.collectionId}/sections/${section.id}`}
           >
-            <div className="bg-gray-400 p-4 rounded shadow inline-block">
-              <a className="inline-block h-6 w-6 align-bottom">
-                <FontAwesomeIcon icon={faCog} color="white" />
-              </a>
-            </div>
+            <a>
+              <div className="bg-gray-400 p-3 rounded shadow inline-block">
+                <FontAwesomeIcon icon={faCog} color="white" size="2x" />
+              </div>
+            </a>
           </Link>
         )}
         <Link
           href={`/collections/${section.collectionId}/sections/${section.id}/play`}
         >
-          <div className="bg-primary p-4 rounded shadow inline-block ml-2">
-            <a className="inline-block h-6 w-6 align-bottom">
-              <FontAwesomeIcon icon={faPlay} color="white" />
-            </a>
-          </div>
+          <a>
+            <div className="bg-primary p-3 rounded shadow inline-block ml-2 text-center">
+              <FontAwesomeIcon icon={faPlay} color="white" size="2x" />
+            </div>
+          </a>
         </Link>
       </div>
     </div>
