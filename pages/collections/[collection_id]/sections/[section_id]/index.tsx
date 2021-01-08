@@ -89,8 +89,14 @@ export default function CollectionPage() {
           <ul className="mt-4">
             {quizzes.map((quiz, index) => (
               <li key={quiz.id} className="mt-1">
-                問題{index + 1}
-                <span className="ml-2">{quiz.question}</span>
+                <Link
+                  href={`/collections/${section.collectionId}/sections/${section.id}/quizzes/${quiz.id}/edit`}
+                >
+                  <a>
+                    問題{index + 1}
+                    <span className="ml-2">{quiz.question}</span>
+                  </a>
+                </Link>
               </li>
             ))}
           </ul>

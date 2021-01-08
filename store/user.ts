@@ -21,13 +21,13 @@ import storage from 'redux-persist/lib/storage'
 
 const auth = firebase.auth()
 
-type UserState = {
+export type UserState = {
   isLogin: boolean
   uid: string
   user?: User
 }
 
-export const initialUserState: UserState = {
+const initialUserState: UserState = {
   isLogin: false,
   uid: '',
 }

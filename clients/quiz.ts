@@ -36,6 +36,36 @@ export const createQuiz = async (
   return id
 }
 
+export const updateQuiz = async (
+  id: string,
+  question: string,
+  answers: string[],
+  correctAnswerIndex: number[],
+  explanation: string,
+  collectionId: string,
+  sectionId: string
+) => {
+  await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .collection('quizzes')
+    .doc(id)
+    .set(
+      {
+        question,
+        answers,
+        correctAnswerIndex,
+        explanation,
+        type: 'alternative',
+        updatedAt: new Date(),
+      },
+      {merge: true}
+    )
+  return id
+}
+
 export const getQuizzes = async (
   collectionId: string,
   sectionId: string
@@ -50,6 +80,22 @@ export const getQuizzes = async (
   return snapshot.docs.map((doc) => {
     return snapshotToQuiz(doc)
   })
+}
+
+export const getQuiz = async (
+  collectionId: string,
+  sectionId: string,
+  id: string
+): Promise<Quiz> => {
+  const snapshot = await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .collection('quizzes')
+    .doc(id)
+    .get()
+  return snapshotToQuiz(snapshot)
 }
 
 const snapshotToQuiz = (
