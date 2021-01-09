@@ -50,8 +50,7 @@ const CollectionTile = ({collection}: Props) => {
         )}
       </div>
       <div>
-        {/* TODO 問題集の合計問題数を取得 */}
-        <span className="font-semibold text-sm">{100}問</span>
+        <span className="font-semibold text-sm">{collection.quizCount}問</span>
         <span className="pl-4 text-gray-400 text-xs">
           <Link href={`/users/${collection.creatorId}`}>
             <a>{user.name}</a>

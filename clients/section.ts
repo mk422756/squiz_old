@@ -62,6 +62,7 @@ const snapshotToSection = (
     title: data.title || '',
     collectionId: data.collectionId,
     creatorId: data.creatorId,
+    quizCount: data.quizCount || 0,
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }

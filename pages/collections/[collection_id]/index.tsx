@@ -152,10 +152,10 @@ export default function CollectionPage() {
             })}
           </div>
           <pre className="pt-4">{collection.description}</pre>
-          {/* TODO 合計問題数を実装する */}
-          <div className="pt-4 text-sm font-semibold">合計 100 問</div>
+          <div className="pt-4 text-sm font-semibold">
+            合計 {collection.quizCount} 問
+          </div>
           <div className="text-xs text-gray-500">
-            {/* TODO セクション更新の最新を取得する */}
             最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
           </div>
           <div className="pt-4">

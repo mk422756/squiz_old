@@ -101,6 +101,7 @@ const snapshotToCollection = (
     creatorId: data.creatorId,
     tags: data.tags || [],
     imageUrl: data.imageUrl || '',
+    quizCount: data.quizCount || 0,
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }

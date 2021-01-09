@@ -3,6 +3,7 @@ export type Section = {
   title: string
   collectionId: string
   creatorId: string
+  quizCount: number
   createdAt: Date
   updatedAt: Date
 }

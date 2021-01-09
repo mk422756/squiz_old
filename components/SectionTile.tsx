@@ -14,8 +14,7 @@ const SectionTile = ({section, isMySection}: Props) => {
     <div className="border p-4 flex justify-between items-center bg-white">
       <div>
         <p className="font-semibold">{section.title}</p>
-        {/* TODO 問題数を取得する */}
-        <p className="font-semibold text-sm">100問</p>
+        <p className="font-semibold text-sm">{section.quizCount}問</p>
         <p className="text-xs text-gray-400">
           更新日:{dateToYYYYMMDD(section.updatedAt)}
         </p>

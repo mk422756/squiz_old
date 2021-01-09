@@ -11,6 +11,7 @@ export function useCollection(id: string) {
     imageUrl: '',
     creatorId: '',
     tags: [],
+    quizCount: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
   })
