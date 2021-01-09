@@ -65,6 +65,20 @@ export const updateQuiz = async (
     )
   return id
 }
+export const deleteQuiz = async (
+  collectionId: string,
+  sectionId: string,
+  id: string
+): Promise<void> => {
+  await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .collection('quizzes')
+    .doc(id)
+    .delete()
+}
 
 export const getQuizzes = async (
   collectionId: string,

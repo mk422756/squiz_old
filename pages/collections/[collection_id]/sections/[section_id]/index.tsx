@@ -3,7 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
 import {getSection} from 'clients/section'
-import {getQuizzes} from 'clients/quiz'
+import {getQuizzes, deleteQuiz} from 'clients/quiz'
 import {getCurrentUser} from 'clients/auth'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
 
@@ -24,6 +24,9 @@ export default function CollectionPage() {
     let unmounted = false
 
     ;(async () => {
+      if (!section_id || !collection_id) {
+        return
+      }
       const [section, quizzes] = await Promise.all([
         getSection(collection_id as string, section_id as string),
         getQuizzes(collection_id as string, section_id as string),
@@ -41,15 +44,32 @@ export default function CollectionPage() {
     return () => {
       unmounted = true
     }
-    // TODO 二回取得しに行ってしまうので一度にまとめる
   }, [collection_id, section_id])
+
+  async function _deleteQuiz(e) {
+    if (confirm('問題を削除します。よろしいですか？')) {
+      await deleteQuiz(
+        collection_id as string,
+        section_id as string,
+        e.target.id
+      )
+      await reloadQuiz()
+    }
+  }
+
+  async function reloadQuiz() {
+    const quizzes = await getQuizzes(
+      collection_id as string,
+      section_id as string
+    )
+    setQuizzes(quizzes)
+  }
 
   return (
     <Layout>
       <main>
         <div className="p-4 bg-white">
           <h1 className="text-2xl font-semibold">{section.title}</h1>
-          {/* TODO 合計問題数を実装する */}
           <div className="pt-4 text-sm font-semibold">
             合計 {quizzes.length} 問
           </div>
@@ -94,9 +114,17 @@ export default function CollectionPage() {
                 >
                   <a>
                     問題{index + 1}
-                    <span className="ml-2">{quiz.question}</span>
+                    <span className="ml-2 break-words">{quiz.question}</span>
                   </a>
                 </Link>
+
+                <span
+                  className="float-right"
+                  id={quiz.id}
+                  onClick={_deleteQuiz}
+                >
+                  削除
+                </span>
               </li>
             ))}
           </ul>
