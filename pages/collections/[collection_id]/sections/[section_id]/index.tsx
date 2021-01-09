@@ -61,7 +61,7 @@ export default function CollectionPage() {
           {isMySection && (
             <div className="pt-4">
               <Link
-                href={`/collections/${section.collectionId}/sections/${section.id}/create_quiz`}
+                href={`/collections/${section.collectionId}/sections/${section.id}/quizzes/create`}
               >
                 <a className="underline text-gray-400">問題作成</a>
               </Link>
