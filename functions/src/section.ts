@@ -37,5 +37,5 @@ async function updateCollectionQuizCount(
   return await firestore
     .collection('collections')
     .doc(collectionId)
-    .set({quizCount: totalQuizCount, updatedAt: new Date()}, {merge: true})
+    .update({quizCount: totalQuizCount, updatedAt: new Date()})
 }

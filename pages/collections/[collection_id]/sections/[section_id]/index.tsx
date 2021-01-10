@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getSection} from 'clients/section'
+import {getSection, deleteSection} from 'clients/section'
 import {getQuizzes, deleteQuiz} from 'clients/quiz'
 import {getCurrentUser} from 'clients/auth'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
@@ -46,6 +46,17 @@ export default function CollectionPage() {
     }
   }, [collection_id, section_id])
 
+  async function _deleteSection() {
+    if (
+      confirm(
+        'セクションを削除します。セクションに含まれる全ての問題も削除されます。本当によろしいですか？'
+      )
+    ) {
+      await deleteSection(collection_id as string, section_id as string)
+      router.push(`/collections/${collection_id}`)
+    }
+  }
+
   async function _deleteQuiz(e) {
     if (confirm('問題を削除します。よろしいですか？')) {
       await deleteQuiz(
@@ -69,7 +80,10 @@ export default function CollectionPage() {
     <Layout>
       <main>
         <div className="p-4 bg-white">
-          <h1 className="text-2xl font-semibold">{section.title}</h1>
+          <Link href={`/collections/${section.collectionId}`}>
+            <a className="text-blue-400 text-sm">◀︎問題集に戻る</a>
+          </Link>
+          <h1 className="text-2xl font-semibold mt-4">{section.title}</h1>
           <div className="pt-4 text-sm font-semibold">
             合計 {quizzes.length} 問
           </div>
@@ -91,12 +105,7 @@ export default function CollectionPage() {
               <button
                 type="button"
                 className="mx-2 underline text-gray-400"
-                onClick={async () => {
-                  if (window.confirm('This will be deleted')) {
-                    // TODO 削除処理
-                    router.push('/collections')
-                  }
-                }}
+                onClick={_deleteSection}
               >
                 削除
               </button>

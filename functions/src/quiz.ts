@@ -24,6 +24,15 @@ export const onCreateQuiz = functions.firestore
 export const onDelete = functions.firestore
   .document('collections/{collectionId}/sections/{sectionId}/quizzes/{quizId}')
   .onDelete(async (_, context) => {
+    const _isExistSection = await isExistSection(
+      context.params.collectionId,
+      context.params.sectionId
+    )
+
+    if (!_isExistSection) {
+      return
+    }
+
     const snapshot = await firestore
       .collection('collections')
       .doc(context.params.collectionId)
@@ -49,5 +58,16 @@ async function updateSectionQuizCount(
     .doc(collectionId)
     .collection('sections')
     .doc(sectionId)
-    .set({quizCount: count, updatedAt: new Date()}, {merge: true})
+    .update({quizCount: count, updatedAt: new Date()})
+}
+
+async function isExistSection(collectionId: string, sectionId: string) {
+  const snapshot = await firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .get()
+
+  return snapshot.exists
 }

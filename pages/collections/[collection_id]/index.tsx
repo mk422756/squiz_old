@@ -15,7 +15,12 @@ import Modal from 'react-modal'
 import Button from 'components/Button'
 import SectionTile from 'components/SectionTile'
 
-const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
+const NewSectonModal = ({
+  modalIsOpen,
+  closeModal,
+  collectionId,
+  reloadSections,
+}) => {
   Modal.setAppElement('#modal')
 
   const [title, setTitle] = useState('')
@@ -42,6 +47,7 @@ const NewSectonModal = ({modalIsOpen, closeModal, collectionId}) => {
     }
     await createSection(title, collectionId, currentUser.uid)
     closeModal()
+    await reloadSections()
   }
 
   return (
@@ -120,6 +126,11 @@ export default function CollectionPage() {
       unmounted = true
     }
   }, [collection_id])
+
+  async function reloadSections() {
+    const sections = await getSections(collection_id as string)
+    setSections(sections)
+  }
 
   return (
     <Layout>
@@ -221,6 +232,7 @@ export default function CollectionPage() {
                   modalIsOpen={modalIsOpen}
                   closeModal={closeModal}
                   collectionId={collection_id}
+                  reloadSections={reloadSections}
                 ></NewSectonModal>
               </div>
             </div>
