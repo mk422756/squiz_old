@@ -69,9 +69,9 @@ export const setupStore = (): EnhancedStore => {
   ]
 
   // only development
-  if (process.env.NODE_ENV === 'development') {
-    middlewares.push(logger)
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   middlewares.push(logger)
+  // }
 
   const persistConfig = {
     key: 'user',

@@ -12,8 +12,8 @@ export function useCollection(id: string) {
     creatorId: '',
     tags: [],
     quizCount: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toString(),
+    updatedAt: new Date().toString(),
   })
   useEffect(() => {
     let unmounted = false
