@@ -14,6 +14,18 @@ import {dateToYYYYMMDD} from 'utils/dateUtils'
 import Modal from 'react-modal'
 import Button from 'components/Button'
 import SectionTile from 'components/SectionTile'
+import {
+  TwitterTimelineEmbed,
+  TwitterShareButton,
+  TwitterFollowButton,
+  TwitterHashtagButton,
+  TwitterMentionButton,
+  TwitterTweetEmbed,
+  TwitterMomentShare,
+  TwitterDMButton,
+  TwitterVideoEmbed,
+  TwitterOnAirButton,
+} from 'react-twitter-embed'
 
 const NewSectonModal = ({
   modalIsOpen,
@@ -170,21 +182,18 @@ export default function CollectionPage() {
             最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
           </div>
           <div className="pt-4">
-            <span className="inline-block h-5 w-5 align-middle">
+            {/* <span className="inline-block h-5 w-5 align-middle">
               <FontAwesomeIcon icon={faHeart} color="gray" className="fa-lg" />
             </span>
             <span className="ml-1 align-middle text-sm text-gray-500">
               お気に入り
-            </span>
-            <span className="ml-4 inline-block h-5 w-5 align-middle">
-              <FontAwesomeIcon
-                icon={faTwitter}
-                color="gray"
-                className="fa-lg"
+            </span> */}
+            <span className="inline-block align-bottom">
+              <TwitterShareButton
+                key={collection.id}
+                url={`${location.protocol}//${location.host}${location.pathname}`}
+                options={{text: `#squiz ${collection.title}`}}
               />
-            </span>
-            <span className="ml-1 align-middle text-sm text-gray-500">
-              ツイート
             </span>
           </div>
 
