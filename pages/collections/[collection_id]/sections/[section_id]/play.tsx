@@ -12,6 +12,7 @@ import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
 import {connect} from 'react-redux'
+import styles from 'styles/Default.module.css'
 
 function PlayPage({userState}) {
   const [collection, setCollection] = useState({id: '', title: ''})
@@ -96,8 +97,8 @@ function PlayPage({userState}) {
 
   return (
     <LayoutQuiz>
-      <main className="flex flex-col h-screen">
-        <div className="flex-1 overflow-y-auto">
+      <main>
+        <div>
           <StatusBox
             quizzes={quizzes}
             collectionTitle={collection.title || ''}
@@ -125,7 +126,7 @@ function PlayPage({userState}) {
             ></ResultBox>
           )}
         </div>
-        <div className="">
+        <div className="fixed w-full bottom-0 opacity-95 z-50">
           <ControlBox
             quizzes={quizzes}
             currentQuizIndex={currentQuizIndex}
