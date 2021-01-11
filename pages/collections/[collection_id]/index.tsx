@@ -141,67 +141,67 @@ export default function CollectionPage({
   }
 
   return (
-    <>
+    <Layout>
       <Head>
-        <title>SQUIZ</title>
+        <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
-        <meta property="og:title" content={collection.title} />
-        <meta
-          property="og:description"
-          content="SQUIZは新しい学習プラットフォームです"
-        />
-        <meta property="og:type" content="article" />
-        <meta property="og:locale" content="ja_JP" />
-        <meta property="og:url" content="https://squiz.vercel.app" />
-        <meta property="og:site_name" content="squiz" />
+        <meta property="og:title" content="hogehoge" />
+        <meta property="og:description" content="fugafuga" />
+        <meta name="keywords" content="piyopiyo" />
+        <meta property="og:type" content="blog" />
+        <meta property="og:url" content="https://yahoo.co.jp" />
+        <meta property="og:image" content="https://picsum.photos/200/300" />
+        <meta property="og:site_name" content="ogog" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" content="https://squiz.vercel.app" />
-        <meta name="twitter:title" content="squiz" />
-        <link rel="canonical" href="https://squiz.vercel.app" />
+        <meta name="twitter:site" content="@tcr_jp" />
+        <meta name="twitter:url" content="https://yahoo.co.jp" />
+        <meta name="twitter:title" content="hogehoge" />
+        <meta name="twitter:description" content="fugafuga" />
+        <meta name="twitter:image" content="https://picsum.photos/200/300" />
       </Head>
-      <Layout>
-        <main>
-          {collection.imageUrl && (
-            <div>
-              <img
-                className="object-cover h-40 w-full"
-                src={collection.imageUrl}
-                alt="問題集イメージ"
-              />
-            </div>
-          )}
-          <div className="p-4 bg-white">
-            <h1 className="text-2xl font-semibold break-words">
-              {collection.title}
-            </h1>
-            <div className="pt-4 text-primary break-words">
-              {collection.tags.map((tag, index) => {
-                return (
-                  <span key={index}>
-                    <Link href={`/tags/${tag}`}>
-                      <a>
-                        <span>#{tag}</span>
-                        <span className="ml-1" />
-                      </a>
-                    </Link>
-                  </span>
-                )
-              })}
-            </div>
-            <pre className="pt-4">{collection.description}</pre>
-            <div className="pt-4 text-sm font-semibold">
-              合計 {collection.quizCount} 問
-            </div>
-            <div className="text-xs text-gray-500">
-              最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
-            </div>
-            <div className="pt-4">
-              {/* <span className="inline-block h-5 w-5 align-middle">
+      <main>
+        {collection.imageUrl && (
+          <div>
+            <img
+              className="object-cover h-40 w-full"
+              src={collection.imageUrl}
+              alt="問題集イメージ"
+            />
+          </div>
+        )}
+        <div className="p-4 bg-white">
+          <h1 className="text-2xl font-semibold break-words">
+            {collection.title}
+          </h1>
+          <div className="pt-4 text-primary break-words">
+            {collection.tags.map((tag, index) => {
+              return (
+                <span key={index}>
+                  <Link href={`/tags/${tag}`}>
+                    <a>
+                      <span>#{tag}</span>
+                      <span className="ml-1" />
+                    </a>
+                  </Link>
+                </span>
+              )
+            })}
+          </div>
+          <pre className="pt-4">{collection.description}</pre>
+          <div className="pt-4 text-sm font-semibold">
+            合計 {collection.quizCount} 問
+          </div>
+          <div className="text-xs text-gray-500">
+            最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
+          </div>
+          <div className="pt-4">
+            {/* <span className="inline-block h-5 w-5 align-middle">
               <FontAwesomeIcon icon={faHeart} color="gray" className="fa-lg" />
             </span>
             <span className="ml-1 align-middle text-sm text-gray-500">
               お気に入り
             </span> */}
+            {process.browser && (
               <span className="inline-block align-bottom">
                 <TwitterShareButton
                   key={collection.id}
@@ -209,76 +209,71 @@ export default function CollectionPage({
                   options={{text: `#squiz ${collection.title}`}}
                 />
               </span>
-            </div>
-
-            <div className="pt-4">
-              <Link href={`/users/${user.id}`}>
-                <a>
-                  <img
-                    className="inline-block h-6 w-6 rounded-full bg-white"
-                    src={user.imageUrl}
-                  />
-                  <span className="ml-1 text-sm font-semibold">
-                    {user.name}
-                  </span>
-                </a>
-              </Link>
-            </div>
-
-            {isMyCollection && (
-              <div className="pt-4">
-                <div>
-                  <span className="text-gray-400">公開状況:</span>
-                  <span className="text-red-400 ml-1">
-                    {collection.isPublic ? '公開' : '非公開'}
-                  </span>
-                </div>
-                <div className="mt-1">
-                  <Link href={`/collections/${collection.id}/edit`}>
-                    <a className="underline text-gray-400">編集</a>
-                  </Link>
-                  <button
-                    type="button"
-                    className="mx-2 underline text-gray-400"
-                    onClick={async () => {
-                      if (window.confirm('This will be deleted')) {
-                        // TODO 削除処理
-                        router.push('/collections')
-                      }
-                    }}
-                  >
-                    削除
-                  </button>
-                  <a
-                    className="mx-2 underline text-gray-400"
-                    onClick={openModal}
-                  >
-                    セクション作成
-                  </a>
-
-                  <NewSectonModal
-                    modalIsOpen={modalIsOpen}
-                    closeModal={closeModal}
-                    collectionId={collection_id}
-                    reloadSections={reloadSections}
-                  ></NewSectonModal>
-                </div>
-              </div>
             )}
-            <div id="modal"></div>
           </div>
-          <div>
-            <ul className="mt-2">
-              {sections.map((section) => (
-                <li key={section.id} className="mt-1">
-                  <SectionTile section={section} isMySection={isMyCollection} />
-                </li>
-              ))}
-            </ul>
+
+          <div className="pt-4">
+            <Link href={`/users/${user.id}`}>
+              <a>
+                <img
+                  className="inline-block h-6 w-6 rounded-full bg-white"
+                  src={user.imageUrl}
+                />
+                <span className="ml-1 text-sm font-semibold">{user.name}</span>
+              </a>
+            </Link>
           </div>
-        </main>
-      </Layout>
-    </>
+
+          {isMyCollection && (
+            <div className="pt-4">
+              <div>
+                <span className="text-gray-400">公開状況:</span>
+                <span className="text-red-400 ml-1">
+                  {collection.isPublic ? '公開' : '非公開'}
+                </span>
+              </div>
+              <div className="mt-1">
+                <Link href={`/collections/${collection.id}/edit`}>
+                  <a className="underline text-gray-400">編集</a>
+                </Link>
+                <button
+                  type="button"
+                  className="mx-2 underline text-gray-400"
+                  onClick={async () => {
+                    if (window.confirm('This will be deleted')) {
+                      // TODO 削除処理
+                      router.push('/collections')
+                    }
+                  }}
+                >
+                  削除
+                </button>
+                <a className="mx-2 underline text-gray-400" onClick={openModal}>
+                  セクション作成
+                </a>
+
+                <NewSectonModal
+                  modalIsOpen={modalIsOpen}
+                  closeModal={closeModal}
+                  collectionId={collection_id}
+                  reloadSections={reloadSections}
+                ></NewSectonModal>
+              </div>
+            </div>
+          )}
+          <div id="modal"></div>
+        </div>
+        <div>
+          <ul className="mt-2">
+            {sections.map((section) => (
+              <li key={section.id} className="mt-1">
+                <SectionTile section={section} isMySection={isMyCollection} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
+    </Layout>
   )
 }
 
