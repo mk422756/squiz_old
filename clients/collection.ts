@@ -102,7 +102,7 @@ const snapshotToCollection = (
     tags: data.tags || [],
     imageUrl: data.imageUrl || '',
     quizCount: data.quizCount || 0,
-    createdAt: data.createdAt?.toDate() || new Date(),
-    updatedAt: data.createdAt?.toDate() || new Date(),
+    createdAt: data.createdAt?.toDate().toString() || new Date().toString(),
+    updatedAt: data.createdAt?.toDate().toString() || new Date().toString(),
   }
 }

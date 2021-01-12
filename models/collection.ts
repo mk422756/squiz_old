@@ -7,6 +7,6 @@ export type Collection = {
   tags: string[]
   imageUrl: string
   quizCount: number
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
