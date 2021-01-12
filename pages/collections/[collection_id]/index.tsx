@@ -206,7 +206,7 @@ export default function CollectionPage({
                 <TwitterShareButton
                   key={collection.id}
                   url={`${location.protocol}//${location.host}${location.pathname}`}
-                  options={{text: `#squiz ${collection.title}`}}
+                  options={{text: `#squiz ${collection.title}`, size: 'large'}}
                 />
               </span>
             </div>
