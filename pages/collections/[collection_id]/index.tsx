@@ -174,6 +174,13 @@ export default function CollectionPage({
             <h1 className="text-2xl font-semibold break-words">
               {collection.title}
             </h1>
+            <pre className="pt-4">{collection.description}</pre>
+            <div className="pt-4 text-sm font-semibold">
+              合計 {collection.quizCount} 問
+            </div>
+            <div className="text-xs text-gray-500">
+              最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
+            </div>
             <div className="pt-4 text-primary break-words">
               {collection.tags.map((tag, index) => {
                 return (
@@ -187,13 +194,6 @@ export default function CollectionPage({
                   </span>
                 )
               })}
-            </div>
-            <pre className="pt-4">{collection.description}</pre>
-            <div className="pt-4 text-sm font-semibold">
-              合計 {collection.quizCount} 問
-            </div>
-            <div className="text-xs text-gray-500">
-              最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
             </div>
             <div className="pt-4">
               {/* <span className="inline-block h-5 w-5 align-middle">
