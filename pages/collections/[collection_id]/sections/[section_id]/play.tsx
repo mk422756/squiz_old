@@ -101,9 +101,9 @@ function PlayPage({userState}) {
           <StatusBox
             quizzes={quizzes}
             collectionTitle={collection.title || ''}
-            collectionId={collection.id}
             sectionTitle={section.title || ''}
             currentQuizIndex={currentQuizIndex}
+            isFinished={isFinished}
             back={backToCollectionPage}
           ></StatusBox>
 

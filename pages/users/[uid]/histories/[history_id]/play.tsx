@@ -71,9 +71,9 @@ export default function PlayPage() {
           <StatusBox
             quizzes={quizzes}
             collectionTitle={history.collectionTitle || ''}
-            collectionId={history.collectionId}
             sectionTitle={history.sectionTitle || ''}
             currentQuizIndex={currentQuizIndex}
+            isFinished={isFinished}
             back={backToHistoriesPage}
           ></StatusBox>
 

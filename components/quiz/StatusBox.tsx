@@ -6,19 +6,19 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 type StatusBoxProps = {
   quizzes: Quiz[]
-  collectionId: string
   collectionTitle: string
   sectionTitle: string
   currentQuizIndex: number
+  isFinished: boolean
   back: () => void
 }
 
 const StatusBox = ({
   quizzes,
   collectionTitle,
-  collectionId,
   sectionTitle,
   currentQuizIndex,
+  isFinished,
   back,
 }: StatusBoxProps) => {
   const router = useRouter()
@@ -27,6 +27,12 @@ const StatusBox = ({
     if (window.confirm('問題を終了します。よろしいですか？')) {
       back()
     }
+  }
+
+  const progressStyle = {
+    width: isFinished
+      ? '100%'
+      : (currentQuizIndex / quizzes.length) * 100 + '%',
   }
 
   return (
@@ -51,8 +57,9 @@ const StatusBox = ({
         <div className="text-xs my-auto">
           {currentQuizIndex + 1}/{quizzes.length}
         </div>
-        {/* TODO プログレスバーを実装する */}
-        <div className="col-span-6 bg-accent h-7 rounded"></div>
+        <div className="col-span-6 bg-gray-200 h-7 rounded">
+          <div className="bg-accent h-full rounded" style={progressStyle}></div>
+        </div>
       </div>
     </div>
   )
