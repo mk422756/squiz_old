@@ -9,7 +9,7 @@ const LoginLink = ({userState}) => {
       {userState.isLogin ? (
         <ul>
           <li className="mx-4 inline-block h-6 w-6 align-middle">
-            <Link href={`/users/${userState.user.id}/histories`}>
+            <Link href={`/users/${userState.uid}/histories`}>
               <a>
                 <FontAwesomeIcon
                   icon={faBook}
@@ -21,7 +21,7 @@ const LoginLink = ({userState}) => {
           </li>
           <li className="inline-block">
             {userState.user && (
-              <Link href={`/users/${userState.user.id}`}>
+              <Link href={`/users/${userState.uid}`}>
                 <a>
                   <img
                     className="inline-block h-8 w-8 rounded-full bg-white"
