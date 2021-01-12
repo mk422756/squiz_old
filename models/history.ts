@@ -36,7 +36,7 @@ export class HistoryDetails {
   toQuizzes(onlyIncorrect: boolean = false): Quiz[] {
     const details = onlyIncorrect
       ? this.details.filter((detail) => {
-          return (
+          return !(
             detail.answerIndex.length === detail.correctAnswerIndex.length &&
             detail.answerIndex.every(
               (value, index) => value === detail.correctAnswerIndex[index]
