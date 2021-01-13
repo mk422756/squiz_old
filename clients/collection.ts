@@ -103,6 +103,6 @@ const snapshotToCollection = (
     imageUrl: data.imageUrl || '',
     quizCount: data.quizCount || 0,
     createdAt: data.createdAt?.toDate().toString() || new Date().toString(),
-    updatedAt: data.createdAt?.toDate().toString() || new Date().toString(),
+    updatedAt: data.updatedAt?.toDate().toString() || new Date().toString(),
   }
 }

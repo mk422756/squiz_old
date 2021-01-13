@@ -27,7 +27,6 @@ const AnswerBox = ({
     color = 'bg-red-100'
   }
   const className = 'my-3 mx-4 p-3 rounded shadow ' + color
-  console.log(className)
   return (
     <div className={className}>
       <label className="grid grid-cols-12">
