@@ -5,6 +5,8 @@ type AnswerBoxProps = {
   answer: string
   index: number
   selectedAnswerIndex: number
+  correctAnswerIndex: number[]
+  isAnswered: boolean
   handleAnswers: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -12,10 +14,22 @@ const AnswerBox = ({
   answer,
   index,
   selectedAnswerIndex,
+  correctAnswerIndex,
+  isAnswered,
   handleAnswers,
 }: AnswerBoxProps) => {
+  const isCorrect = correctAnswerIndex.includes(index)
+  const isSelected = selectedAnswerIndex === index
+  let color = 'bg-white'
+  if (isAnswered && isCorrect) {
+    color = 'bg-green-100'
+  } else if (isAnswered && isSelected) {
+    color = 'bg-red-100'
+  }
+  const className = 'my-3 mx-4 p-3 rounded shadow ' + color
+  console.log(className)
   return (
-    <div className="my-3 mx-4 p-3 bg-white rounded shadow">
+    <div className={className}>
       <label className="grid grid-cols-12">
         <input
           type="radio"
@@ -73,6 +87,8 @@ const PlayBox = ({
               answer={answer}
               index={index}
               selectedAnswerIndex={selectedAnswerIndex}
+              correctAnswerIndex={currentQuiz.correctAnswerIndex}
+              isAnswered={isAnswered}
               handleAnswers={handleAnswers}
             ></AnswerBox>
           )
