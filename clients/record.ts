@@ -1,5 +1,6 @@
 import firebase from 'lib/firebase'
 import dayjs from 'dayjs'
+import {Record} from 'models/record'
 
 const db = firebase.firestore()
 
@@ -20,7 +21,7 @@ export const addRecord = async (userId: string, isCorrect: boolean) => {
       .collection('records')
       .doc(date)
       .update({
-        records: firebase.firestore.FieldValue.increment(1),
+        answerCount: firebase.firestore.FieldValue.increment(1),
         correct: firebase.firestore.FieldValue.increment(isCorrect ? 1 : 0),
         incorrect: firebase.firestore.FieldValue.increment(isCorrect ? 0 : 1),
       })
@@ -32,9 +33,38 @@ export const addRecord = async (userId: string, isCorrect: boolean) => {
       .doc(date)
       .set({
         date,
-        records: firebase.firestore.FieldValue.increment(1),
+        answerCount: firebase.firestore.FieldValue.increment(1),
         correct: firebase.firestore.FieldValue.increment(isCorrect ? 1 : 0),
         incorrect: firebase.firestore.FieldValue.increment(isCorrect ? 0 : 1),
       })
+  }
+}
+
+export const getRecords = async (userId: string): Promise<Record[]> => {
+  const date = dayjs().format('YYYYMMDD')
+
+  const snapshot = await db
+    .collection('users')
+    .doc(userId)
+    .collection('records')
+    // .where('date', '>', '20210101')
+    .get()
+
+  return snapshot.docs.map((doc) => {
+    return snapshotToRecord(doc)
+  })
+
+  return []
+}
+
+const snapshotToRecord = (
+  snapshot: firebase.firestore.DocumentSnapshot
+): Record => {
+  const data = snapshot.data()
+  return {
+    date: data.date,
+    answerCount: data.answerCount,
+    correct: data.correct,
+    incorrect: data.incorrect,
   }
 }
