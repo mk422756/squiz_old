@@ -8,8 +8,10 @@ import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
 import {getHistory} from 'clients/history'
+import {addRecord} from 'clients/record'
+import {connect} from 'react-redux'
 
-export default function PlayPage() {
+function PlayPage({userState}) {
   const [history, setHistory] = useState({} as any)
   const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
@@ -48,6 +50,9 @@ export default function PlayPage() {
     const result = new Result(currentQuiz, [selectedAnswerIndex])
     setIsCorrectAnswer(result.isCorrect)
     setResults(results.push(result))
+    if (userState.isLogin) {
+      addRecord(userState.uid, result.isCorrect)
+    }
   }
 
   const next = () => {
@@ -112,3 +117,9 @@ export default function PlayPage() {
     </LayoutQuiz>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {userState: state}
+}
+
+export default connect(mapStateToProps)(PlayPage)
