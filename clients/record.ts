@@ -54,7 +54,22 @@ export const getRecords = async (userId: string): Promise<Record[]> => {
     return snapshotToRecord(doc)
   })
 
-  return []
+  // const arr: Record[] = []
+  // const min = 5
+  // const max = 500
+
+  // for (let i = 1; i < 31; i++) {
+  //   const correct = Math.floor(Math.random() * (max + 1 - min)) + min
+  //   const incorrect = Math.floor(Math.random() * (max + 1 - min)) + min
+  //   arr.push({
+  //     date: i + '日',
+  //     answerCount: correct + incorrect,
+  //     correct,
+  //     incorrect,
+  //   })
+  // }
+
+  // return arr
 }
 
 const snapshotToRecord = (

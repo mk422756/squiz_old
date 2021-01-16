@@ -36,6 +36,7 @@
     "react-modal": "^3.12.1",
     "react-redux": "^7.2.2",
     "react-twitter-embed": "^3.0.3",
+    "recharts": "^2.0.3",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "tailwindcss": "^2.0.2",
