@@ -40,36 +40,53 @@ export const addRecord = async (userId: string, isCorrect: boolean) => {
   }
 }
 
-export const getRecords = async (userId: string): Promise<Record[]> => {
-  const date = dayjs().format('YYYYMMDD')
+export const getRecordsByYearMonth = async (
+  userId: string,
+  date: Date
+): Promise<Record[]> => {
+  const firstDate = dayjs(date).startOf('month')
+  const lastDate = dayjs(date).endOf('month')
 
   const snapshot = await db
     .collection('users')
     .doc(userId)
     .collection('records')
-    // .where('date', '>', '20210101')
+    .where('date', '>=', firstDate.format('YYYYMMDD'))
+    .where('date', '<=', lastDate.format('YYYYMMDD'))
+    .orderBy('date', 'asc')
     .get()
 
-  return snapshot.docs.map((doc) => {
+  const records = snapshot.docs.map((doc) => {
     return snapshotToRecord(doc)
   })
 
-  // const arr: Record[] = []
-  // const min = 5
-  // const max = 500
+  return fillRecordsGap(records, lastDate)
+}
 
-  // for (let i = 1; i < 31; i++) {
-  //   const correct = Math.floor(Math.random() * (max + 1 - min)) + min
-  //   const incorrect = Math.floor(Math.random() * (max + 1 - min)) + min
-  //   arr.push({
-  //     date: i + '日',
-  //     answerCount: correct + incorrect,
-  //     correct,
-  //     incorrect,
-  //   })
-  // }
+const fillRecordsGap = (original: Record[], lastDate: dayjs.Dayjs) => {
+  const records = [...original]
+  for (let i = 1; i <= lastDate.date(); i++) {
+    const ret = records.find((record) => {
+      return Number(record.date.substr(6, 2)) === i
+    })
+    if (!ret) {
+      records.push({
+        date: dayjs(
+          `${lastDate.year()}-${lastDate.month() + 1}-${i}`,
+          'YYYY-MM-D'
+        ).format('YYYYMMDD'),
+        answerCount: 0,
+        correct: 0,
+        incorrect: 0,
+      })
+    }
+  }
 
-  // return arr
+  records.sort((a, b): number => {
+    return a.date > b.date ? 1 : -1
+  })
+
+  return records
 }
 
 const snapshotToRecord = (
