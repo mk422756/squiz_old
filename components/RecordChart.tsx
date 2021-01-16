@@ -56,6 +56,26 @@ const renderLegend = (props) => {
   )
 }
 
+const renderTooltip = (props) => {
+  const {payload, active, label} = props
+  const day = dayjs(label).format('YYYY年M月D日')
+  if (active) {
+    return (
+      <div className="custom-tooltip bg-gray-50 p-2">
+        <p>{day}</p>
+        {payload && payload[0] && (
+          <p className="text-error">不正解:{payload[0].payload.incorrect}</p>
+        )}
+        {payload && payload[0] && (
+          <p className="text-success">正解:{payload[0].payload.correct}</p>
+        )}
+      </div>
+    )
+  }
+
+  return null
+}
+
 export default function RecordChart({records}: {records: Record[]}) {
   return (
     <div className="bg-white">
@@ -72,7 +92,7 @@ export default function RecordChart({records}: {records: Record[]}) {
           <CartesianGrid strokeDasharray="2 5" />
           <XAxis dataKey="date" tick={<CustomizedAxisTick />} />
           <YAxis />
-          <Tooltip />
+          <Tooltip content={renderTooltip} />
           <Area
             type="monotone"
             dataKey="correct"
