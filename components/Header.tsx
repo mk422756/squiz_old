@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {faBook} from '@fortawesome/free-solid-svg-icons'
+import {faHistory} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {connect} from 'react-redux'
 
@@ -12,7 +12,7 @@ const LoginLink = ({userState}) => {
             <Link href={`/users/${userState.uid}/histories`}>
               <a>
                 <FontAwesomeIcon
-                  icon={faBook}
+                  icon={faHistory}
                   color="white"
                   className="fa-lg"
                 />
