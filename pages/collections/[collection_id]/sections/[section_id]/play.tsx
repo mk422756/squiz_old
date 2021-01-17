@@ -13,8 +13,10 @@ import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
 import {connect} from 'react-redux'
+import disableBrowserBackButton from 'disable-browser-back-navigation'
 
 function PlayPage({userState}) {
+  disableBrowserBackButton()
   const [collection, setCollection] = useState({id: '', title: ''})
   const [section, setSection] = useState({
     id: '',

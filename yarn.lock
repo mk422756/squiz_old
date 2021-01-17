@@ -2975,6 +2975,13 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
+disable-browser-back-navigation@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/disable-browser-back-navigation/-/disable-browser-back-navigation-0.1.0.tgz#971c23c02b78dbc7ee01a2b0a6feacbacca71bcd"
+  integrity sha1-lxwjwCt428fuAaKwpv6susynG80=
+  dependencies:
+    prop-types "^15.6.1"
+
 dom-accessibility-api@^0.5.4:
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.5.4.tgz#b06d059cdd4a4ad9a79275f9d414a5c126241166"

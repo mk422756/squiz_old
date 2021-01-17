@@ -10,8 +10,10 @@ import Results from 'models/results'
 import {getHistory} from 'clients/history'
 import {addRecord} from 'clients/record'
 import {connect} from 'react-redux'
+import disableBrowserBackButton from 'disable-browser-back-navigation'
 
 function PlayPage({userState}) {
+  disableBrowserBackButton()
   const [history, setHistory] = useState({} as any)
   const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
