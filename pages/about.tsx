@@ -45,7 +45,7 @@ export default function About() {
           <div className="my-8 text-center">
             <Button>
               <Link href="signup">
-                <a>いますぐ始める</a>
+                <a>新規登録する</a>
               </Link>
             </Button>
           </div>
