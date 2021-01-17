@@ -164,7 +164,7 @@ export default function CollectionPage({
           {collection.imageUrl && (
             <div>
               <img
-                className="object-cover h-40 w-full"
+                className="object-cover max-h-60 w-full"
                 src={collection.imageUrl}
                 alt="問題集イメージ"
               />

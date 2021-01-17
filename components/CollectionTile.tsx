@@ -27,35 +27,39 @@ const CollectionTile = ({collection}: Props) => {
   return (
     <div className="bg-white p-4">
       <div className="flex justify-between">
-        <div className="break-normal mr-1">
-          <Link href={`/collections/${collection.id}`}>
-            <span className="text-lg font-semibold break-all">
-              {collection.title}
+        <div className="break-normal mr-2 w-full">
+          <div>
+            <Link href={`/collections/${collection.id}`}>
+              <span className="text-lg font-semibold break-all">
+                {collection.title}
+              </span>
+            </Link>
+          </div>
+          <div>
+            <span className="font-semibold text-sm">
+              {collection.quizCount}問
             </span>
-          </Link>
+            <span className="pl-4 text-gray-400 text-xs">
+              <Link href={`/users/${collection.creatorId}`}>
+                <a>{user.name}</a>
+              </Link>
+            </span>
+          </div>
         </div>
         {collection.imageUrl && (
-          <div>
+          <div className="h-20 w-32 relative">
             <Link href={`/collections/${collection.id}`}>
               <a>
                 <Image
                   src={collection.imageUrl}
                   alt="問題集イメージ"
-                  width={100}
-                  height={100}
+                  layout="fill"
+                  objectFit="cover"
                 />
               </a>
             </Link>
           </div>
         )}
-      </div>
-      <div>
-        <span className="font-semibold text-sm">{collection.quizCount}問</span>
-        <span className="pl-4 text-gray-400 text-xs">
-          <Link href={`/users/${collection.creatorId}`}>
-            <a>{user.name}</a>
-          </Link>
-        </span>
       </div>
     </div>
   )
