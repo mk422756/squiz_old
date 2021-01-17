@@ -5,6 +5,7 @@ import {getCollection} from 'clients/collection'
 import {getSection} from 'clients/section'
 import {getQuizzes} from 'clients/quiz'
 import {createHistory} from 'clients/history'
+import {addRecord} from 'clients/record'
 import StatusBox from 'components/quiz/StatusBox'
 import ControlBox from 'components/quiz/ControlBox'
 import PlayBox from 'components/quiz/PlayBox'
@@ -63,6 +64,9 @@ function PlayPage({userState}) {
     const result = new Result(currentQuiz, [selectedAnswerIndex])
     setIsCorrectAnswer(result.isCorrect)
     setResults(results.push(result))
+    if (userState.isLogin) {
+      addRecord(userState.uid, result.isCorrect)
+    }
   }
 
   const next = () => {
