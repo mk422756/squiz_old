@@ -60,11 +60,8 @@ function Home({userState}) {
         <div className="mt-2">
           {collections.map((collection) => {
             return (
-              <div className="mt-1">
-                <CollectionTile
-                  key={collection.id}
-                  collection={collection}
-                ></CollectionTile>
+              <div className="mt-1" key={collection.id}>
+                <CollectionTile collection={collection}></CollectionTile>
               </div>
             )
           })}
