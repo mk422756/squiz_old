@@ -3,7 +3,7 @@ import {faHistory} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {connect} from 'react-redux'
 
-const LoginLink = ({userState}) => {
+const LoginLink = ({userState, openSidebar}) => {
   return (
     <div>
       {userState.isLogin ? (
@@ -21,14 +21,12 @@ const LoginLink = ({userState}) => {
           </li>
           <li className="inline-block">
             {userState.user && (
-              <Link href={`/users/${userState.uid}`}>
-                <a>
-                  <img
-                    className="inline-block h-8 w-8 rounded-full bg-white"
-                    src={userState.user.imageUrl}
-                  />
-                </a>
-              </Link>
+              <span onClick={openSidebar}>
+                <img
+                  className="inline-block h-8 w-8 rounded-full bg-white"
+                  src={userState.user.imageUrl}
+                />
+              </span>
             )}
           </li>
         </ul>
@@ -41,7 +39,7 @@ const LoginLink = ({userState}) => {
   )
 }
 
-export function Header({userState}) {
+export function Header({userState, openSidebar}) {
   return (
     <header className="mx-auto flex justify-between bg-primary">
       <div className="my-3 mx-4 float-left">
@@ -51,7 +49,7 @@ export function Header({userState}) {
       </div>
 
       <div className="my-auto mx-4 float-right">
-        <LoginLink userState={userState} />
+        <LoginLink userState={userState} openSidebar={openSidebar} />
       </div>
     </header>
   )
