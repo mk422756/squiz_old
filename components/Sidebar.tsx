@@ -1,7 +1,18 @@
 import Link from 'next/link'
 import {connect} from 'react-redux'
+import {logout} from 'clients/auth'
+import {logout as storeLogout} from 'store/user'
+import {useRouter} from 'next/router'
 
-export function AppSidebar({userState}) {
+export function AppSidebar({userState, storeLogout}) {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    storeLogout()
+    router.push('/')
+  }
+
   if (!userState.isLogin || !userState.user) {
     return null
   }
@@ -24,6 +35,10 @@ export function AppSidebar({userState}) {
             <a>マイページ</a>
           </Link>
         </p>
+        <hr></hr>
+        <p className="my-4 font-semibold">
+          <span onClick={handleLogout}>ログアウト</span>
+        </p>
       </div>
     </div>
   )
@@ -33,4 +48,8 @@ const mapStateToProps = (state) => {
   return {userState: state}
 }
 
-export default connect(mapStateToProps)(AppSidebar)
+const mapDispatchToProps = (dispatch) => {
+  return {storeLogout: () => dispatch(storeLogout())}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppSidebar)

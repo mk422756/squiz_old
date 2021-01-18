@@ -3,20 +3,18 @@ import Layout from 'layouts/layout'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
-import {getCurrentUser, logout} from 'clients/auth'
+import {getCurrentUser} from 'clients/auth'
 import {getCollectionsByUserId} from 'clients/collection'
 import {faTwitter, faFacebookSquare} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import CollectionTile from 'components/CollectionTile'
-import {connect} from 'react-redux'
-import {logout as storeLogout} from 'store/user'
 
 enum SELECT_TYPE {
   DESCRIPTION = 'description',
   COLLECTIONS = 'collections',
 }
 
-function UserPage({storeLogout}) {
+export default function UserPage({storeLogout}) {
   const [user, setUser] = useState({} as any)
   const [collections, setCollections] = useState([])
   const [isMyPage, setIsMyPage] = useState(false)
@@ -49,12 +47,6 @@ function UserPage({storeLogout}) {
       unmounted = true
     }
   }, [uid])
-
-  const handleLogout = () => {
-    logout()
-    storeLogout()
-    router.push('/')
-  }
 
   const selectDisplayType = (event) => {
     switch (event.target.id) {
@@ -121,9 +113,6 @@ function UserPage({storeLogout}) {
                   <a>問題集作成</a>
                 </Link>
               </span>
-              <button className="ml-3" onClick={handleLogout}>
-                ログアウト
-              </button>
             </div>
           )}
         </div>
@@ -173,9 +162,3 @@ function UserPage({storeLogout}) {
     </Layout>
   )
 }
-
-const mapDispatchToProps = (dispatch) => {
-  return {storeLogout: () => dispatch(storeLogout())}
-}
-
-export default connect(null, mapDispatchToProps)(UserPage)
