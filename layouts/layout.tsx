@@ -1,6 +1,6 @@
-import Head from 'next/head'
 import Header from 'components/Header'
 import AppSidebar from 'components/Sidebar'
+import Footer from 'components/Footer'
 import styles from 'styles/Default.module.css'
 import Sidebar from 'react-sidebar'
 import {useState} from 'react'
@@ -21,11 +21,19 @@ function Layout({children}) {
       open={sidebarOpen}
       onSetOpen={onSetSidebarOpen}
       pullRight={true}
-      sidebarClassName="w-64"
-      styles={{sidebar: {background: 'white'}}}
+      sidebarClassName="w-64 bg-white"
+      contentClassName="overflow-y-scroll "
     >
-      <Header openSidebar={openSidebar} />
-      <div className={styles.default}>{children}</div>
+      <div className="flex flex-col h-screen justify-between">
+        <div className="mb-auto">
+          <Header openSidebar={openSidebar} />
+          <div className={styles.default}>{children}</div>
+        </div>
+
+        <div className="mt-16">
+          <Footer></Footer>
+        </div>
+      </div>
     </Sidebar>
   )
 }
