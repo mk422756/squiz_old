@@ -18,7 +18,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/react-hooks": "^5.0.0",
-    "autoprefixer": "^10.2.1",
+    "autoprefixer": "^10.2.3",
     "cuid": "^2.1.8",
     "date-fns": "^2.16.1",
     "dayjs": "^1.10.3",
