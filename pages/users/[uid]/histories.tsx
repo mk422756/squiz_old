@@ -2,18 +2,24 @@ import {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
 import {getHistoriesByUserId} from 'clients/history'
-import {connect} from 'react-redux'
 import {History} from 'models/history'
 import HistoryTile from 'components/HistoryTile'
+import {useRecoilValue} from 'recoil'
+import {userState, userIsLoginState} from 'store/userState'
 
-function HistoriesPage({userState}) {
+export default function HistoriesPage() {
+  const user = useRecoilValue(userState)
+  const isLogin = useRecoilValue(userIsLoginState)
   const [histories, setHistories] = useState<History[]>([])
 
   useEffect(() => {
     let unmounted = false
 
     ;(async () => {
-      const histories = await getHistoriesByUserId(userState.uid)
+      if (!user.id) {
+        return
+      }
+      const histories = await getHistoriesByUserId(user.id)
       if (!unmounted) {
         setHistories(histories)
       }
@@ -22,7 +28,7 @@ function HistoriesPage({userState}) {
     return () => {
       unmounted = true
     }
-  }, [userState])
+  }, [user])
 
   return (
     <Layout>
@@ -30,11 +36,13 @@ function HistoriesPage({userState}) {
         <div className="p-4 bg-white text-center text-lg font-semibold">
           履歴
         </div>
-        <p className="p-4 bg-white">
-          <Link href={`/users/${userState.uid}/records`}>
-            <a className="text-blue-400">学習記録へ</a>
-          </Link>
-        </p>
+        {isLogin && (
+          <p className="p-4 bg-white">
+            <Link href={`/users/${user.id}/records`}>
+              <a className="text-blue-400">学習記録へ</a>
+            </Link>
+          </p>
+        )}
         {histories.map((history) => {
           return (
             <div key={history.id} className="mt-1">
@@ -46,9 +54,3 @@ function HistoriesPage({userState}) {
     </Layout>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(HistoriesPage)

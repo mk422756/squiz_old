@@ -24,7 +24,7 @@ const StatusBox = ({
   const router = useRouter()
 
   const close = () => {
-    if (window.confirm('問題を終了します。よろしいですか？')) {
+    if (confirm('問題を終了します。よろしいですか？')) {
       back()
     }
   }

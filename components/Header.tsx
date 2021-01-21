@@ -1,15 +1,18 @@
 import Link from 'next/link'
 import {faHistory} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {connect} from 'react-redux'
+import {useRecoilValue} from 'recoil'
+import {userState, userIsLoginState} from 'store/userState'
 
-const LoginLink = ({userState, openSidebar}) => {
+const LoginLink = ({openSidebar}) => {
+  const isLogin = useRecoilValue(userIsLoginState)
+  const user = useRecoilValue(userState)
   return (
     <div>
-      {userState.isLogin ? (
+      {isLogin ? (
         <ul>
           <li className="mx-4 inline-block h-6 w-6 align-middle">
-            <Link href={`/users/${userState.uid}/histories`}>
+            <Link href={`/users/${user.id}/histories`}>
               <a>
                 <FontAwesomeIcon
                   icon={faHistory}
@@ -20,14 +23,12 @@ const LoginLink = ({userState, openSidebar}) => {
             </Link>
           </li>
           <li className="inline-block">
-            {userState.user && (
-              <span onClick={openSidebar}>
-                <img
-                  className="inline-block h-8 w-8 rounded-full bg-white"
-                  src={userState.user.imageUrl}
-                />
-              </span>
-            )}
+            <span onClick={openSidebar}>
+              <img
+                className="inline-block h-8 w-8 rounded-full bg-white"
+                src={user.imageUrl}
+              />
+            </span>
           </li>
         </ul>
       ) : (
@@ -39,7 +40,7 @@ const LoginLink = ({userState, openSidebar}) => {
   )
 }
 
-export function Header({userState, openSidebar}) {
+export default function Header({openSidebar}) {
   return (
     <header className="mx-auto flex justify-between bg-primary">
       <div className="my-3 mx-4 float-left">
@@ -49,14 +50,8 @@ export function Header({userState, openSidebar}) {
       </div>
 
       <div className="my-auto mx-4 float-right">
-        <LoginLink userState={userState} openSidebar={openSidebar} />
+        <LoginLink openSidebar={openSidebar} />
       </div>
     </header>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(Header)

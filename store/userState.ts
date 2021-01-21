@@ -1,14 +1,9 @@
 import {atom, selector, DefaultValue} from 'recoil'
 import {User} from 'models/user'
-
-// export type UserState = {
-//   isLogin: boolean
-//   uid: string
-//   user?: User
-// }
+import {isBrowser} from 'utils/browser'
 
 const localStorageEffect = (key) => ({setSelf, onSet}) => {
-  if (typeof window === 'undefined') {
+  if (!isBrowser()) {
     return
   }
   const savedValue = localStorage.getItem(key)

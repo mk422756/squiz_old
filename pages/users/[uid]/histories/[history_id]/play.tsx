@@ -9,11 +9,17 @@ import Result from 'models/result'
 import Results from 'models/results'
 import {getHistory} from 'clients/history'
 import {addRecord} from 'clients/record'
-import {connect} from 'react-redux'
 import disableBrowserBackButton from 'disable-browser-back-navigation'
+import {useRecoilValue} from 'recoil'
+import {userState, userIsLoginState} from 'store/userState'
+import {isBrowser} from 'utils/browser'
 
-function PlayPage({userState}) {
-  disableBrowserBackButton()
+export default function PlayPage() {
+  if (isBrowser()) {
+    disableBrowserBackButton()
+  }
+  const user = useRecoilValue(userState)
+  const isLogin = useRecoilValue(userIsLoginState)
   const [history, setHistory] = useState({} as any)
   const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
@@ -52,8 +58,8 @@ function PlayPage({userState}) {
     const result = new Result(currentQuiz, [selectedAnswerIndex])
     setIsCorrectAnswer(result.isCorrect)
     setResults(results.push(result))
-    if (userState.isLogin) {
-      addRecord(userState.uid, result.isCorrect)
+    if (isLogin) {
+      addRecord(user.id, result.isCorrect)
     }
   }
 
@@ -119,9 +125,3 @@ function PlayPage({userState}) {
     </LayoutQuiz>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(PlayPage)

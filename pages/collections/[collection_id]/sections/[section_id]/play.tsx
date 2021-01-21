@@ -12,11 +12,19 @@ import PlayBox from 'components/quiz/PlayBox'
 import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
-import {connect} from 'react-redux'
 import disableBrowserBackButton from 'disable-browser-back-navigation'
+import {useRecoilValue} from 'recoil'
+import {userState, userIsLoginState} from 'store/userState'
+import {isBrowser} from 'utils/browser'
 
-function PlayPage({userState}) {
-  disableBrowserBackButton()
+export default function PlayPage() {
+  const user = useRecoilValue(userState)
+  const isLogin = useRecoilValue(userIsLoginState)
+
+  if (isBrowser()) {
+    disableBrowserBackButton()
+  }
+
   const [collection, setCollection] = useState({id: '', title: ''})
   const [section, setSection] = useState({
     id: '',
@@ -66,8 +74,8 @@ function PlayPage({userState}) {
     const result = new Result(currentQuiz, [selectedAnswerIndex])
     setIsCorrectAnswer(result.isCorrect)
     setResults(results.push(result))
-    if (userState.isLogin) {
-      addRecord(userState.uid, result.isCorrect)
+    if (isLogin) {
+      addRecord(user.id, result.isCorrect)
     }
   }
 
@@ -80,8 +88,8 @@ function PlayPage({userState}) {
   const finish = () => {
     setIsFinished(true)
 
-    if (userState.isLogin && userState.uid && section && collection) {
-      saveHistories(userState.uid)
+    if (isLogin && user.id && section && collection) {
+      saveHistories(user.id)
     }
   }
 
@@ -148,9 +156,3 @@ function PlayPage({userState}) {
     </LayoutQuiz>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(PlayPage)
