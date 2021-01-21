@@ -5,7 +5,8 @@ import CollectionTile from 'components/CollectionTile'
 import Image from 'next/image'
 import Link from 'next/link'
 import Button from 'components/Button'
-import {connect} from 'react-redux'
+import {useRecoilValue} from 'recoil'
+import {userIsLoginState} from 'store/userState'
 
 const LandingBox = () => {
   return (
@@ -37,8 +38,9 @@ const LandingBox = () => {
   )
 }
 
-function Home({userState}) {
+export default function Home() {
   const [collections, setCollections] = useState([])
+  const isLogin = useRecoilValue(userIsLoginState)
   useEffect(() => {
     let unmounted = false
 
@@ -56,7 +58,7 @@ function Home({userState}) {
   return (
     <Layout>
       <main>
-        {!userState.isLogin && <LandingBox></LandingBox>}
+        {!isLogin && <LandingBox></LandingBox>}
         <div className="mt-2">
           {collections.map((collection) => {
             return (
@@ -70,9 +72,3 @@ function Home({userState}) {
     </Layout>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(Home)

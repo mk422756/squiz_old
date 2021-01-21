@@ -1,19 +1,21 @@
 import Link from 'next/link'
-import {connect} from 'react-redux'
 import {logout} from 'clients/auth'
-import {logout as storeLogout} from 'store/user'
 import {useRouter} from 'next/router'
+import {useRecoilValue} from 'recoil'
+import {userState, userIsLoginState} from 'store/userState'
 
-export function AppSidebar({userState, storeLogout}) {
+export default function AppSidebar() {
   const router = useRouter()
+  const isLogin = useRecoilValue(userIsLoginState)
+  const user = useRecoilValue(userState)
 
   const handleLogout = () => {
     logout()
-    storeLogout()
+    // storeLogout()
     router.push('/')
   }
 
-  if (!userState.isLogin || !userState.user) {
+  if (!isLogin) {
     return null
   }
 
@@ -23,15 +25,15 @@ export function AppSidebar({userState, storeLogout}) {
         <span>
           <img
             className="inline-block h-8 w-8 rounded-full bg-white"
-            src={userState.user.imageUrl}
+            src={user.imageUrl}
           />
-          <span className="ml-2">{userState.user.name}</span>
+          <span className="ml-2">{user.name}</span>
         </span>
       </div>
       <hr></hr>
       <div className="p-4">
         <p className="my-4 font-semibold">
-          <Link href={`/users/${userState.uid}`}>
+          <Link href={`/users/${user.id}`}>
             <a>マイページ</a>
           </Link>
         </p>
@@ -43,13 +45,3 @@ export function AppSidebar({userState, storeLogout}) {
     </div>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {storeLogout: () => dispatch(storeLogout())}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppSidebar)

@@ -17,6 +17,7 @@ import SectionTile from 'components/SectionTile'
 import {TwitterShareButton} from 'react-twitter-embed'
 import {GetStaticProps, InferGetStaticPropsType} from 'next'
 import Head from 'next/head'
+import {isBrowser} from 'utils/browser'
 
 const NewSectonModal = ({
   modalIsOpen,
@@ -203,11 +204,16 @@ export default function CollectionPage({
               お気に入り
             </span> */}
               <span className="inline-block align-bottom">
-                <TwitterShareButton
-                  key={collection.id}
-                  url={`${location.protocol}//${location.host}${location.pathname}`}
-                  options={{text: `#squiz ${collection.title}`, size: 'large'}}
-                />
+                {isBrowser() && (
+                  <TwitterShareButton
+                    key={collection.id}
+                    url={`${location.protocol}//${location.host}${location.pathname}`}
+                    options={{
+                      text: `#squiz ${collection.title}`,
+                      size: 'large',
+                    }}
+                  />
+                )}
               </span>
             </div>
 
@@ -241,7 +247,7 @@ export default function CollectionPage({
                     type="button"
                     className="mx-2 underline text-gray-400"
                     onClick={async () => {
-                      if (window.confirm('This will be deleted')) {
+                      if (confirm('This will be deleted')) {
                         // TODO 削除処理
                         router.push('/collections')
                       }

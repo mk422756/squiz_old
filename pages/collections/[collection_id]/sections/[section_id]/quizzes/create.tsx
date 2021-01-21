@@ -3,17 +3,15 @@ import {useRouter} from 'next/router'
 import Layout from 'layouts/layout'
 import {createQuiz} from 'clients/quiz'
 import QuizEditForm, {Outputs} from 'components/QuizEditForm'
-import {connect} from 'react-redux'
+import {useRecoilValue} from 'recoil'
+import {userState} from 'store/userState'
 
-function CreateQuizPage({userState}) {
+export default function CreateQuizPage() {
+  const user = useRecoilValue(userState)
   const router = useRouter()
   const {collection_id, section_id} = router.query
 
   const create = async (outputs: Outputs) => {
-    if (!userState.uid) {
-      alert('エラーが発生しました。もう一度やり直してください')
-      return
-    }
     await createQuiz(
       outputs.question,
       outputs.answers,
@@ -21,7 +19,7 @@ function CreateQuizPage({userState}) {
       outputs.explanation,
       collection_id as string,
       section_id as string,
-      userState.uid
+      user.id
     )
     router.push(`/collections/${collection_id}/sections/${section_id}`)
   }
@@ -35,9 +33,3 @@ function CreateQuizPage({userState}) {
     </Layout>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {userState: state}
-}
-
-export default connect(mapStateToProps)(CreateQuizPage)
