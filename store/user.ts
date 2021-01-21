@@ -91,10 +91,10 @@ export const setupStore = (): EnhancedStore => {
       getUser(user.uid).then((user) => {
         store.dispatch(setUser(user))
       })
-      console.log('login changed')
+      // console.log('login changed')
     } else {
       store.dispatch(logout())
-      console.log('logout called')
+      // console.log('logout called')
     }
   })
 
