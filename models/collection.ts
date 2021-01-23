@@ -3,6 +3,8 @@ export type Collection = {
   title: string
   description: string
   isPublic: boolean
+  needPayment: boolean
+  price: number
   creatorId: string
   tags: string[]
   imageUrl: string

@@ -28,22 +28,29 @@ export const updateCollection = async (
   description: string,
   creatorId: string,
   isPublic: boolean,
+  needPayment: boolean,
+  price: number,
   tags: string[],
   imageBlob?: Blob
 ) => {
   const imageUrl = imageBlob
     ? await putFile(`collections/${id}/collection_image`, imageBlob)
     : ''
-  await db.collection('collections').doc(id).set({
-    title,
-    description,
-    creatorId,
-    isPublic,
-    tags,
-    imageUrl,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  })
+  await db.collection('collections').doc(id).set(
+    {
+      title,
+      description,
+      creatorId,
+      isPublic,
+      needPayment,
+      price,
+      tags,
+      imageUrl,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {merge: true}
+  )
   return id
 }
 
@@ -98,6 +105,8 @@ const snapshotToCollection = (
     title: data.title || '',
     description: data.description || '',
     isPublic: data.isPublic || false,
+    needPayment: data.needPayment || false,
+    price: data.price || 100,
     creatorId: data.creatorId,
     tags: data.tags || [],
     imageUrl: data.imageUrl || '',
