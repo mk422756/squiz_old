@@ -25,7 +25,7 @@ export default function AppSidebar() {
         <span>
           <img
             className="inline-block h-8 w-8 rounded-full bg-white"
-            src={user.imageUrl}
+            src={user.imageUrl ? user.imageUrl : '/user_avatar.png'}
           />
           <span className="ml-2">{user.name}</span>
         </span>

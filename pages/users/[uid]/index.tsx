@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import Layout from 'layouts/layout'
 import Link from 'next/link'
+import Image from 'next/image'
 import {useRouter} from 'next/router'
 import {getUser} from 'clients/user'
 import {getCurrentUser} from 'clients/auth'
@@ -65,9 +66,11 @@ export default function UserPage({storeLogout}) {
         <div className="bg-white">
           <div className="p-4 flow-root">
             <div className="h-16 w-16 float-left mt-2">
-              <img
+              <Image
                 className="rounded-full bg-white"
-                src={user.imageUrl}
+                width="60"
+                height="60"
+                src={user.imageUrl ? user.imageUrl : '/user_avatar.png'}
                 alt="ユーザーイメージ"
               />
             </div>

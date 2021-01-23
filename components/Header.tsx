@@ -26,7 +26,7 @@ const LoginLink = ({openSidebar}) => {
             <span onClick={openSidebar}>
               <img
                 className="inline-block h-8 w-8 rounded-full bg-white"
-                src={user.imageUrl}
+                src={user.imageUrl ? user.imageUrl : '/user_avatar.png'}
               />
             </span>
           </li>
