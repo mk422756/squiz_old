@@ -2,8 +2,11 @@ import Layout from 'layouts/layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import Button from 'components/Button'
+import {useRecoilValue} from 'recoil'
+import {userIsLoginState} from 'store/userState'
 
 export default function About() {
+  const isLogin = useRecoilValue(userIsLoginState)
   return (
     <Layout>
       <main>
@@ -42,13 +45,23 @@ export default function About() {
               作成した問題集は公開して、他のユーザーに共有することができます。
             </p>
           </div>
-          <div className="my-8 text-center">
-            <Button>
-              <Link href="signup">
-                <a>新規登録する</a>
-              </Link>
-            </Button>
-          </div>
+          {isLogin ? (
+            <div className="my-8 text-center">
+              <Button>
+                <Link href="/">
+                  <a>トップページに戻る</a>
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="my-8 text-center">
+              <Button>
+                <Link href="signup">
+                  <a>新規登録する</a>
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </main>
     </Layout>
