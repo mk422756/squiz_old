@@ -18,6 +18,7 @@ import {TwitterShareButton} from 'react-twitter-embed'
 import {GetStaticProps, InferGetStaticPropsType} from 'next'
 import Head from 'next/head'
 import {isBrowser} from 'utils/browser'
+import Linkify from 'react-linkify'
 
 const NewSectonModal = ({
   modalIsOpen,
@@ -175,9 +176,16 @@ export default function CollectionPage({
             <h1 className="pt-4 text-2xl font-semibold break-words">
               {collection.title}
             </h1>
-            <pre className="pt-8 whitespace-pre-wrap">
-              {collection.description}
-            </pre>
+            <Linkify
+              properties={{
+                target: '_blank',
+                style: {color: 'blue'},
+              }}
+            >
+              <pre className="pt-8 whitespace-pre-wrap">
+                {collection.description}
+              </pre>
+            </Linkify>
 
             <div className="pt-4 text-sm font-semibold">
               合計 {collection.quizCount} 問
