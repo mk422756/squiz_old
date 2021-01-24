@@ -233,7 +233,7 @@ export default function CollectionPage({
                 <a>
                   <img
                     className="inline-block h-6 w-6 rounded-full bg-white"
-                    src={user.imageUrl}
+                    src={user.imageUrl ? user.imageUrl : '/user_avatar.png'}
                   />
                   <span className="ml-1 text-sm font-semibold">
                     {user.name}

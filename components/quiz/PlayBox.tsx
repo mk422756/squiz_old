@@ -1,5 +1,6 @@
 import React from 'react'
 import {Quiz} from 'models/quiz'
+import Linkify from 'react-linkify'
 
 type AnswerBoxProps = {
   answer: string
@@ -108,7 +109,17 @@ const PlayBox = ({
               </div>
             )}
           </div>
-          <pre className="break-words mt-2">{currentQuiz.explanation}</pre>
+          <Linkify
+            properties={{
+              target: '_blank',
+              style: {color: 'blue'},
+            }}
+          >
+            <pre className="mt-2 whitespace-pre-wrap">
+              {currentQuiz.explanation}
+            </pre>
+          </Linkify>
+          {/* <pre className="break-words mt-2">{currentQuiz.explanation}</pre> */}
         </div>
       )}
     </div>

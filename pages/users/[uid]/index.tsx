@@ -9,6 +9,7 @@ import {getCollectionsByUserId} from 'clients/collection'
 import {faTwitter, faFacebookSquare} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import CollectionTile from 'components/CollectionTile'
+import Linkify from 'react-linkify'
 
 enum SELECT_TYPE {
   DESCRIPTION = 'description',
@@ -145,7 +146,16 @@ export default function UserPage({storeLogout}) {
         </div>
         <div>
           {selectedDisplayType === SELECT_TYPE.DESCRIPTION ? (
-            <pre className="p-4 mt-1 bg-white">{user.description}</pre>
+            <Linkify
+              properties={{
+                target: '_blank',
+                style: {color: 'blue'},
+              }}
+            >
+              <pre className="p-4 mt-1 bg-white whitespace-pre-wrap">
+                {user.description}
+              </pre>
+            </Linkify>
           ) : (
             <div>
               {collections.map((collection) => {

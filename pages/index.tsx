@@ -58,7 +58,11 @@ export default function Home() {
   return (
     <Layout>
       <main>
-        {!isLogin && <LandingBox></LandingBox>}
+        {!isLogin && (
+          <div>
+            <LandingBox></LandingBox>
+          </div>
+        )}
         <div className="mt-2">
           {collections.map((collection) => {
             return (

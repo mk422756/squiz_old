@@ -111,7 +111,7 @@ export default function PlayPage() {
   return (
     <LayoutQuiz>
       <main>
-        <div>
+        <div className="mb-20">
           <StatusBox
             quizzes={quizzes}
             collectionTitle={collection.title || ''}
