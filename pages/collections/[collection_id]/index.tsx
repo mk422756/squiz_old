@@ -172,10 +172,13 @@ export default function CollectionPage({
             </div>
           )}
           <div className="p-4 bg-white">
-            <h1 className="text-2xl font-semibold break-words">
+            <h1 className="pt-4 text-2xl font-semibold break-words">
               {collection.title}
             </h1>
-            <pre className="pt-4">{collection.description}</pre>
+            <pre className="pt-8 whitespace-pre-wrap">
+              {collection.description}
+            </pre>
+
             <div className="pt-4 text-sm font-semibold">
               合計 {collection.quizCount} 問
             </div>
