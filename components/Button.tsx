@@ -4,6 +4,7 @@ type ButtonProps = {
   fullWidth?: boolean
   mx?: number
   color?: string
+  disabled?: boolean
 }
 
 const Button = (props: ButtonProps) => {
@@ -16,14 +17,20 @@ const Button = (props: ButtonProps) => {
     className += ` px-8`
   }
 
-  if (props.color === 'gray') {
+  if (props.disabled) {
+    className += ' bg-blue-300 text-white'
+  } else if (props.color === 'gray') {
     className += ' bg-gray-200 hover:bg-gray-300 text-gray-700'
   } else {
     className += ' bg-primary hover:bg-primary-dark text-white'
   }
 
   return (
-    <button onClick={props.onClick} className={className}>
+    <button
+      onClick={props.onClick}
+      className={className}
+      disabled={props.disabled}
+    >
       {props.children}
     </button>
   )

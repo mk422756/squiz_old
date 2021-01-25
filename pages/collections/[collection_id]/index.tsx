@@ -243,8 +243,15 @@ export default function CollectionPage({
             </div>
 
             {collection.needPayment && (
-              <div className="mt-4 text-2xl font-semibold">
-                <span>価格: {collection.price}円</span>
+              <div>
+                <div className="mt-4 text-2xl font-semibold">
+                  <span>価格: {collection.price}円</span>
+                </div>
+                <Button>
+                  <Link href={`/collections/${collection_id}/purchase`}>
+                    <a>購入</a>
+                  </Link>
+                </Button>
               </div>
             )}
 
