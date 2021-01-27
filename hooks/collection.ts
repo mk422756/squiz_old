@@ -12,6 +12,8 @@ export function useCollection(id: string) {
     creatorId: '',
     tags: [],
     quizCount: 0,
+    needPayment: false,
+    price: 0,
     createdAt: new Date().toString(),
     updatedAt: new Date().toString(),
   })

@@ -2,6 +2,7 @@ import {useEffect} from 'react'
 import {useSetRecoilState} from 'recoil'
 import {userState} from 'store/userState'
 import {purchasedCollectionsState} from 'store/purchasedCollectionsState'
+import {loginInfoState} from 'store/loginInfoState'
 import {getUser, getPurchasedCollectionIds} from 'clients/user'
 import firebase from 'lib/firebase'
 const auth = firebase.auth()
@@ -11,6 +12,7 @@ export default function FirebaseAuthRoot({children}) {
   const setPurchasedCollectionsState = useSetRecoilState(
     purchasedCollectionsState
   )
+  const setLoginInfoState = useSetRecoilState(loginInfoState)
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -25,6 +27,7 @@ export default function FirebaseAuthRoot({children}) {
       } else {
         setUserState(null)
         setPurchasedCollectionsState([])
+        setLoginInfoState(null)
         console.log('logout called')
       }
     })

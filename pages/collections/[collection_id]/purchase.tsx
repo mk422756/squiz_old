@@ -13,6 +13,8 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js'
+import {useRecoilValue} from 'recoil'
+import {userIsLoginState} from 'store/userState'
 
 type CheckoutFormProps = {
   uid: string
@@ -26,6 +28,12 @@ const CheckoutForm = ({uid, collectionId, amount}: CheckoutFormProps) => {
   const stripe = useStripe()
   const elements = useElements()
   const router = useRouter()
+
+  // const isLogin = useRecoilValue(userIsLoginState)
+
+  // if (!isLogin) {
+  //   router.push(`/login`)
+  // }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -112,6 +120,8 @@ export default function PurchasePage() {
   const {collection_id} = router.query
   const collection = useCollection(collection_id as string)
   const [user, setUser] = useState({} as any)
+
+  // TODO 購入ユーザーと作者を区別する
 
   useEffect(() => {
     let unmounted = false

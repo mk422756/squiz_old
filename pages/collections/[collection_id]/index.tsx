@@ -19,9 +19,10 @@ import {GetStaticProps, InferGetStaticPropsType} from 'next'
 import Head from 'next/head'
 import {isBrowser} from 'utils/browser'
 import Linkify from 'react-linkify'
-import {useRecoilValue} from 'recoil'
-import {userState} from 'store/userState'
+import {useRecoilValue, useSetRecoilState} from 'recoil'
 import {purchasedCollectionsState} from 'store/purchasedCollectionsState'
+import {userIsLoginState} from 'store/userState'
+import {loginInfoState} from 'store/loginInfoState'
 
 const NewSectonModal = ({
   modalIsOpen,
@@ -103,6 +104,8 @@ export default function CollectionPage({
   const [sections, setSections] = useState([])
   const [user, setUser] = useState({} as any)
 
+  const setLoginInfoState = useSetRecoilState(loginInfoState)
+  const isLogin = useRecoilValue(userIsLoginState)
   const purchasedCollections = useRecoilValue(purchasedCollectionsState)
   const purchasedCollectionInfo = purchasedCollections.find(
     (collection) => collection.collectionId === collection_id
@@ -148,6 +151,17 @@ export default function CollectionPage({
   async function reloadSections() {
     const sections = await getSections(collection_id as string)
     setSections(sections)
+  }
+
+  function goPurchasePage() {
+    if (isLogin) {
+      router.push(`/collections/${collection_id}/purchase`)
+    } else {
+      setLoginInfoState({
+        urlAfterLogin: `/collections/${collection_id}/purchase`,
+      })
+      router.push(`/login`)
+    }
   }
 
   return (
@@ -306,10 +320,9 @@ export default function CollectionPage({
                   <div className="mb-3 text-2xl font-semibold">
                     <span>価格: {collection.price}円</span>
                   </div>
-                  <Button fullWidth={true}>
-                    <Link href={`/collections/${collection_id}/purchase`}>
-                      <a>購入</a>
-                    </Link>
+
+                  <Button fullWidth={true} onClick={goPurchasePage}>
+                    購入
                   </Button>
                 </>
               )}

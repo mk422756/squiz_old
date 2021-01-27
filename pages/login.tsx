@@ -5,6 +5,8 @@ import {emailLogin} from 'clients/auth'
 import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
 import {getErrorMessage} from 'utils/firebaseErrors'
+import {useRecoilState} from 'recoil'
+import {loginInfoState} from 'store/loginInfoState'
 
 export default function Login() {
   const {register, handleSubmit, errors} = useForm()
@@ -12,6 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const router = useRouter()
   const [error, setError] = useState('')
+  const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState)
 
   const changeEmail = (event) => {
     setEmail(event.target.value)
@@ -24,7 +27,13 @@ export default function Login() {
   const onSubmit = async () => {
     try {
       const uid = await emailLogin(email, password)
-      router.push(`/users/${uid}`)
+      if (loginInfo && loginInfo.urlAfterLogin) {
+        console.log(loginInfo)
+        router.push(loginInfo.urlAfterLogin)
+        setLoginInfo(null)
+      } else {
+        router.push(`/users/${uid}`)
+      }
     } catch (e) {
       setError(getErrorMessage(e))
     }
