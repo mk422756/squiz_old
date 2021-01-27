@@ -1,9 +1,9 @@
 import firebase from 'lib/firebase'
 import {User} from 'models/user'
+import {PurchasedCollectionInfo} from 'models/purchasedCollectionInfo'
 import {putFile} from 'utils/firebaseStorage'
 
 const db = firebase.firestore()
-const storage = firebase.storage()
 
 export const createUser = async (uid: string) => {
   await db
@@ -53,4 +53,22 @@ export const getUser = async (uid: string): Promise<User | null> => {
     createdAt: data.createdAt?.toDate() || new Date(),
     updatedAt: data.createdAt?.toDate() || new Date(),
   }
+}
+
+export const getPurchasedCollectionIds = async (
+  uid: string
+): Promise<PurchasedCollectionInfo[]> => {
+  const snapshot = await db
+    .collection('purchased')
+    .where('userId', '==', uid)
+    .get()
+
+  return snapshot.docs.map((doc) => {
+    const data = doc.data()
+    return {
+      id: doc.id,
+      collectionId: data.collectionId || '',
+      purchasedAt: data.createdAt?.toDate() || new Date(),
+    }
+  })
 }

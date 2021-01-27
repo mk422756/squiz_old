@@ -7,11 +7,18 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 type Props = {
   section: Section
   isMySection: boolean
+  needPayment: boolean
+  parchased: boolean
 }
 
-const SectionTile = ({section, isMySection}: Props) => {
+const SectionTile = ({section, isMySection, needPayment, parchased}: Props) => {
+  const bgColor = needPayment && !parchased ? 'bg-gray-200' : 'bg-white'
+
+  const showPlayButton =
+    (section.quizCount > 0 && !needPayment) ||
+    (section.quizCount > 0 && needPayment && parchased)
   return (
-    <div className="border p-4 flex justify-between items-center bg-white">
+    <div className={`border p-4 flex justify-between items-center ${bgColor}`}>
       <div className="w-4/6">
         <p className="font-semibold">{section.title}</p>
         <p className="font-semibold text-sm">{section.quizCount}問</p>
@@ -20,7 +27,7 @@ const SectionTile = ({section, isMySection}: Props) => {
         </p>
       </div>
       <div className="w-2/6">
-        {section.quizCount > 0 && (
+        {showPlayButton && (
           <Link
             href={`/collections/${section.collectionId}/sections/${section.id}/play`}
           >

@@ -19,6 +19,9 @@ import {GetStaticProps, InferGetStaticPropsType} from 'next'
 import Head from 'next/head'
 import {isBrowser} from 'utils/browser'
 import Linkify from 'react-linkify'
+import {useRecoilValue} from 'recoil'
+import {userState} from 'store/userState'
+import {purchasedCollectionsState} from 'store/purchasedCollectionsState'
 
 const NewSectonModal = ({
   modalIsOpen,
@@ -99,6 +102,11 @@ export default function CollectionPage({
   // const collection = useCollection(collection_id as string)
   const [sections, setSections] = useState([])
   const [user, setUser] = useState({} as any)
+
+  const purchasedCollections = useRecoilValue(purchasedCollectionsState)
+  const purchasedCollectionInfo = purchasedCollections.find(
+    (collection) => collection.collectionId === collection_id
+  )
 
   const [modalIsOpen, setIsOpen] = useState(false)
   function openModal() {
@@ -242,19 +250,6 @@ export default function CollectionPage({
               </Link>
             </div>
 
-            {collection.needPayment && (
-              <div>
-                <div className="mt-4 text-2xl font-semibold">
-                  <span>価格: {collection.price}円</span>
-                </div>
-                <Button>
-                  <Link href={`/collections/${collection_id}/purchase`}>
-                    <a>購入</a>
-                  </Link>
-                </Button>
-              </div>
-            )}
-
             {isMyCollection && (
               <div className="pt-4">
                 <div>
@@ -297,11 +292,39 @@ export default function CollectionPage({
             )}
             <div id="modal"></div>
           </div>
+          {collection.needPayment && (
+            <div className="mt-2 p-4 bg-white">
+              {purchasedCollectionInfo ? (
+                <div>
+                  <p className="font-semibold">購入済み</p>
+                  <p className="text-xs text-gray-500">
+                    購入日 {dateToYYYYMMDD(purchasedCollectionInfo.purchasedAt)}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-3 text-2xl font-semibold">
+                    <span>価格: {collection.price}円</span>
+                  </div>
+                  <Button fullWidth={true}>
+                    <Link href={`/collections/${collection_id}/purchase`}>
+                      <a>購入</a>
+                    </Link>
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
           <div>
             <ul className="mt-2">
               {sections.map((section) => (
                 <li key={section.id} className="mt-1">
-                  <SectionTile section={section} isMySection={isMyCollection} />
+                  <SectionTile
+                    section={section}
+                    isMySection={isMyCollection}
+                    needPayment={collection.needPayment}
+                    parchased={!!purchasedCollectionInfo}
+                  />
                 </li>
               ))}
             </ul>
