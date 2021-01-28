@@ -20,7 +20,7 @@ import Head from 'next/head'
 import {isBrowser} from 'utils/browser'
 import Linkify from 'react-linkify'
 import {useRecoilValue, useSetRecoilState} from 'recoil'
-import {purchasedCollectionsState} from 'store/purchasedCollectionsState'
+import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
 import {userIsLoginState} from 'store/userState'
 import {loginInfoState} from 'store/loginInfoState'
 
@@ -106,9 +106,9 @@ export default function CollectionPage({
 
   const setLoginInfoState = useSetRecoilState(loginInfoState)
   const isLogin = useRecoilValue(userIsLoginState)
-  const purchasedCollections = useRecoilValue(purchasedCollectionsState)
-  const purchasedCollectionInfo = purchasedCollections.find(
-    (collection) => collection.collectionId === collection_id
+  const purchasedCollectionsInfo = useRecoilValue(purchasedCollectionsInfoState)
+  const purchasedCollectionInfo = purchasedCollectionsInfo.find(
+    (info) => info.collectionId === collection_id
   )
 
   const [modalIsOpen, setIsOpen] = useState(false)

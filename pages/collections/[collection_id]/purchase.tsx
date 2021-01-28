@@ -14,31 +14,40 @@ import {
   useElements,
 } from '@stripe/react-stripe-js'
 import {useRecoilValue} from 'recoil'
-import {userIsLoginState} from 'store/userState'
+import {userState} from 'store/userState'
+import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
 
 type CheckoutFormProps = {
-  uid: string
   collectionId: string
   amount: number
 }
 
-const CheckoutForm = ({uid, collectionId, amount}: CheckoutFormProps) => {
+const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
+  const purchasedCollectionsInfo = useRecoilValue(purchasedCollectionsInfoState)
+  const alreadyPurchased = !!purchasedCollectionsInfo.find(
+    (info) => info.collectionId === collectionId
+  )
+  const user = useRecoilValue(userState)
   const [error, setError] = useState('')
   const [purchasing, setPurchasing] = useState(false)
   const stripe = useStripe()
   const elements = useElements()
   const router = useRouter()
 
-  // const isLogin = useRecoilValue(userIsLoginState)
-
-  // if (!isLogin) {
-  //   router.push(`/login`)
-  // }
-
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     try {
+      if (!user.id) {
+        alert('ユーザー情報が不正です')
+        return
+      }
+
+      if (alreadyPurchased) {
+        alert('既に購入済みです')
+        return
+      }
+
       setPurchasing(true)
       const {error, paymentMethod} = await stripe.createPaymentMethod({
         type: 'card',
@@ -76,7 +85,7 @@ const CheckoutForm = ({uid, collectionId, amount}: CheckoutFormProps) => {
         collection_id: collectionId,
       }
 
-      await createPayment(uid, data)
+      await createPayment(user.id, data)
       alert('購入が完了しました')
       router.push(`/collections/${collectionId}`)
     } catch (e) {
@@ -119,7 +128,7 @@ export default function PurchasePage() {
   const router = useRouter()
   const {collection_id} = router.query
   const collection = useCollection(collection_id as string)
-  const [user, setUser] = useState({} as any)
+  const [creator, setCreator] = useState({} as any)
 
   // TODO 購入ユーザーと作者を区別する
 
@@ -132,7 +141,7 @@ export default function PurchasePage() {
         }
         const user = await getUser(collection.creatorId)
         if (!unmounted) {
-          setUser(user)
+          setCreator(user)
         }
       }
     })()
@@ -151,13 +160,15 @@ export default function PurchasePage() {
           </h1>
 
           <div className="pt-2">
-            <Link href={`/users/${user.id}`}>
+            <Link href={`/users/${creator.id}`}>
               <a>
                 <img
                   className="inline-block h-6 w-6 rounded-full bg-white"
-                  src={user.imageUrl ? user.imageUrl : '/user_avatar.png'}
+                  src={creator.imageUrl ? creator.imageUrl : '/user_avatar.png'}
                 />
-                <span className="ml-1 text-sm font-semibold">{user.name}</span>
+                <span className="ml-1 text-sm font-semibold">
+                  {creator.name}
+                </span>
               </a>
             </Link>
           </div>
@@ -169,7 +180,6 @@ export default function PurchasePage() {
             <p>カード情報を入力</p>
             <Elements stripe={stripePromise}>
               <CheckoutForm
-                uid={user.id}
                 collectionId={collection_id as string}
                 amount={collection.price}
               />

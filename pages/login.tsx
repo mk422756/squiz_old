@@ -28,7 +28,6 @@ export default function Login() {
     try {
       const uid = await emailLogin(email, password)
       if (loginInfo && loginInfo.urlAfterLogin) {
-        console.log(loginInfo)
         router.push(loginInfo.urlAfterLogin)
         setLoginInfo(null)
       } else {
