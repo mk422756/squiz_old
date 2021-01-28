@@ -99,7 +99,9 @@ export default function CollectionPage() {
               >
                 <a className="underline text-gray-400">問題作成</a>
               </Link>
-              <Link href={`/collections/${section.collectionId}/edit`}>
+              <Link
+                href={`/collections/${section.collectionId}/sections/${section.id}/edit`}
+              >
                 <a className="underline text-gray-400 ml-2">編集</a>
               </Link>
               <button

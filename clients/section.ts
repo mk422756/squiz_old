@@ -25,6 +25,26 @@ export const createSection = async (
   return id
 }
 
+export const updateSection = async (
+  collectionId: string,
+  sectionId: string,
+  title: string
+) => {
+  await db
+    .collection('collections')
+    .doc(collectionId)
+    .collection('sections')
+    .doc(sectionId)
+    .set(
+      {
+        title,
+        collectionId,
+        updatedAt: new Date(),
+      },
+      {merge: true}
+    )
+}
+
 export const deleteSection = async (collectionId: string, id: string) => {
   // セクション内の全てのQuizを削除する
   const batch = db.batch()
