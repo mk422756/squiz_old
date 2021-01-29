@@ -37,6 +37,11 @@ export default function AppSidebar() {
             <a>マイページ</a>
           </Link>
         </p>
+        <p className="my-4 font-semibold">
+          <Link href={`/users/${user.id}/purchased_collections`}>
+            <a>購入済み問題集</a>
+          </Link>
+        </p>
         <hr></hr>
         <p className="my-4 font-semibold">
           <span onClick={handleLogout}>ログアウト</span>

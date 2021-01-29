@@ -1,6 +1,6 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
-import {Collection} from 'models/collection'
+import {Collection, PurchasedCollection} from 'models/collection'
 import {putFile} from 'utils/firebaseStorage'
 
 const db = firebase.firestore()
@@ -68,6 +68,50 @@ export const getCollections = async (): Promise<Collection[]> => {
   return snapshot.docs.map((doc) => {
     return snapshotToCollection(doc)
   })
+}
+
+type CollectionIdAndPurchaseDate = {
+  collectionId: string
+  purchasedAt: Date
+}
+
+export const getPurchasedCollections = async (
+  userId: string
+): Promise<PurchasedCollection[]> => {
+  const purchasedSnapshot = await db
+    .collection('purchased')
+    .where('userId', '==', userId)
+    .get()
+
+  const purchaseInfos: CollectionIdAndPurchaseDate[] = purchasedSnapshot.docs.map(
+    (doc): CollectionIdAndPurchaseDate => {
+      const data = doc.data()
+      return {
+        collectionId: data.collectionId || '',
+        purchasedAt: data.createdAt?.toDate() || new Date(),
+      }
+    }
+  )
+
+  const collections: PurchasedCollection[] = []
+  for (const info of purchaseInfos) {
+    if (!info.collectionId) {
+      continue
+    }
+    const snapshot = await db
+      .collection('collections')
+      .doc(info.collectionId)
+      .get()
+    if (!snapshot.exists) {
+      continue
+    }
+    collections.push({
+      purchasedAt: info.purchasedAt,
+      collection: snapshotToCollection(snapshot),
+    })
+  }
+
+  return collections
 }
 
 export const getCollectionsByTag = async (

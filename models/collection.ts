@@ -9,6 +9,11 @@ export type Collection = {
   tags: string[]
   imageUrl: string
   quizCount: number
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type PurchasedCollection = {
+  collection: Collection
+  purchasedAt: Date
 }

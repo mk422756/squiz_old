@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
-import {getCollection} from 'clients/collection'
-import {Collection} from 'models/collection'
+import {getCollection, getPurchasedCollections} from 'clients/collection'
+import {Collection, PurchasedCollection} from 'models/collection'
 
 export function useCollection(id: string) {
   const [collection, setCollection] = useState<Collection>({
@@ -14,8 +14,8 @@ export function useCollection(id: string) {
     quizCount: 0,
     needPayment: false,
     price: 0,
-    createdAt: new Date().toString(),
-    updatedAt: new Date().toString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   })
   useEffect(() => {
     let unmounted = false
@@ -32,4 +32,23 @@ export function useCollection(id: string) {
   }, [id])
 
   return collection
+}
+
+export function usePurchasedCollections(userId: string) {
+  const [collections, setCollections] = useState<PurchasedCollection[]>([])
+  useEffect(() => {
+    let unmounted = false
+    ;(async () => {
+      const collections = await getPurchasedCollections(userId)
+      if (!unmounted) {
+        setCollections(collections)
+      }
+    })()
+
+    return () => {
+      unmounted = true
+    }
+  }, [userId])
+
+  return collections
 }
