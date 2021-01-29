@@ -12,14 +12,25 @@ type Props = {
 }
 
 const SectionTile = ({section, isMySection, needPayment, parchased}: Props) => {
-  const bgColor = needPayment && !parchased ? 'bg-gray-200' : 'bg-white'
-
+  const bgColor =
+    section.isFree || !needPayment || parchased ? 'bg-white' : 'bg-gray-200'
   const showPlayButton =
+    section.isFree ||
     (section.quizCount > 0 && !needPayment) ||
     (section.quizCount > 0 && needPayment && parchased)
+
+  const showIsFree = needPayment && section.isFree && !parchased
+
   return (
     <div className={`border p-4 flex justify-between items-center ${bgColor}`}>
       <div className="w-4/6">
+        {showIsFree && (
+          <p>
+            <span className="p-1 bg-primary rounded text-white text-xs">
+              無料公開
+            </span>
+          </p>
+        )}
         <p className="font-semibold">{section.title}</p>
         <p className="font-semibold text-sm">{section.quizCount}問</p>
         <p className="text-xs text-gray-400">

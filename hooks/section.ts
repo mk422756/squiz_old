@@ -6,6 +6,7 @@ export function useSection(collectionId: string, sectionId: string) {
   const [section, setSection] = useState<Section>({
     id: '',
     title: '',
+    isFree: false,
     collectionId: '',
     creatorId: '',
     quizCount: 0,

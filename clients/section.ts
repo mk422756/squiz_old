@@ -28,21 +28,20 @@ export const createSection = async (
 export const updateSection = async (
   collectionId: string,
   sectionId: string,
-  title: string
+  title: string,
+  isFree: boolean
 ) => {
   await db
     .collection('collections')
     .doc(collectionId)
     .collection('sections')
     .doc(sectionId)
-    .set(
-      {
-        title,
-        collectionId,
-        updatedAt: new Date(),
-      },
-      {merge: true}
-    )
+    .update({
+      title,
+      collectionId,
+      isFree,
+      updatedAt: new Date(),
+    })
 }
 
 export const deleteSection = async (collectionId: string, id: string) => {
@@ -106,6 +105,7 @@ const snapshotToSection = (
   return {
     id: snapshot.id,
     title: data.title || '',
+    isFree: data.isFree || false,
     collectionId: data.collectionId,
     creatorId: data.creatorId,
     quizCount: data.quizCount || 0,

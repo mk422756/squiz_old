@@ -16,7 +16,7 @@ afterEach(() => {
   container = null
 })
 
-function getSection(): Section {
+function getSection(isFree: boolean): Section {
   return {
     collectionId: 'testCollection',
     createdAt: new Date(),
@@ -25,12 +25,13 @@ function getSection(): Section {
     quizCount: 1,
     title: 'testTitle',
     updatedAt: new Date(),
+    isFree,
   }
 }
 
 describe('SectionTile', () => {
   it('無料の問題集の場合', () => {
-    const section = getSection()
+    const section = getSection(false)
     act(() => {
       ReactDOM.render(
         <SectionTile
@@ -50,7 +51,7 @@ describe('SectionTile', () => {
     )
   })
   it('有料の問題集で未購入の場合', () => {
-    const section = getSection()
+    const section = getSection(false)
     act(() => {
       ReactDOM.render(
         <SectionTile
@@ -69,8 +70,30 @@ describe('SectionTile', () => {
       'href="/collections/testCollection/sections/testId/play"'
     )
   })
-  it('有料の問題集で、購入済みの場合', () => {
-    const section = getSection()
+  it('有料の問題集で未購入の場合(無料公開)', () => {
+    const section = getSection(true)
+    act(() => {
+      ReactDOM.render(
+        <SectionTile
+          section={section}
+          isMySection={false}
+          needPayment={true}
+          parchased={false}
+        />,
+        container
+      )
+    })
+    const div = container.querySelector('div')
+    expect(div.className).toContain('bg-white')
+    // 実行ボタンが表示されている
+    expect(div).toContainHTML(
+      'href="/collections/testCollection/sections/testId/play"'
+    )
+    // 無料公開の文言がある
+    expect(div.innerHTML).toContain('無料公開')
+  })
+  it('有料の問題集で購入済みの場合', () => {
+    const section = getSection(false)
     act(() => {
       ReactDOM.render(
         <SectionTile
@@ -88,5 +111,27 @@ describe('SectionTile', () => {
     expect(div).toContainHTML(
       'href="/collections/testCollection/sections/testId/play"'
     )
+  })
+  it('有料の問題集で購入済みの場合(無料公開)', () => {
+    const section = getSection(false)
+    act(() => {
+      ReactDOM.render(
+        <SectionTile
+          section={section}
+          isMySection={false}
+          needPayment={true}
+          parchased={true}
+        />,
+        container
+      )
+    })
+    const div = container.querySelector('div')
+    expect(div.className).toContain('bg-white')
+    // 実行ボタンが表示されている
+    expect(div).toContainHTML(
+      'href="/collections/testCollection/sections/testId/play"'
+    )
+    // 無料公開の文言がない
+    expect(div.innerHTML).not.toContain('無料公開')
   })
 })

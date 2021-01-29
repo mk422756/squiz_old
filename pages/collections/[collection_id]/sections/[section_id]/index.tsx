@@ -1,50 +1,25 @@
-import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getSection, deleteSection} from 'clients/section'
+import {deleteSection} from 'clients/section'
 import {getQuizzes, deleteQuiz} from 'clients/quiz'
-import {getCurrentUser} from 'clients/auth'
 import {dateToYYYYMMDD} from 'utils/dateUtils'
+import {useSection} from 'hooks/section'
+import {useQuizzes} from 'hooks/quiz'
+import {useRecoilValue} from 'recoil'
+import {userState} from 'store/userState'
 
 export default function CollectionPage() {
-  const [isMySection, setIsMySection] = useState(false)
-  const [section, setSection] = useState({
-    id: '',
-    title: '',
-    collectionId: '',
-    creatorId: '',
-    updatedAt: new Date(),
-  })
-  const [quizzes, setQuizzes] = useState([])
+  const user = useRecoilValue(userState)
+
   const router = useRouter()
   const {collection_id, section_id} = router.query
+  const collectionId = collection_id as string
+  const sectionId = section_id as string
+  const section = useSection(collectionId, sectionId)
+  const [quizzes, setQuizzes] = useQuizzes(collectionId, sectionId)
 
-  useEffect(() => {
-    let unmounted = false
-
-    ;(async () => {
-      if (!section_id || !collection_id) {
-        return
-      }
-      const [section, quizzes] = await Promise.all([
-        getSection(collection_id as string, section_id as string),
-        getQuizzes(collection_id as string, section_id as string),
-      ])
-      const currentUser = getCurrentUser()
-      if (!unmounted) {
-        setSection(section)
-        setQuizzes(quizzes)
-        if (section.creatorId === currentUser?.uid) {
-          setIsMySection(true)
-        }
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [collection_id, section_id])
+  const isMySection = user && user.id === section.creatorId
 
   async function _deleteSection() {
     if (
@@ -91,6 +66,12 @@ export default function CollectionPage() {
             {/* TODO セクション更新の最新を取得する */}
             最終更新日 {dateToYYYYMMDD(section.updatedAt)}
           </div>
+
+          {section.isFree && (
+            <div className="mt-4 text-red-400 font-semibold">
+              無料公開セクション
+            </div>
+          )}
 
           {isMySection && (
             <div className="pt-4">
