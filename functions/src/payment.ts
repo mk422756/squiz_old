@@ -88,3 +88,39 @@ function userFacingMessage(error: any) {
     ? error.message
     : 'An error occurred, developers have been alerted'
 }
+
+/**
+ * When adding the payment method ID on the client,
+ * this function is triggered to retrieve the payment method details.
+ */
+exports.addPaymentMethodDetails = functions.firestore
+  .document('/users/{userId}/payment_methods/{pushId}')
+  .onCreate(async (snap, context) => {
+    try {
+      const paymentMethodId = snap.data().id
+      const paymentMethod = await stripe.paymentMethods.retrieve(
+        paymentMethodId
+      )
+      await snap.ref.set(paymentMethod)
+      // Create a new SetupIntent so the customer can add a new method next time.
+      const intent = await stripe.setupIntents.create({
+        customer: `${paymentMethod.customer}`,
+      })
+
+      await firestore
+        .collection('users')
+        .doc(context.params.userId)
+        .collection('secrets')
+        .doc('stripe')
+        .set(
+          {
+            setup_secret: intent.client_secret,
+          },
+          {merge: true}
+        )
+      return
+    } catch (error) {
+      await snap.ref.set({error: userFacingMessage(error)}, {merge: true})
+      // await reportError(error, {user: context.params.userId})
+    }
+  })

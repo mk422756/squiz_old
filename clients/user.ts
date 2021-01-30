@@ -1,5 +1,6 @@
 import firebase from 'lib/firebase'
 import {User} from 'models/user'
+import {PaymentSecret} from 'models/paymentSecret'
 import {PurchasedCollectionInfo} from 'models/purchasedCollectionInfo'
 import {putFile} from 'utils/firebaseStorage'
 
@@ -37,6 +38,17 @@ export const updateUser = async (
   )
 }
 
+export const createPaymentMethod = async (
+  uid: string,
+  paymentMethodId: string
+) => {
+  await db
+    .collection('users')
+    .doc(uid)
+    .collection('payment_methods')
+    .add({id: paymentMethodId})
+}
+
 export const getUser = async (uid: string): Promise<User | null> => {
   const ret = await db.collection('users').doc(uid).get()
   if (!ret.exists) {
@@ -71,4 +83,25 @@ export const getPurchasedCollectionIds = async (
       purchasedAt: data.createdAt?.toDate() || new Date(),
     }
   })
+}
+
+export const getPaymentSecret = async (
+  uid: string
+): Promise<PaymentSecret | null> => {
+  const snapshot = await db
+    .collection('users')
+    .doc(uid)
+    .collection('secrets')
+    .doc('stripe')
+    .get()
+
+  if (!snapshot.exists) {
+    return null
+  }
+
+  const data = snapshot.data()
+  return {
+    customerId: data.customer_id,
+    setupSecret: data.setup_secret,
+  }
 }

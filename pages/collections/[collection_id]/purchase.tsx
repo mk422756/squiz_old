@@ -2,9 +2,14 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getUser} from 'clients/user'
+import {
+  getUser,
+  createPaymentMethod,
+  getPurchasedCollectionIds,
+} from 'clients/user'
 import Button from 'components/Button'
 import {useCollection} from 'hooks/collection'
+import {usePaymentSecret} from 'hooks/user'
 import {createPayment} from 'clients/payment'
 import {loadStripe} from '@stripe/stripe-js'
 import {
@@ -13,7 +18,7 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js'
-import {useRecoilValue} from 'recoil'
+import {useRecoilValue, useRecoilState} from 'recoil'
 import {userState} from 'store/userState'
 import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
 
@@ -22,17 +27,67 @@ type CheckoutFormProps = {
   amount: number
 }
 
+type PaymentMethod = {
+  id: string
+  error: string
+}
+
 const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
-  const purchasedCollectionsInfo = useRecoilValue(purchasedCollectionsInfoState)
+  const [
+    purchasedCollectionsInfo,
+    setPurchasedCollectionsInfo,
+  ] = useRecoilState(purchasedCollectionsInfoState)
   const alreadyPurchased = !!purchasedCollectionsInfo.find(
     (info) => info.collectionId === collectionId
   )
   const user = useRecoilValue(userState)
+  const secret = usePaymentSecret(user?.id)
   const [error, setError] = useState('')
   const [purchasing, setPurchasing] = useState(false)
   const stripe = useStripe()
   const elements = useElements()
   const router = useRouter()
+  const [isSaveCreditInfo, setIsSaveCreditInfo] = useState(false)
+
+  const changeSaveCreditInfo = (event) => {
+    setIsSaveCreditInfo(event.target.checked)
+  }
+
+  const saveCreditInfo = async (): Promise<PaymentMethod> => {
+    const {setupIntent, error} = await stripe.confirmCardSetup(
+      secret.setupSecret,
+      {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      }
+    )
+    if (error) {
+      return {id: '', error: error.message}
+    }
+
+    await createPaymentMethod(user.id, setupIntent.payment_method)
+    return {id: setupIntent.payment_method, error: ''}
+  }
+
+  const notSaveCreditInfo = async (): Promise<PaymentMethod> => {
+    const {error, paymentMethod} = await stripe.createPaymentMethod({
+      type: 'card',
+      card: elements.getElement(CardElement),
+    })
+
+    if (error) {
+      return {id: '', error: error.message}
+    }
+
+    return {id: paymentMethod.id, error: ''}
+  }
+
+  const updatePurchasedCollectionsInfoState = async () => {
+    // TODO 購入情報のコレクションが非同期で更新されるため、直接ストアを更新する
+    const infos = await getPurchasedCollectionIds(user.id)
+    setPurchasedCollectionsInfo(infos)
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -49,29 +104,20 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       }
 
       setPurchasing(true)
-      const {error, paymentMethod} = await stripe.createPaymentMethod({
-        type: 'card',
-        card: elements.getElement(CardElement),
-      })
 
-      console.log(error)
+      let paymentMethod: PaymentMethod = {id: '', error: ''}
+      if (isSaveCreditInfo) {
+        paymentMethod = await saveCreditInfo()
+      } else {
+        paymentMethod = await notSaveCreditInfo()
+      }
 
-      if (error) {
-        setError(error.message)
+      if (paymentMethod.error) {
+        setError(paymentMethod.error)
         setPurchasing(false)
         return
-      } else {
-        // TODO 支払い方法の保存
-        // const {setupIntent, error} = await stripe.confirmCardSetup(
-        //   'seti_xxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxx',
-        //   {
-        //     payment_method: {
-        //       card: elements.getElement(CardElement),
-        //     },
-        //   }
-        // )
-        setError('')
       }
+      setError('')
 
       if (!confirm('購入しますがよろしいですか？')) {
         return
@@ -86,6 +132,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       }
 
       await createPayment(user.id, data)
+      await updatePurchasedCollectionsInfoState()
       alert('購入が完了しました')
       router.push(`/collections/${collectionId}`)
     } catch (e) {
@@ -109,13 +156,23 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         }}
       />
       {error && <p className="text-red-600 mt-2">{error}</p>}
-      <div className="mt-4">
+      <div className="mt-2">
+        <label>
+          <input
+            type="checkbox"
+            onChange={changeSaveCreditInfo}
+            checked={isSaveCreditInfo}
+          />
+          <span className="text-gray-400">カード情報をStripeに保存する</span>
+        </label>
+      </div>
+      <div className="mt-10">
         <Button
           onClick={handleSubmit}
           disabled={!stripe || purchasing}
           fullWidth={true}
         >
-          Pay
+          購入
         </Button>
       </div>
     </form>
@@ -129,8 +186,6 @@ export default function PurchasePage() {
   const {collection_id} = router.query
   const collection = useCollection(collection_id as string)
   const [creator, setCreator] = useState({} as any)
-
-  // TODO 購入ユーザーと作者を区別する
 
   useEffect(() => {
     let unmounted = false
@@ -173,11 +228,19 @@ export default function PurchasePage() {
             </Link>
           </div>
 
-          <div className="mt-4 text-2xl font-semibold">
+          <div className="mt-8 text-3xl font-semibold">
             <span>支払額: {collection.price}円</span>
           </div>
-          <div className="mt-4">
-            <p>カード情報を入力</p>
+          <div className="mt-8 text-gray-400 text-sm ">
+            クレジットカード決済は、
+            <a className="text-primary" href="https://stripe.com/jp">
+              Stripe
+            </a>
+            を利用しています。 <br></br>
+            クレジットカード情報は当サービスでは保持せず、決済代行会社であるStripe社で安全に管理されます。
+          </div>
+          <div className="mt-8">
+            <p className="text-lg">カード情報を入力</p>
             <Elements stripe={stripePromise}>
               <CheckoutForm
                 collectionId={collection_id as string}
