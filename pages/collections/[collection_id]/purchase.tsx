@@ -2,15 +2,11 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {
-  getUser,
-  createPaymentMethod,
-  getPurchasedCollectionIds,
-} from 'clients/user'
+import {getUser, getPurchasedCollectionIds} from 'clients/user'
 import Button from 'components/Button'
 import {useCollection} from 'hooks/collection'
 import {usePaymentSecret} from 'hooks/user'
-import {createPayment} from 'clients/payment'
+import {createPayment, createPaymentMethod} from 'clients/payment'
 import {loadStripe} from '@stripe/stripe-js'
 import {
   CardElement,
@@ -66,7 +62,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       return {id: '', error: error.message}
     }
 
-    await createPaymentMethod(user.id, setupIntent.payment_method)
+    await createPaymentMethod(setupIntent.payment_method)
     return {id: setupIntent.payment_method, error: ''}
   }
 
@@ -84,7 +80,6 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
   }
 
   const updatePurchasedCollectionsInfoState = async () => {
-    // TODO 購入情報のコレクションが非同期で更新されるため、直接ストアを更新する
     const infos = await getPurchasedCollectionIds(user.id)
     setPurchasedCollectionsInfo(infos)
   }
@@ -131,7 +126,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         collection_id: collectionId,
       }
 
-      await createPayment(user.id, data)
+      await createPayment(data)
       await updatePurchasedCollectionsInfoState()
       alert('購入が完了しました')
       router.push(`/collections/${collectionId}`)

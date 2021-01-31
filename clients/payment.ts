@@ -1,6 +1,7 @@
 import firebase from 'lib/firebase'
+import cuid from 'cuid'
 
-const db = firebase.firestore()
+const functions = firebase.functions()
 
 type PaymentData = {
   payment_method: string
@@ -10,10 +11,16 @@ type PaymentData = {
   collection_id: string
 }
 
-export const createPayment = async (uid: string, data: PaymentData) => {
-  await db
-    .collection('users')
-    .doc(uid)
-    .collection('payments')
-    .add({...data, created_at: new Date()})
+export const createPayment = async (data: PaymentData) => {
+  const id = cuid()
+  const createPayment = functions.httpsCallable('payment-createStripePayment')
+  await createPayment({...data, id})
+}
+
+export const createPaymentMethod = async (paymentMethodId: string) => {
+  const id = cuid()
+  const createPaymentMethod = functions.httpsCallable(
+    'payment-createStripePaymentMethod'
+  )
+  await createPaymentMethod({id, paymentMethodId})
 }

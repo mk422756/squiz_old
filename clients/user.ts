@@ -38,17 +38,6 @@ export const updateUser = async (
   )
 }
 
-export const createPaymentMethod = async (
-  uid: string,
-  paymentMethodId: string
-) => {
-  await db
-    .collection('users')
-    .doc(uid)
-    .collection('payment_methods')
-    .add({id: paymentMethodId})
-}
-
 export const getUser = async (uid: string): Promise<User | null> => {
   const ret = await db.collection('users').doc(uid).get()
   if (!ret.exists) {
