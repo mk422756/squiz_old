@@ -5,7 +5,7 @@ import Layout from 'layouts/layout'
 import {getUser, getPurchasedCollectionIds} from 'clients/user'
 import Button from 'components/Button'
 import {useCollection} from 'hooks/collection'
-import {usePaymentSecret} from 'hooks/user'
+import {useUser, usePaymentSecret} from 'hooks/user'
 import {createPayment, createPaymentMethod} from 'clients/payment'
 import {loadStripe} from '@stripe/stripe-js'
 import {
@@ -180,26 +180,7 @@ export default function PurchasePage() {
   const router = useRouter()
   const {collection_id} = router.query
   const collection = useCollection(collection_id as string)
-  const [creator, setCreator] = useState({} as any)
-
-  useEffect(() => {
-    let unmounted = false
-    ;(async () => {
-      if (!unmounted) {
-        if (!collection?.creatorId) {
-          return
-        }
-        const user = await getUser(collection.creatorId)
-        if (!unmounted) {
-          setCreator(user)
-        }
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [collection])
+  const creator = useUser(collection?.creatorId)
 
   return (
     <Layout>

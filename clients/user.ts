@@ -39,6 +39,9 @@ export const updateUser = async (
 }
 
 export const getUser = async (uid: string): Promise<User | null> => {
+  if (!uid) {
+    return
+  }
   const ret = await db.collection('users').doc(uid).get()
   if (!ret.exists) {
     return
