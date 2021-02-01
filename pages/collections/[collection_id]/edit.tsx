@@ -23,8 +23,8 @@ export default function CollectionEditPage() {
   const user = useRecoilValue(userState)
 
   const [tag, setTag] = useState('')
-  const [tags, setTags] = useState([])
-  const [imageBlob, setImageBlob] = useState<Blob>(null)
+  const [tags, setTags] = useState<string[]>([])
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null)
   const router = useRouter()
   const {collection_id} = router.query
   const collection = useCollection(collection_id as string)
@@ -53,7 +53,7 @@ export default function CollectionEditPage() {
     }
   }, [collection])
 
-  const onChangeTag = (event) => {
+  const onChangeTag = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTag(event.target.value)
   }
 
@@ -65,18 +65,18 @@ export default function CollectionEditPage() {
     setTag('')
   }
 
-  const onClickDeteteTags = (event) => {
+  const onClickDeteteTags = (event: React.ChangeEvent<any>) => {
     tags.splice(event.target.id, 1)
     setTags([...tags])
   }
 
-  const back = (event) => {
+  const back = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     router.push(`/collections/${collection_id as string}`)
   }
 
   const update = async (data: FormValues) => {
-    if (!user.id) {
+    if (!user) {
       return
     }
     await updateCollection(
@@ -88,7 +88,7 @@ export default function CollectionEditPage() {
       data.needPayment === 'true',
       Number(data.price) || 100,
       tags,
-      imageBlob
+      imageBlob || undefined
     )
     router.push(`/collections/${collection_id as string}`)
   }

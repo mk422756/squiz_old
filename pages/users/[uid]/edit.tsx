@@ -2,34 +2,39 @@ import {useState, useEffect} from 'react'
 import Layout from 'layouts/layout'
 import Button from 'components/Button'
 import {useRouter} from 'next/router'
-import {getUser, updateUser} from 'clients/user'
+import {updateUser} from 'clients/user'
 import {getCurrentUser} from 'clients/auth'
 import {useForm} from 'react-hook-form'
 import ImageCrop from 'components/ImageCrop'
+import {useUser} from 'hooks/user'
 
 export default function CreateCollectionPage() {
   const {register, handleSubmit, errors} = useForm()
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [twitterId, setTwitterId] = useState('')
-  const [facebookId, setFacebookId] = useState('')
-  const [imageBlob, setImageBlob] = useState<Blob>(null)
   const router = useRouter()
   const {uid} = router.query
+  const user = useUser(uid as string)
+  if (!user) {
+    return <div>now loading</div>
+  }
+  const [name, setName] = useState<string>(user.name)
+  const [description, setDescription] = useState<string>(user.description || '')
+  const [twitterId, setTwitterId] = useState<string>(user.twitterId || '')
+  const [facebookId, setFacebookId] = useState<string>(user.facebookId || '')
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null)
 
-  const changeName = (event) => {
+  const changeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
   }
 
-  const changeDescription = (event) => {
+  const changeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value)
   }
 
-  const changeTwitterId = (event) => {
+  const changeTwitterId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTwitterId(event.target.value)
   }
 
-  const changeFacebookId = (event) => {
+  const changeFacebookId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFacebookId(event.target.value)
   }
 
@@ -45,28 +50,28 @@ export default function CreateCollectionPage() {
       description,
       twitterId,
       facebookId,
-      imageBlob
+      imageBlob || undefined
     )
     router.push(`/users/${user.uid}`)
   }
 
-  useEffect(() => {
-    let unmounted = false
+  // useEffect(() => {
+  //   let unmounted = false
 
-    ;(async () => {
-      const user = await getUser(uid as string)
-      if (!unmounted) {
-        setName(user.name)
-        setDescription(user.description || '')
-        setTwitterId(user.twitterId || '')
-        setFacebookId(user.facebookId || '')
-      }
-    })()
+  //   ;(async () => {
+  //     const user = await getUser(uid as string)
+  //     if (!unmounted) {
+  //       setName(user.name)
+  //       setDescription(user.description || '')
+  //       setTwitterId(user.twitterId || '')
+  //       setFacebookId(user.facebookId || '')
+  //     }
+  //   })()
 
-    return () => {
-      unmounted = true
-    }
-  }, [uid])
+  //   return () => {
+  //     unmounted = true
+  //   }
+  // }, [uid])
 
   return (
     <Layout>
@@ -103,7 +108,7 @@ export default function CreateCollectionPage() {
             name="description"
             className="p-2 border w-full"
             rows={4}
-            onChange={changeDescription}
+            onChange={changeDescription as any}
             value={description}
             ref={register({
               maxLength: {

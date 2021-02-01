@@ -1,29 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {Collection} from 'models/collection'
-import {useState, useEffect} from 'react'
-import {getUser} from 'clients/user'
+import {useUser} from 'hooks/user'
 
 type Props = {
   collection: Collection
 }
 
 const CollectionTile = ({collection}: Props) => {
-  const [user, setUser] = useState({name: ''})
-  useEffect(() => {
-    let unmounted = false
+  const user = useUser(collection.creatorId)
 
-    ;(async () => {
-      const user = await getUser(collection.creatorId)
-      if (!unmounted) {
-        setUser(user)
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [])
   return (
     <div className="bg-white p-4">
       <div className="flex justify-between">

@@ -51,7 +51,7 @@ type PlayBoxProps = {
   isCorrectAnswer: boolean
   selectedAnswerIndex: number
   finish: () => void
-  setSelectedAnswerIndex: (number) => void
+  setSelectedAnswerIndex: (number: number) => void
 }
 
 const PlayBox = ({
@@ -112,7 +112,7 @@ const PlayBox = ({
           <Linkify
             properties={{
               target: '_blank',
-              style: {color: 'blue'},
+              style: {color: 'red', fontWeight: 'bold'},
             }}
           >
             <pre className="mt-2 whitespace-pre-wrap">

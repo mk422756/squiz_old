@@ -14,17 +14,21 @@ export default function Signup() {
   const router = useRouter()
   const [error, setError] = useState('')
 
-  const changeEmail = (event) => {
+  const changeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value)
   }
 
-  const changePassword = (event) => {
+  const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
   }
 
   const onSubmit = async () => {
     try {
       const uid = await emailSignup(email, password)
+      if (!uid) {
+        setError('新規登録に失敗しました')
+        return
+      }
       await createUser(uid)
       router.push(`/users/${uid}`)
     } catch (e) {

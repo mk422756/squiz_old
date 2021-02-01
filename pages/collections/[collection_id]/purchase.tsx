@@ -25,7 +25,7 @@ type CheckoutFormProps = {
 
 type PaymentMethod = {
   id: string
-  error: string
+  error: string | undefined
 }
 
 const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
@@ -37,7 +37,10 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
     (info) => info.collectionId === collectionId
   )
   const user = useRecoilValue(userState)
-  const secret = usePaymentSecret(user?.id)
+  if (!user) {
+    return <div>now loading</div>
+  }
+  const secret = usePaymentSecret(user.id)
   const [error, setError] = useState('')
   const [purchasing, setPurchasing] = useState(false)
   const stripe = useStripe()
@@ -45,16 +48,23 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
   const router = useRouter()
   const [isSaveCreditInfo, setIsSaveCreditInfo] = useState(false)
 
-  const changeSaveCreditInfo = (event) => {
-    setIsSaveCreditInfo(event.target.checked)
+  const changeSaveCreditInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsSaveCreditInfo(event?.target?.checked)
   }
 
-  const saveCreditInfo = async (): Promise<PaymentMethod> => {
+  const saveCreditInfo = async (): Promise<PaymentMethod | null> => {
+    if (!stripe || !elements) {
+      return null
+    }
+    const card = elements.getElement(CardElement)
+    if (!card) {
+      return null
+    }
     const {setupIntent, error} = await stripe.confirmCardSetup(
       secret.setupSecret,
       {
         payment_method: {
-          card: elements.getElement(CardElement),
+          card,
         },
       }
     )
@@ -62,15 +72,32 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       return {id: '', error: error.message}
     }
 
-    await createPaymentMethod(setupIntent.payment_method)
-    return {id: setupIntent.payment_method, error: ''}
+    const paymentMethod = setupIntent?.payment_method
+    if (!paymentMethod) {
+      return null
+    }
+
+    await createPaymentMethod(paymentMethod)
+    return {id: paymentMethod, error: ''}
   }
 
-  const notSaveCreditInfo = async (): Promise<PaymentMethod> => {
+  const notSaveCreditInfo = async (): Promise<PaymentMethod | null> => {
+    if (!stripe || !elements) {
+      return null
+    }
+
+    const card = elements.getElement(CardElement)
+    if (!card) {
+      return null
+    }
     const {error, paymentMethod} = await stripe.createPaymentMethod({
       type: 'card',
-      card: elements.getElement(CardElement),
+      card,
     })
+
+    if (!paymentMethod) {
+      return null
+    }
 
     if (error) {
       return {id: '', error: error.message}
@@ -84,7 +111,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
     setPurchasedCollectionsInfo(infos)
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
 
     try {
@@ -100,11 +127,15 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
 
       setPurchasing(true)
 
-      let paymentMethod: PaymentMethod = {id: '', error: ''}
+      let paymentMethod = null
       if (isSaveCreditInfo) {
         paymentMethod = await saveCreditInfo()
       } else {
         paymentMethod = await notSaveCreditInfo()
+      }
+
+      if (!paymentMethod) {
+        return
       }
 
       if (paymentMethod.error) {
@@ -174,7 +205,9 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
   )
 }
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ''
+)
 
 export default function PurchasePage() {
   const router = useRouter()

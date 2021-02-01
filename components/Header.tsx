@@ -4,12 +4,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {useRecoilValue} from 'recoil'
 import {userState, userIsLoginState} from 'store/userState'
 
-const LoginLink = ({openSidebar}) => {
+const LoginLink = ({openSidebar}: any) => {
   const isLogin = useRecoilValue(userIsLoginState)
   const user = useRecoilValue(userState)
   return (
     <div>
-      {isLogin ? (
+      {isLogin && user ? (
         <ul>
           <li className="mx-4 inline-block h-6 w-6 align-middle">
             <Link href={`/users/${user.id}/histories`}>
@@ -40,7 +40,7 @@ const LoginLink = ({openSidebar}) => {
   )
 }
 
-export default function Header({openSidebar}) {
+export default function Header({openSidebar}: any) {
   return (
     <header className="mx-auto flex justify-between bg-primary">
       <div className="my-3 mx-4 float-left">

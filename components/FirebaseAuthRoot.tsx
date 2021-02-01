@@ -7,7 +7,7 @@ import {getUser, getPurchasedCollectionIds} from 'clients/user'
 import firebase from 'lib/firebase'
 const auth = firebase.auth()
 
-export default function FirebaseAuthRoot({children}) {
+export default function FirebaseAuthRoot({children}: any) {
   const setUserState = useSetRecoilState(userState)
   const setPurchasedCollectionsInfoState = useSetRecoilState(
     purchasedCollectionsInfoState
@@ -18,7 +18,9 @@ export default function FirebaseAuthRoot({children}) {
     auth.onAuthStateChanged((user) => {
       if (user) {
         getUser(user.uid).then((user) => {
-          setUserState(user)
+          if (user) {
+            setUserState(user)
+          }
         })
         getPurchasedCollectionIds(user.uid).then((infos) => {
           setPurchasedCollectionsInfoState(infos)

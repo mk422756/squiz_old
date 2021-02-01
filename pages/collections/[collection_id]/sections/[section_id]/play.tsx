@@ -1,9 +1,6 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import {useRouter} from 'next/router'
 import LayoutQuiz from 'layouts/layout_quiz'
-import {getCollection} from 'clients/collection'
-import {getSection} from 'clients/section'
-import {getQuizzes} from 'clients/quiz'
 import {createHistory} from 'clients/history'
 import {addRecord} from 'clients/record'
 import StatusBox from 'components/quiz/StatusBox'
@@ -16,6 +13,9 @@ import disableBrowserBackButton from 'disable-browser-back-navigation'
 import {useRecoilValue} from 'recoil'
 import {userState, userIsLoginState} from 'store/userState'
 import {isBrowser} from 'utils/browser'
+import {useQuizzes} from 'hooks/quiz'
+import {useSection} from 'hooks/section'
+import {useCollection} from 'hooks/collection'
 
 export default function PlayPage() {
   const user = useRecoilValue(userState)
@@ -25,15 +25,6 @@ export default function PlayPage() {
     disableBrowserBackButton()
   }
 
-  const [collection, setCollection] = useState({id: '', title: ''})
-  const [section, setSection] = useState({
-    id: '',
-    title: '',
-    collectionId: '',
-    creatorId: '',
-    updatedAt: new Date(),
-  })
-  const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [isAnswered, setIsAnswered] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
@@ -43,31 +34,14 @@ export default function PlayPage() {
   const router = useRouter()
 
   const {collection_id, section_id} = router.query
+  const collection = useCollection(collection_id as string)
+  const section = useSection(collection_id as string, section_id as string)
+  const [quizzes] = useQuizzes(collection_id as string, section_id as string)
   const currentQuiz = quizzes[currentQuizIndex]
 
-  useEffect(() => {
-    let unmounted = false
-
-    ;(async () => {
-      if (!collection_id || !section_id) {
-        return
-      }
-      const [collection, section, quizzes] = await Promise.all([
-        getCollection(collection_id as string),
-        getSection(collection_id as string, section_id as string),
-        getQuizzes(collection_id as string, section_id as string),
-      ])
-      if (!unmounted) {
-        setCollection(collection)
-        setSection(section)
-        setQuizzes(quizzes)
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [collection_id, section_id])
+  if (!user) {
+    return <div>now loading</div>
+  }
 
   const answer = () => {
     setIsAnswered(true)

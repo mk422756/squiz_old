@@ -32,12 +32,12 @@ export default function CollectionPage() {
     }
   }
 
-  async function _deleteQuiz(e) {
+  async function _deleteQuiz(event: React.ChangeEvent<HTMLInputElement>) {
     if (confirm('問題を削除します。よろしいですか？')) {
       await deleteQuiz(
         collection_id as string,
         section_id as string,
-        e.target.id
+        event.target.id
       )
       await reloadQuiz()
     }
@@ -94,7 +94,6 @@ export default function CollectionPage() {
               </button>
             </div>
           )}
-          <div id="modal"></div>
         </div>
         <div className="p-4 mt-2 bg-white">
           <p className="font-semibold">問題一覧</p>
@@ -113,7 +112,7 @@ export default function CollectionPage() {
                 <span
                   className="float-right"
                   id={quiz.id}
-                  onClick={_deleteQuiz}
+                  onClick={_deleteQuiz as any}
                 >
                   削除
                 </span>

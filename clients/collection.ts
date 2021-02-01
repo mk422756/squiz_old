@@ -2,6 +2,7 @@ import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import {Collection, PurchasedCollection} from 'models/collection'
 import {putFile} from 'utils/firebaseStorage'
+import {nullableArray2NonullableArray} from 'utils/array'
 
 const db = firebase.firestore()
 
@@ -57,7 +58,7 @@ export const updateCollection = async (
 export const getCollection = async (id: string): Promise<Collection | null> => {
   const snapshot = await db.collection('collections').doc(id).get()
   if (!snapshot.exists) {
-    return
+    return null
   }
   return snapshotToCollection(snapshot)
 }
@@ -65,9 +66,11 @@ export const getCollection = async (id: string): Promise<Collection | null> => {
 export const getCollections = async (): Promise<Collection[]> => {
   const snapshot = await db.collection('collections').get()
 
-  return snapshot.docs.map((doc) => {
+  const collections = snapshot.docs.map((doc) => {
     return snapshotToCollection(doc)
   })
+
+  return nullableArray2NonullableArray(collections)
 }
 
 type CollectionIdAndPurchaseDate = {
@@ -105,9 +108,14 @@ export const getPurchasedCollections = async (
     if (!snapshot.exists) {
       continue
     }
+
+    const collection = snapshotToCollection(snapshot)
+    if (!collection) {
+      continue
+    }
     collections.push({
       purchasedAt: info.purchasedAt,
-      collection: snapshotToCollection(snapshot),
+      collection,
     })
   }
 
@@ -122,9 +130,11 @@ export const getCollectionsByTag = async (
     .where('tags', 'array-contains', tag)
     .get()
 
-  return snapshot.docs.map((doc) => {
+  const collections = snapshot.docs.map((doc) => {
     return snapshotToCollection(doc)
   })
+
+  return nullableArray2NonullableArray(collections)
 }
 
 export const getCollectionsByUserId = async (
@@ -135,15 +145,20 @@ export const getCollectionsByUserId = async (
     .where('creatorId', '==', userId)
     .get()
 
-  return snapshot.docs.map((doc) => {
+  const collections = snapshot.docs.map((doc) => {
     return snapshotToCollection(doc)
   })
+
+  return nullableArray2NonullableArray(collections)
 }
 
 const snapshotToCollection = (
   snapshot: firebase.firestore.DocumentSnapshot
-): Collection => {
+): Collection | null => {
   const data = snapshot.data()
+  if (!data) {
+    return null
+  }
   return {
     id: snapshot.id,
     title: data.title || '',

@@ -23,7 +23,7 @@ export function useQuiz(collectionId: string, sectionId: string, id: string) {
         return
       }
       const quiz = await getQuiz(collectionId, sectionId, id)
-      if (!unmounted) {
+      if (!unmounted && quiz) {
         setQuiz(quiz)
       }
     })()

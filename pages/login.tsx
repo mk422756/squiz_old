@@ -16,11 +16,11 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState)
 
-  const changeEmail = (event) => {
+  const changeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value)
   }
 
-  const changePassword = (event) => {
+  const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
   }
 
@@ -38,7 +38,7 @@ export default function Login() {
     }
   }
 
-  const toSignup = (event) => {
+  const toSignup = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     router.push(`/signup`)
   }

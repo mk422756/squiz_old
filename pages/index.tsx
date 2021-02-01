@@ -1,6 +1,5 @@
-import {useState, useEffect} from 'react'
 import Layout from 'layouts/layout'
-import {getCollections} from 'clients/collection'
+import {useCollections} from 'hooks/collection'
 import CollectionTile from 'components/CollectionTile'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -39,22 +38,10 @@ const LandingBox = () => {
 }
 
 export default function Home() {
-  const [collections, setCollections] = useState([])
+  // const [collections, setCollections] = useState([])
+  const collections = useCollections()
   const isLogin = useRecoilValue(userIsLoginState)
-  useEffect(() => {
-    let unmounted = false
 
-    ;(async () => {
-      const collections = await getCollections()
-      if (!unmounted) {
-        setCollections(collections)
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [])
   return (
     <Layout>
       <main>

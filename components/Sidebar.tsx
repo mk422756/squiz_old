@@ -15,7 +15,7 @@ export default function AppSidebar() {
     router.push('/')
   }
 
-  if (!isLogin) {
+  if (!isLogin || !user) {
     return null
   }
 

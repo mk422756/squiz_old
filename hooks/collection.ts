@@ -1,5 +1,10 @@
 import {useState, useEffect} from 'react'
-import {getCollection, getPurchasedCollections} from 'clients/collection'
+import {
+  getCollection,
+  getCollections,
+  getCollectionsByUserId,
+  getPurchasedCollections,
+} from 'clients/collection'
 import {Collection, PurchasedCollection} from 'models/collection'
 
 export function useCollection(id: string) {
@@ -21,7 +26,7 @@ export function useCollection(id: string) {
     let unmounted = false
     ;(async () => {
       const collection = await getCollection(id)
-      if (!unmounted) {
+      if (!unmounted && collection) {
         setCollection(collection)
       }
     })()
@@ -32,6 +37,47 @@ export function useCollection(id: string) {
   }, [id])
 
   return collection
+}
+
+export function useCollections() {
+  // TODO ページネーション
+  const [collections, setCollections] = useState<Collection[]>([])
+  useEffect(() => {
+    let unmounted = false
+    ;(async () => {
+      const collections = await getCollections()
+      if (!unmounted && collections) {
+        setCollections(collections)
+      }
+    })()
+
+    return () => {
+      unmounted = true
+    }
+  }, [])
+
+  return collections
+}
+
+// TODO 一本化する
+export function useCollectionsByUserId(userId: string) {
+  // TODO ページネーション
+  const [collections, setCollections] = useState<Collection[]>([])
+  useEffect(() => {
+    let unmounted = false
+    ;(async () => {
+      const collections = await getCollectionsByUserId(userId)
+      if (!unmounted && collections) {
+        setCollections(collections)
+      }
+    })()
+
+    return () => {
+      unmounted = true
+    }
+  }, [userId])
+
+  return collections
 }
 
 export function usePurchasedCollections(userId: string) {

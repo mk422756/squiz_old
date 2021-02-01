@@ -9,19 +9,20 @@ import {useRecoilValue} from 'recoil'
 import {userState, userIsLoginState} from 'store/userState'
 import 'react-datepicker/dist/react-datepicker.css'
 import ja from 'date-fns/locale/ja'
+
 registerLocale('ja', ja)
 
 export default function RecordsPage() {
   const user = useRecoilValue(userState)
   const isLogin = useRecoilValue(userIsLoginState)
   const [records, setRecords] = useState<Record[]>([])
-  const [startDate, setStartDate] = useState(new Date())
+  const [startDate, setStartDate] = useState<Date>(new Date())
 
   useEffect(() => {
     let unmounted = false
 
     ;(async () => {
-      if (!user.id && !startDate) {
+      if (!user || !startDate) {
         return
       }
       const records = await getRecordsByYearMonth(user.id, startDate)
@@ -34,7 +35,11 @@ export default function RecordsPage() {
     return () => {
       unmounted = true
     }
-  }, [userState, startDate])
+  }, [user, startDate])
+
+  const onChangeDate = (date: Date) => {
+    setStartDate(date)
+  }
 
   return (
     <Layout>
@@ -43,7 +48,7 @@ export default function RecordsPage() {
           学習記録
         </div>
         <div className="p-4 bg-white">
-          {isLogin && (
+          {isLogin && user && (
             <Link href={`/users/${user.id}/histories`}>
               <a className="text-blue-400">履歴へ</a>
             </Link>
@@ -53,7 +58,7 @@ export default function RecordsPage() {
           <div className="border shadow-sm inline-block p-2">
             <DatePicker
               selected={startDate}
-              onChange={(date) => setStartDate(date)}
+              onChange={onChangeDate}
               dateFormat="▼ yyyy年M月"
               locale="ja"
               showMonthYearPicker

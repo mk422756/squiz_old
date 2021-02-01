@@ -2,12 +2,12 @@ import {useState} from 'react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 
-export default function ImageCrop({setImageBlob}) {
+export default function ImageCrop({setImageBlob}: any) {
   const [crop, setCrop] = useState()
-  const [src, setSrc] = useState(null)
+  const [src, setSrc] = useState<string | ArrayBuffer | null>(null)
   const [imageRef, setImageRef] = useState()
 
-  function getCroppedImg(image, crop) {
+  function getCroppedImg(image: any, crop: any) {
     if (!image) {
       return
     }
@@ -17,6 +17,10 @@ export default function ImageCrop({setImageBlob}) {
     canvas.width = crop.width
     canvas.height = crop.height
     const ctx = canvas.getContext('2d')
+
+    if (!ctx) {
+      return
+    }
 
     ctx.drawImage(
       image,
@@ -42,7 +46,7 @@ export default function ImageCrop({setImageBlob}) {
     })
   }
 
-  const onSelectFile = (event) => {
+  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const reader = new FileReader()
       reader.addEventListener('load', () => setSrc(reader.result))
@@ -51,11 +55,11 @@ export default function ImageCrop({setImageBlob}) {
     }
   }
 
-  const onImageLoaded = (image) => {
-    setImageRef(image)
+  const onImageLoaded = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // setImageRef(image)
   }
 
-  const onCropComplete = async (crop) => {
+  const onCropComplete = async (crop: any) => {
     const blob = await getCroppedImg(imageRef, crop)
     if (!blob) {
       return
@@ -63,7 +67,7 @@ export default function ImageCrop({setImageBlob}) {
     setImageBlob(blob)
   }
 
-  const onCropChange = (crop, percentCrop) => {
+  const onCropChange = (crop: any, percentCrop: any) => {
     setCrop(crop)
   }
 

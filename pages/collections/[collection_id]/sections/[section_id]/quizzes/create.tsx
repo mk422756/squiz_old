@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import {useRouter} from 'next/router'
 import Layout from 'layouts/layout'
 import {createQuiz} from 'clients/quiz'
@@ -10,6 +9,10 @@ export default function CreateQuizPage() {
   const user = useRecoilValue(userState)
   const router = useRouter()
   const {collection_id, section_id} = router.query
+
+  if (!user) {
+    return <div>now loading</div>
+  }
 
   const create = async (outputs: Outputs) => {
     await createQuiz(

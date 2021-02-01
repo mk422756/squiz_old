@@ -11,7 +11,7 @@ import {
 } from 'recharts'
 import dayjs from 'dayjs'
 
-function CustomizedAxisTick(props) {
+function CustomizedAxisTick(props: any) {
   const date = dayjs(props.payload.value).date() + '日'
   return (
     <text x={props.x} y={props.y} dy={15} textAnchor="end" fill="#666">
@@ -20,7 +20,7 @@ function CustomizedAxisTick(props) {
   )
 }
 
-const renderLegend = (props) => {
+const renderLegend = (props: any) => {
   const {payload} = props
 
   function label(value: string) {
@@ -45,7 +45,7 @@ const renderLegend = (props) => {
 
   return (
     <ul className="text-center">
-      {payload.map((entry, index) => (
+      {payload.map((entry: any, index: number) => (
         <li key={`item-${index}`} className="inline-block">
           <span className={`ml-4 ${labelColor(entry.value)}`}>
             {label(entry.value)}
@@ -56,7 +56,7 @@ const renderLegend = (props) => {
   )
 }
 
-const renderTooltip = (props) => {
+const renderTooltip = (props: any) => {
   const {payload, active, label} = props
   const day = dayjs(label).format('YYYY年M月D日')
   if (active) {

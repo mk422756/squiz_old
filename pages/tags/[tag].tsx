@@ -3,9 +3,10 @@ import {useRouter} from 'next/router'
 import Layout from 'layouts/layout'
 import CollectionTile from 'components/CollectionTile'
 import {getCollectionsByTag} from 'clients/collection'
+import {Collection} from 'models/collection'
 
 export default function Home() {
-  const [collections, setCollections] = useState([])
+  const [collections, setCollections] = useState<Collection[]>([])
 
   const router = useRouter()
   const {tag} = router.query

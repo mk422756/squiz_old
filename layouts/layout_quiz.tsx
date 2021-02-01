@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from 'styles/Default.module.css'
 
-function LayoutQuiz({children}) {
+function LayoutQuiz({children}: any) {
   return (
     <div>
       <Head>

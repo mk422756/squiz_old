@@ -1,6 +1,7 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import {Section} from 'models/section'
+import {nullableArray2NonullableArray} from 'utils/array'
 
 const db = firebase.firestore()
 
@@ -76,9 +77,10 @@ export const getSections = async (collectionId: string): Promise<Section[]> => {
     .doc(collectionId)
     .collection('sections')
     .get()
-  return snapshot.docs.map((doc) => {
+  const sections = snapshot.docs.map((doc) => {
     return snapshotToSection(doc)
   })
+  return nullableArray2NonullableArray(sections)
 }
 
 export const getSection = async (
@@ -93,15 +95,18 @@ export const getSection = async (
     .get()
 
   if (!snapshot.exists) {
-    return
+    return null
   }
   return snapshotToSection(snapshot)
 }
 
 const snapshotToSection = (
   snapshot: firebase.firestore.DocumentSnapshot
-): Section => {
+): Section | null => {
   const data = snapshot.data()
+  if (!data) {
+    return null
+  }
   return {
     id: snapshot.id,
     title: data.title || '',

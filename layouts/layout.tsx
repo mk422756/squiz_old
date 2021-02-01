@@ -5,9 +5,9 @@ import styles from 'styles/Default.module.css'
 import Sidebar from 'react-sidebar'
 import {useState} from 'react'
 
-function Layout({children}) {
+function Layout({children}: any) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const onSetSidebarOpen = (open) => {
+  const onSetSidebarOpen = (open: boolean) => {
     setSidebarOpen(open)
   }
 

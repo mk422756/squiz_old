@@ -40,13 +40,16 @@ export const updateUser = async (
 
 export const getUser = async (uid: string): Promise<User | null> => {
   if (!uid) {
-    return
+    return null
   }
   const ret = await db.collection('users').doc(uid).get()
   if (!ret.exists) {
-    return
+    return null
   }
   const data = ret.data()
+  if (!data) {
+    return null
+  }
   return {
     id: ret.id,
     name: data.name || '',
@@ -92,6 +95,9 @@ export const getPaymentSecret = async (
   }
 
   const data = snapshot.data()
+  if (!data) {
+    return null
+  }
   return {
     customerId: data.customer_id,
     setupSecret: data.setup_secret,

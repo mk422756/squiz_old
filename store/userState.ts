@@ -2,7 +2,7 @@ import {atom, selector, DefaultValue} from 'recoil'
 import {User} from 'models/user'
 import {isBrowser} from 'utils/browser'
 
-const localStorageEffect = (key) => ({setSelf, onSet}) => {
+const localStorageEffect = (key: string) => ({setSelf, onSet}: any) => {
   if (!isBrowser()) {
     return
   }
@@ -11,7 +11,7 @@ const localStorageEffect = (key) => ({setSelf, onSet}) => {
     setSelf(JSON.parse(savedValue))
   }
 
-  onSet((newValue) => {
+  onSet((newValue: any) => {
     if (newValue instanceof DefaultValue) {
       localStorage.removeItem(key)
     } else {
@@ -20,9 +20,9 @@ const localStorageEffect = (key) => ({setSelf, onSet}) => {
   })
 }
 
-export const userState = atom({
+export const userState = atom<User | null>({
   key: 'userState',
-  default: null as User,
+  default: null,
   effects_UNSTABLE: [localStorageEffect('user')],
 })
 

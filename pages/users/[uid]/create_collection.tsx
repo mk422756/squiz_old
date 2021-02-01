@@ -10,11 +10,11 @@ export default function CreateCollectionPage() {
   const [description, setDescription] = useState('')
   const router = useRouter()
 
-  const changeTitle = (event) => {
+  const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value)
   }
 
-  const changeDescription = (event) => {
+  const changeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value)
   }
 
@@ -44,7 +44,7 @@ export default function CreateCollectionPage() {
           <span>説明</span>
           <textarea
             className="p-2 border w-full"
-            onChange={changeDescription}
+            onChange={changeDescription as any}
           />
         </label>
         <div className="my-4 text-center">

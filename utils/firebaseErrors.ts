@@ -1,8 +1,8 @@
-export const getErrorMessage = (firebassError) => {
+export const getErrorMessage = (firebassError: any): string => {
   return authErrors[firebassError.code.split('/')[1]]
 }
 
-export const authErrors = {
+export const authErrors: any = {
   'admin-restricted-operation':
     'This operation is restricted to administrators only.',
   'argument-error': '',

@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import {useRouter} from 'next/router'
 import LayoutQuiz from 'layouts/layout_quiz'
 import StatusBox from 'components/quiz/StatusBox'
@@ -7,12 +7,12 @@ import PlayBox from 'components/quiz/PlayBox'
 import ResultBox from 'components/quiz/ResultBox'
 import Result from 'models/result'
 import Results from 'models/results'
-import {getHistory} from 'clients/history'
 import {addRecord} from 'clients/record'
 import disableBrowserBackButton from 'disable-browser-back-navigation'
 import {useRecoilValue} from 'recoil'
 import {userState, userIsLoginState} from 'store/userState'
 import {isBrowser} from 'utils/browser'
+import {useHistory} from 'hooks/history'
 
 export default function PlayPage() {
   if (isBrowser()) {
@@ -20,8 +20,6 @@ export default function PlayPage() {
   }
   const user = useRecoilValue(userState)
   const isLogin = useRecoilValue(userIsLoginState)
-  const [history, setHistory] = useState({} as any)
-  const [quizzes, setQuizzes] = useState([])
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [isAnswered, setIsAnswered] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
@@ -32,33 +30,19 @@ export default function PlayPage() {
 
   const onlyIncorrect = router.query.only_incorrect === 'true'
   const {uid, history_id} = router.query
+  const [history, quizzes] = useHistory(
+    uid as string,
+    history_id as string,
+    onlyIncorrect
+  )
   const currentQuiz = quizzes[currentQuizIndex]
-
-  useEffect(() => {
-    let unmounted = false
-
-    ;(async () => {
-      if (!uid || !history_id) {
-        return
-      }
-      const history = await getHistory(uid as string, history_id as string)
-      if (!unmounted) {
-        setHistory(history.history)
-        setQuizzes(history.toQuizzes(onlyIncorrect))
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [uid, history_id])
 
   const answer = () => {
     setIsAnswered(true)
     const result = new Result(currentQuiz, [selectedAnswerIndex])
     setIsCorrectAnswer(result.isCorrect)
     setResults(results.push(result))
-    if (isLogin) {
+    if (isLogin && user) {
       addRecord(user.id, result.isCorrect)
     }
   }

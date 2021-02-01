@@ -2,7 +2,7 @@ import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import Results from 'models/results'
 import {History, HistoryDetail, HistoryDetails} from 'models/history'
-import histories from 'pages/users/[uid]/histories'
+import {nullableArray2NonullableArray} from 'utils/array'
 
 const db = firebase.firestore()
 
@@ -67,15 +67,17 @@ export const getHistoriesByUserId = async (
     .collection('histories')
     .get()
 
-  return snapshot.docs.map((doc) => {
+  const histories = snapshot.docs.map((doc) => {
     return snapshotToHistory(doc, userId)
   })
+
+  return nullableArray2NonullableArray<History>(histories)
 }
 
 export const getHistory = async (
   userId: string,
   id: string
-): Promise<HistoryDetails> => {
+): Promise<HistoryDetails | null> => {
   const snapshot = await db
     .collection('users')
     .doc(userId)
@@ -93,6 +95,9 @@ export const getHistory = async (
     .get()
 
   const history = snapshotToHistory(snapshot, userId)
+  if (!history) {
+    return null
+  }
   const details = snapshotToHistoryDetails(detailSnapshot)
   return new HistoryDetails(history, details)
 }
@@ -100,11 +105,15 @@ export const getHistory = async (
 const snapshotToHistory = (
   snapshot: firebase.firestore.DocumentSnapshot,
   userId: string
-): History => {
+): History | null => {
   if (!snapshot.exists) {
-    return
+    return null
   }
   const data = snapshot.data()
+
+  if (!data) {
+    return null
+  }
   return {
     id: snapshot.id,
     collectionId: data.collectionId,
@@ -124,11 +133,14 @@ const snapshotToHistoryDetails = (
   snapshot: firebase.firestore.DocumentSnapshot
 ): HistoryDetail[] => {
   if (!snapshot.exists) {
-    return
+    return []
   }
   const data = snapshot.data()
+  if (!data) {
+    return []
+  }
   const results = data.results
-  return results.map((result) => {
+  return results.map((result: any) => {
     return {
       quizId: result.quizId,
       question: result.question,

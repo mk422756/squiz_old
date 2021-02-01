@@ -1,57 +1,43 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import Layout from 'layouts/layout'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useRouter} from 'next/router'
-import {getUser} from 'clients/user'
-import {getCurrentUser} from 'clients/auth'
-import {getCollectionsByUserId} from 'clients/collection'
+import {useUser} from 'hooks/user'
 import {faTwitter, faFacebookSquare} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import CollectionTile from 'components/CollectionTile'
 import Linkify from 'react-linkify'
+import {useRecoilValue} from 'recoil'
+import {userState} from 'store/userState'
+import {useCollectionsByUserId} from 'hooks/collection'
 
 enum SELECT_TYPE {
   DESCRIPTION = 'description',
   COLLECTIONS = 'collections',
 }
 
-export default function UserPage({storeLogout}) {
-  const [user, setUser] = useState({} as any)
-  const [collections, setCollections] = useState([])
-  const [isMyPage, setIsMyPage] = useState(false)
+export default function UserPage() {
+  const currentUser = useRecoilValue(userState)
+
   const [selectedDisplayType, setSelectedDisplayType] = useState(
     SELECT_TYPE.DESCRIPTION
   )
   const router = useRouter()
   const {uid} = router.query
+  const userId = uid ? (uid as string) : ''
+  const user = useUser(userId)
+  const collections = useCollectionsByUserId(userId)
 
-  useEffect(() => {
-    let unmounted = false
+  const isMyPage = user.id === currentUser?.id
 
-    ;(async () => {
-      if (!uid) {
-        return
-      }
-      const user = await getUser(uid as string)
-      const collections = await getCollectionsByUserId(uid as string)
-      const currentUser = getCurrentUser()
-      if (!unmounted) {
-        setUser(user)
-        setCollections(collections)
-        if (user.id === currentUser?.uid) {
-          setIsMyPage(true)
-        }
-      }
-    })()
+  if (!user) {
+    return <div>now loading</div>
+  }
 
-    return () => {
-      unmounted = true
-    }
-  }, [uid])
-
-  const selectDisplayType = (event) => {
-    switch (event.target.id) {
+  const selectDisplayType = (event: any) => {
+    const id: string = event.target.id
+    switch (id) {
       case SELECT_TYPE.COLLECTIONS:
         setSelectedDisplayType(SELECT_TYPE.COLLECTIONS)
         break

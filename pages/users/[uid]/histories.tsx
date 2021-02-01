@@ -1,34 +1,19 @@
-import {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getHistoriesByUserId} from 'clients/history'
-import {History} from 'models/history'
 import HistoryTile from 'components/HistoryTile'
 import {useRecoilValue} from 'recoil'
 import {userState, userIsLoginState} from 'store/userState'
+import {useHistories} from 'hooks/history'
 
 export default function HistoriesPage() {
   const user = useRecoilValue(userState)
   const isLogin = useRecoilValue(userIsLoginState)
-  const [histories, setHistories] = useState<History[]>([])
 
-  useEffect(() => {
-    let unmounted = false
+  if (!user) {
+    return <div>now loading</div>
+  }
 
-    ;(async () => {
-      if (!user.id) {
-        return
-      }
-      const histories = await getHistoriesByUserId(user.id)
-      if (!unmounted) {
-        setHistories(histories)
-      }
-    })()
-
-    return () => {
-      unmounted = true
-    }
-  }, [user])
+  const histories = useHistories(user.id)
 
   return (
     <Layout>

@@ -1,6 +1,7 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
 import {Quiz} from 'models/quiz'
+import {nullableArray2NonullableArray} from 'utils/array'
 
 const db = firebase.firestore()
 
@@ -91,16 +92,18 @@ export const getQuizzes = async (
     .doc(sectionId)
     .collection('quizzes')
     .get()
-  return snapshot.docs.map((doc) => {
+  const quizzes = snapshot.docs.map((doc) => {
     return snapshotToQuiz(doc)
   })
+
+  return nullableArray2NonullableArray(quizzes)
 }
 
 export const getQuiz = async (
   collectionId: string,
   sectionId: string,
   id: string
-): Promise<Quiz> => {
+): Promise<Quiz | null> => {
   const snapshot = await db
     .collection('collections')
     .doc(collectionId)
@@ -114,8 +117,11 @@ export const getQuiz = async (
 
 const snapshotToQuiz = (
   snapshot: firebase.firestore.DocumentSnapshot
-): Quiz => {
+): Quiz | null => {
   const data = snapshot.data()
+  if (!data) {
+    return null
+  }
   return {
     id: snapshot.id,
     question: data.question || '',

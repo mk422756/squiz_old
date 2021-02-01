@@ -42,7 +42,7 @@ export function usePaymentSecret(userId: string) {
     let unmounted = false
     ;(async () => {
       const secret = await getPaymentSecret(userId)
-      if (!unmounted) {
+      if (!unmounted && secret) {
         setSecret(secret)
       }
     })()

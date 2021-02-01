@@ -1,6 +1,7 @@
 import firebase from 'lib/firebase'
 import dayjs from 'dayjs'
 import {Record} from 'models/record'
+import {nullableArray2NonullableArray} from 'utils/array'
 
 const db = firebase.firestore()
 
@@ -60,7 +61,7 @@ export const getRecordsByYearMonth = async (
     return snapshotToRecord(doc)
   })
 
-  return fillRecordsGap(records, lastDate)
+  return fillRecordsGap(nullableArray2NonullableArray(records), lastDate)
 }
 
 const fillRecordsGap = (original: Record[], lastDate: dayjs.Dayjs) => {
@@ -91,8 +92,11 @@ const fillRecordsGap = (original: Record[], lastDate: dayjs.Dayjs) => {
 
 const snapshotToRecord = (
   snapshot: firebase.firestore.DocumentSnapshot
-): Record => {
+): Record | null => {
   const data = snapshot.data()
+  if (!data) {
+    return null
+  }
   return {
     date: data.date,
     answerCount: data.answerCount,
