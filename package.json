@@ -42,7 +42,7 @@
     "recharts": "^2.0.4",
     "recoil": "^0.1.2",
     "tailwindcss": "^2.0.2",
-    "ts-jest": "^26.4.4"
+    "ts-jest": "^26.5.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
