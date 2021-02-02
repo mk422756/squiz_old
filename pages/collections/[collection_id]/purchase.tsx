@@ -46,6 +46,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
   const stripe = useStripe()
   const elements = useElements()
   const router = useRouter()
+  const {collection_id} = router.query
   const [isSaveCreditInfo, setIsSaveCreditInfo] = useState(false)
 
   const changeSaveCreditInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,6 +147,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       setError('')
 
       if (!confirm('購入しますがよろしいですか？')) {
+        setPurchasing(false)
         return
       }
 
@@ -193,13 +195,24 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         </label>
       </div>
       <div className="mt-10">
-        <Button
-          onClick={handleSubmit}
-          disabled={!stripe || purchasing}
-          fullWidth={true}
-        >
-          購入
-        </Button>
+        <div>
+          <Button
+            onClick={handleSubmit}
+            disabled={!stripe || purchasing}
+            fullWidth={true}
+            loading={purchasing}
+          >
+            購入
+          </Button>
+        </div>
+
+        <div className="mt-4">
+          <Button fullWidth={true} color="gray" disabled={purchasing}>
+            <Link href={`/collections/${collection_id}`}>
+              <a>キャンセル</a>
+            </Link>
+          </Button>
+        </div>
       </div>
     </form>
   )
@@ -256,13 +269,6 @@ export default function PurchasePage() {
                 amount={collection.price}
               />
             </Elements>
-            <div className="mt-4">
-              <Button fullWidth={true} color="gray">
-                <Link href={`/collections/${collection_id}`}>
-                  <a>キャンセル</a>
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </main>

@@ -1,3 +1,5 @@
+import ReactLoading from 'react-loading'
+
 type ButtonProps = {
   onClick?: any
   children?: any
@@ -5,11 +7,12 @@ type ButtonProps = {
   mx?: number
   color?: string
   disabled?: boolean
+  loading?: boolean
 }
 
 const Button = (props: ButtonProps) => {
   let className =
-    'rounded-md py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline shadow tracking-wide font-semibold'
+    'relative rounded-md py-2 transition duration-500 ease select-none shadow tracking-wide font-semibold'
 
   if (props.fullWidth === true) {
     className += ' w-full'
@@ -17,12 +20,16 @@ const Button = (props: ButtonProps) => {
     className += ` px-8`
   }
 
-  if (props.disabled) {
+  if (props.disabled && props.color === 'gray') {
+    className += ' bg-gray-100 '
+  } else if (props.disabled) {
     className += ' bg-blue-300 text-white'
   } else if (props.color === 'gray') {
-    className += ' bg-gray-200 hover:bg-gray-300 text-gray-700'
+    className +=
+      ' bg-gray-200 hover:bg-gray-300 text-gray-700 focus:outline-none focus:shadow-outline'
   } else {
-    className += ' bg-primary hover:bg-primary-dark text-white'
+    className +=
+      ' bg-primary hover:bg-primary-dark text-white focus:outline-none focus:shadow-outline'
   }
 
   return (
@@ -31,7 +38,12 @@ const Button = (props: ButtonProps) => {
       className={className}
       disabled={props.disabled}
     >
-      {props.children}
+      {props.loading && (
+        <div className="absolute left-2 top-2">
+          <ReactLoading type="spin" height={22} width={22} />
+        </div>
+      )}
+      <span className="ml-2">{props.children}</span>
     </button>
   )
 }
