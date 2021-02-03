@@ -1,8 +1,8 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Layout from 'layouts/layout'
-import {getUser, getPurchasedCollectionIds} from 'clients/user'
+import {getPurchasedCollectionIds} from 'clients/user'
 import Button from 'components/Button'
 import {useCollection} from 'hooks/collection'
 import {useUser, usePaymentSecret} from 'hooks/user'
@@ -17,6 +17,8 @@ import {
 import {useRecoilValue, useRecoilState} from 'recoil'
 import {userState} from 'store/userState'
 import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
+import ReactModal from 'react-modal'
+import ReactLoading from 'react-loading'
 
 type CheckoutFormProps = {
   collectionId: string
@@ -29,6 +31,16 @@ type PaymentMethod = {
 }
 
 const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
+  const customModalStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      bottom: 'auto',
+      right: '10%',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  }
   const [
     purchasedCollectionsInfo,
     setPurchasedCollectionsInfo,
@@ -48,6 +60,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
   const router = useRouter()
   const {collection_id} = router.query
   const [isSaveCreditInfo, setIsSaveCreditInfo] = useState(false)
+  const [canSubmit, setCanSubmit] = useState(false)
 
   const changeSaveCreditInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsSaveCreditInfo(event?.target?.checked)
@@ -126,8 +139,11 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         return
       }
 
-      setPurchasing(true)
+      if (!confirm('購入しますがよろしいですか？')) {
+        return
+      }
 
+      setPurchasing(true)
       let paymentMethod = null
       if (isSaveCreditInfo) {
         paymentMethod = await saveCreditInfo()
@@ -136,6 +152,7 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
       }
 
       if (!paymentMethod) {
+        setPurchasing(false)
         return
       }
 
@@ -145,11 +162,6 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         return
       }
       setError('')
-
-      if (!confirm('購入しますがよろしいですか？')) {
-        setPurchasing(false)
-        return
-      }
 
       const data = {
         payment_method: paymentMethod.id,
@@ -170,9 +182,14 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
     }
   }
 
+  const onChangeCardInput = (event: any) => {
+    setCanSubmit(event.complete)
+  }
+
   return (
     <form>
       <CardElement
+        onChange={onChangeCardInput}
         className="border bg-white p-4 rounded"
         options={{
           hidePostalCode: true,
@@ -195,12 +212,34 @@ const CheckoutForm = ({collectionId, amount}: CheckoutFormProps) => {
         </label>
       </div>
       <div className="mt-10">
+        {purchasing && (
+          <ReactModal
+            isOpen={true}
+            style={customModalStyles}
+            contentLabel="購入処理中"
+          >
+            <div className="mt-4">
+              <ReactLoading
+                type="spin"
+                color="#63B9ED"
+                height={70}
+                width={70}
+                className="mx-auto"
+              />
+            </div>
+            <div className="w-full mt-8 text-center">
+              <h2 className="text-2xl font-semibold">購入処理中です</h2>
+              <p className="mt-4">
+                処理中はブラウザの戻るボタンや閉じる処理を使用しないでください
+              </p>
+            </div>
+          </ReactModal>
+        )}
         <div>
           <Button
             onClick={handleSubmit}
-            disabled={!stripe || purchasing}
+            disabled={!stripe || !canSubmit || purchasing}
             fullWidth={true}
-            loading={purchasing}
           >
             購入
           </Button>
