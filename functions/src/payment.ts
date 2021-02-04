@@ -46,6 +46,7 @@ exports.createStripePayment = functions.https.onCall(async (data, context) => {
       },
       {idempotencyKey}
     )
+
     // If the result is successful, write it back to the database.
 
     const promise1 = firestore
@@ -78,6 +79,11 @@ exports.createStripePayment = functions.https.onCall(async (data, context) => {
       .collection('payments')
       .doc(id)
       .set({error: userFacingMessage(error)}, {merge: true})
+
+    throw new functions.https.HttpsError(
+      'cancelled',
+      'Payment failed: ' + userFacingMessage(error)
+    )
     // await reportError(error, {user: context.params.userId})
   }
 })
@@ -124,7 +130,7 @@ exports.createStripePaymentMethod = functions.https.onCall(
       await firestore
         .collection('users')
         .doc(userId)
-        .collection('payment_methods')
+        .collection('paymentMethods')
         .doc(id)
         .set(paymentMethod)
 
@@ -150,10 +156,14 @@ exports.createStripePaymentMethod = functions.https.onCall(
       await firestore
         .collection('users')
         .doc(userId)
-        .collection('payment_methods')
+        .collection('paymentMethods')
         .doc(id)
         .set({error: userFacingMessage(error)}, {merge: true})
       // await reportError(error, {user: context.params.userId})
+      throw new functions.https.HttpsError(
+        'cancelled',
+        'Create payment method failed: ' + userFacingMessage(error)
+      )
     }
   }
 )

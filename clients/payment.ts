@@ -1,7 +1,9 @@
 import firebase from 'lib/firebase'
 import cuid from 'cuid'
+import {PaymentMethod} from 'models/paymentMethod'
 
 const functions = firebase.functions()
+const db = firebase.firestore()
 
 type PaymentData = {
   payment_method: string
@@ -23,4 +25,21 @@ export const createPaymentMethod = async (paymentMethodId: string) => {
     'payment-createStripePaymentMethod'
   )
   await createPaymentMethod({id, paymentMethodId})
+}
+
+export const getPaymentMethods = async (
+  userId: string
+): Promise<PaymentMethod[]> => {
+  const snapshot = await db
+    .collection('users')
+    .doc(userId)
+    .collection('paymentMethods')
+    .get()
+
+  return snapshot.docs.map(
+    (doc): PaymentMethod => {
+      const data = doc.data()
+      return {id: doc.id, paymentMethodId: data.id, last4: data.card.last4}
+    }
+  )
 }

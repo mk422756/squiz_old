@@ -57,7 +57,7 @@ async function cleanupStripeUser(user: admin.auth.UserRecord) {
   const snapshot = await firestore
     .collection('users')
     .doc(user.uid)
-    .collection('payment_methods')
+    .collection('paymentMethods')
     .get()
   snapshot.forEach((snap) => snap.ref.delete())
 }
