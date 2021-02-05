@@ -37,6 +37,7 @@ const AnswerBox = ({
           checked={selectedAnswerIndex === index}
           onChange={handleAnswers}
           className="my-auto"
+          disabled={isAnswered}
         ></input>
         <div className="ml-1 break-words col-span-11">{answer}</div>
       </label>
