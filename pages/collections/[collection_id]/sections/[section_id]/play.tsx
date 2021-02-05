@@ -106,11 +106,7 @@ export default function PlayPage() {
               setSelectedAnswerIndex={setSelectedAnswerIndex}
             ></PlayBox>
           ) : (
-            <ResultBox
-              results={results}
-              collectionId={collection.id}
-              quizCount={quizzes.length}
-            ></ResultBox>
+            <ResultBox results={results} quizCount={quizzes.length}></ResultBox>
           )}
         </div>
         <div className="fixed w-full max-w-3xl bottom-0 opacity-95 z-50">

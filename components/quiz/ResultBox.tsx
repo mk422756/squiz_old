@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import Result from 'models/result'
 import Results from 'models/results'
 import ResultPieChart from 'components/ResultPieChart'
@@ -7,10 +8,15 @@ type ResultReviewBoxProps = {
 }
 
 const ResultReviewBox = ({result, index}: ResultReviewBoxProps) => {
+  const [showDetail, setShowDetail] = useState(false)
+  const onChangeShowDetail = () => {
+    console.log('detail')
+    setShowDetail((detail) => !detail)
+  }
   return (
     <div className="my-2 p-4 bg-white flow-root">
       <span className="text-lg font-semibold">問題{index}</span>
-      <p className="my-2">{result.quiz.question}</p>
+      <pre className="my-2 whitespace-pre-wrap">{result.quiz.question}</pre>
       {result.isCorrect ? (
         <div>
           <span className="text-green-400">○</span>
@@ -26,18 +32,44 @@ const ResultReviewBox = ({result, index}: ResultReviewBoxProps) => {
           </span>
         </div>
       )}
-      {/* <p className="text-primary float-right">詳細</p> */}
+      <p className="text-primary float-right" onClick={onChangeShowDetail}>
+        ▼詳細
+      </p>
+      {showDetail && (
+        <div className="pt-8">
+          <div>
+            {result.quiz.answers.map((answer, index) => {
+              const isSelectedAnswer = result.answerIndex.includes(index)
+              const correctAnswer = result.quiz.correctAnswerIndex.includes(
+                index
+              )
+              let className = 'p-2 border rounded mt-2'
+              if (correctAnswer) {
+                className += ' bg-green-100'
+              } else if (!result.isCorrect && isSelectedAnswer) {
+                className += ' bg-red-100'
+              }
+              return <div className={className}>{answer}</div>
+            })}
+          </div>
+          <pre className="my-8 whitespace-pre-wrap">
+            {result.quiz.explanation}
+          </pre>
+          <p className="text-primary float-right" onClick={onChangeShowDetail}>
+            ▲閉じる
+          </p>
+        </div>
+      )}
     </div>
   )
 }
 
 type ResultBoxProps = {
   results: Results
-  collectionId: string
   quizCount: number
 }
 
-const ResultBox = ({results, collectionId, quizCount}: ResultBoxProps) => {
+const ResultBox = ({results, quizCount}: ResultBoxProps) => {
   const unanswerdCount = quizCount - results.length
   return (
     <div>

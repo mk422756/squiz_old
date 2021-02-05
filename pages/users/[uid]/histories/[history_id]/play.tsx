@@ -85,11 +85,7 @@ export default function PlayPage() {
               setSelectedAnswerIndex={setSelectedAnswerIndex}
             ></PlayBox>
           ) : (
-            <ResultBox
-              results={results}
-              collectionId={history.collectionId}
-              quizCount={quizzes.length}
-            ></ResultBox>
+            <ResultBox results={results} quizCount={quizzes.length}></ResultBox>
           )}
         </div>
         <div className="">
