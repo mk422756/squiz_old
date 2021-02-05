@@ -25,28 +25,28 @@ export default function About() {
               height={167}
             ></Image>
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-10 text-center">
             <p className="text-lg font-semibold">
               問題集を解いてスキルアップしましょう
             </p>
-            <p className="p-4 m-2 leading-7 inline-block text-left">
+            <p className="px-4 m-2 leading-7 inline-block text-left">
               資格勉強や、スキルアップのために繰り返し学習しましょう。
               <br />
               進捗管理や間違った問題だけ再挑戦することができ、効率的に学習できます。
             </p>
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-10 text-center">
             <p className="text-lg font-semibold">
               オリジナルの問題集を作成しましょう
             </p>
-            <p className="p-4 m-2 leading-7  inline-block text-left">
+            <p className="px-4 m-2 leading-7  inline-block text-left">
               自分だけの問題集を作成することができます。
               <br />
               作成した問題集は公開して、他のユーザーに共有することができます。
             </p>
           </div>
           {isLogin ? (
-            <div className="my-8 text-center">
+            <div className="my-10 text-center">
               <Button>
                 <Link href="/">
                   <a>トップページに戻る</a>
