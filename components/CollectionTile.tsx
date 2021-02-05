@@ -21,7 +21,7 @@ const CollectionTile = ({collection}: Props) => {
               </span>
             </Link>
           </div>
-          <div>
+          <div className="mt-2">
             <span className="font-semibold text-sm">
               {collection.quizCount}問
             </span>
@@ -33,7 +33,7 @@ const CollectionTile = ({collection}: Props) => {
           </div>
         </div>
         {collection.imageUrl && (
-          <div className="h-20 w-32 relative">
+          <div className="h-20 w-32 relative border border-gray-100 ml-4">
             <Link href={`/collections/${collection.id}`}>
               <a>
                 <Image
