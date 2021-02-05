@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="text-center text-white pt-6 text-3xl font-semibold">
         SQUIZ
       </div>
-      <div className="p-4">
+      <div className="p-4 text-center">
         <span>
           <Link href="/about">
             <a className="text-white">SQUIZとは</a>
