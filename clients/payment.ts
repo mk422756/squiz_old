@@ -39,7 +39,12 @@ export const getPaymentMethods = async (
   return snapshot.docs.map(
     (doc): PaymentMethod => {
       const data = doc.data()
-      return {id: doc.id, paymentMethodId: data.id, last4: data.card.last4}
+      return {
+        id: doc.id,
+        paymentMethodId: data.id,
+        last4: data.card.last4,
+        brand: data.card.brand,
+      }
     }
   )
 }

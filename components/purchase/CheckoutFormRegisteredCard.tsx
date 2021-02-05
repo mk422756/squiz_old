@@ -69,6 +69,22 @@ export default function CheckoutFormNewCard({
     setPaymentId(e.target.value)
   }
 
+  const cardImage = (brand: string) => {
+    const cards = ['visa', 'jcb', 'mastercard', 'amex', 'discover', 'diners']
+    if (!cards.includes(brand)) {
+      return null
+    }
+
+    return (
+      <img
+        src={`/creditcard/${brand}.png`}
+        className="inline ml-2"
+        width="34"
+        height="34"
+      ></img>
+    )
+  }
+
   return (
     <div>
       <p className="text-lg font-semibold">カード選択してください</p>
@@ -81,7 +97,11 @@ export default function CheckoutFormNewCard({
               value={method.paymentMethodId}
               onChange={onChangeRadio}
             ></input>
-            <span className="ml-2">**** **** **** {method.last4}</span>
+            <span className="align-middle">
+              {cardImage(method.brand)}
+              <span className="ml-1">下4桁</span>
+              <span className="ml-2">{method.last4}</span>
+            </span>
           </label>
         )
       })}
