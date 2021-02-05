@@ -26,7 +26,9 @@ function Layout({children}: any) {
     >
       <div className="flex flex-col h-screen justify-between">
         <div className="mb-auto">
-          <Header openSidebar={openSidebar} />
+          <div className="mb-2">
+            <Header openSidebar={openSidebar} />
+          </div>
           <div className={styles.default}>{children}</div>
         </div>
 

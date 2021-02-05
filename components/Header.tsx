@@ -42,7 +42,7 @@ const LoginLink = ({openSidebar}: any) => {
 
 export default function Header({openSidebar}: any) {
   return (
-    <header className="mx-auto flex justify-between bg-primary">
+    <header className="mx-auto flex justify-between bg-primary shadow">
       <div className="my-3 mx-4 float-left">
         <Link href="/">
           <a className="text-white text-3xl">SQUIZ</a>
