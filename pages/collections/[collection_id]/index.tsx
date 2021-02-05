@@ -170,6 +170,19 @@ export default function CollectionPage({collection}: StaticIndexProps) {
           <div className="text-xs text-gray-500">
             最終更新日 {dateToYYYYMMDD(collection.updatedAt)}
           </div>
+          <div className="pt-4">
+            <Link href={`/users/${creator.id}`}>
+              <a>
+                <img
+                  className="inline-block h-6 w-6 rounded-full bg-white"
+                  src={creator.imageUrl ? creator.imageUrl : '/user_avatar.png'}
+                />
+                <span className="ml-1 text-sm font-semibold">
+                  {creator.name}
+                </span>
+              </a>
+            </Link>
+          </div>
           <div className="pt-4 text-primary break-words">
             {collection.tags.map((tag: string, index: number) => {
               return (
@@ -203,20 +216,6 @@ export default function CollectionPage({collection}: StaticIndexProps) {
                 />
               )}
             </span>
-          </div>
-
-          <div className="pt-4">
-            <Link href={`/users/${creator.id}`}>
-              <a>
-                <img
-                  className="inline-block h-6 w-6 rounded-full bg-white"
-                  src={creator.imageUrl ? creator.imageUrl : '/user_avatar.png'}
-                />
-                <span className="ml-1 text-sm font-semibold">
-                  {creator.name}
-                </span>
-              </a>
-            </Link>
           </div>
 
           {isMyCollection && (
