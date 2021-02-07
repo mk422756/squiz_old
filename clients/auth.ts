@@ -13,6 +13,16 @@ export const emailLogin = async (email: string, password: string) => {
   return credential.user?.uid
 }
 
+export const googleLogin = async () => {
+  const provider = new firebase.auth.GoogleAuthProvider()
+  auth.signInWithRedirect(provider)
+}
+
+export const getRedirectInfo = async () => {
+  const ret = await auth.getRedirectResult()
+  return ret.user?.uid
+}
+
 export const logout = async () => {
   await auth.signOut()
 }

@@ -39,7 +39,7 @@ export default function Signup() {
   return (
     <Layout>
       <div className="bg-white h-screen relative">
-        <main className="border rounded absolute inset-x-0 my-8 mx-4">
+        <main className="border rounded absolute inset-x-0 my-8 max-w-md mx-auto">
           <div className="mx-4 my-8 text-center text-2xl font-semibold">
             新規登録
           </div>

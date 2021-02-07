@@ -1,18 +1,19 @@
 import React, {useState} from 'react'
 import Layout from 'layouts/layout'
 import Button from 'components/Button'
-import {emailLogin} from 'clients/auth'
+import {emailLogin, googleLogin} from 'clients/auth'
 import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
 import {getErrorMessage} from 'utils/firebaseErrors'
 import {useRecoilState} from 'recoil'
 import {loginInfoState} from 'store/loginInfoState'
+import GoogleButton from 'react-google-button'
 
 export default function Login() {
+  const router = useRouter()
   const {register, handleSubmit, errors} = useForm()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const router = useRouter()
   const [error, setError] = useState('')
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState)
 
@@ -38,6 +39,15 @@ export default function Login() {
     }
   }
 
+  const onSubmitGoogleLogin = async () => {
+    try {
+      await googleLogin()
+    } catch (e) {
+      console.log(e)
+      setError(getErrorMessage(e))
+    }
+  }
+
   const toSignup = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     router.push(`/signup`)
@@ -45,12 +55,18 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="bg-white h-screen relative">
-        <main className="border rounded absolute inset-x-0 my-8 mx-4">
-          <div className="mx-4 my-8 text-center text-2xl font-semibold">
+      <div className="bg-white h-screen relative mx-auto">
+        <main className="border  rounded absolute inset-x-0 my-8 mx-auto  max-w-md">
+          <div className="mx-4 my-10 text-center text-2xl font-semibold">
             ログイン
           </div>
-          <form className="m-4">
+          <GoogleButton
+            type="light" // can be light or dark
+            onClick={onSubmitGoogleLogin}
+            className="mx-auto my-8 w-screen"
+          />
+
+          <form className="mt-12 m-4">
             <div>
               <input
                 type="email"
