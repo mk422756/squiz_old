@@ -3,12 +3,18 @@ import {useSetRecoilState, useRecoilState} from 'recoil'
 import {userState} from 'store/userState'
 import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
 import {loginInfoState} from 'store/loginInfoState'
-import {getUser, createUser, getPurchasedCollectionIds} from 'clients/user'
+import {
+  getUser,
+  createUser,
+  getPurchasedCollectionIds,
+  snapshotToUser,
+} from 'clients/user'
 import firebase from 'lib/firebase'
 import {useRouter} from 'next/router'
 import {getRedirectInfo} from 'clients/auth'
 
 const auth = firebase.auth()
+const firestore = firebase.firestore()
 
 export default function FirebaseAuthRoot({children}: any) {
   const router = useRouter()
@@ -36,12 +42,12 @@ export default function FirebaseAuthRoot({children}: any) {
     })
     auth.onAuthStateChanged((user) => {
       if (user) {
-        // TODO Firestoreをリアルタイムアップデートする
-        getUser(user.uid).then((user) => {
-          if (user) {
-            setUserState(user)
-          }
-        })
+        firestore
+          .collection('users')
+          .doc(user.uid)
+          .onSnapshot((snapshot) => {
+            setUserState(snapshotToUser(snapshot))
+          })
         getPurchasedCollectionIds(user.uid).then((infos) => {
           setPurchasedCollectionsInfoState(infos)
         })

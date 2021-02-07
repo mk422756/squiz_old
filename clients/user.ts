@@ -42,16 +42,19 @@ export const getUser = async (uid: string): Promise<User | null> => {
   if (!uid) {
     return null
   }
-  const ret = await db.collection('users').doc(uid).get()
-  if (!ret.exists) {
-    return null
-  }
-  const data = ret.data()
+  const snapshot = await db.collection('users').doc(uid).get()
+  return snapshotToUser(snapshot)
+}
+
+export const snapshotToUser = (
+  snapshot: firebase.firestore.DocumentSnapshot
+): User | null => {
+  const data = snapshot.data()
   if (!data) {
     return null
   }
   return {
-    id: ret.id,
+    id: snapshot.id,
     name: data.name || '',
     description: data.description || '',
     twitterId: data.twitterId || '',
