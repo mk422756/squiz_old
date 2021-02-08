@@ -101,10 +101,15 @@ export default function CreateCollectionPage() {
               </span>
             )}
           </div>
-          <div className="mt-2">
+          <div className="mt-4">
             <ImageCrop setImageBlob={setImageBlob}></ImageCrop>
+            {user.imageUrl && !imageBlob && (
+              <div className="my-4">
+                <img src={user.imageUrl}></img>
+              </div>
+            )}
           </div>
-          <div className="mt-2">
+          <div className="mt-4">
             <label className="text-sm font-semibold">自己紹介</label>
             <textarea
               name="description"

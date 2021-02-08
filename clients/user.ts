@@ -13,6 +13,14 @@ export const createUser = async (uid: string) => {
     .set({name: 'no name', createdAt: new Date(), updatedAt: new Date()})
 }
 
+type UpdateParam = {
+  name: string
+  description: string
+  twitterId: string
+  facebookId: string
+  updatedAt: Date
+  imageUrl?: string
+}
 export const updateUser = async (
   uid: string,
   name: string,
@@ -21,21 +29,18 @@ export const updateUser = async (
   facebookId: string,
   imageBlob?: Blob
 ) => {
-  let imageUrl = ''
-  if (imageBlob) {
-    imageUrl = await putFile(`users/${uid}/user_image`, imageBlob)
+  const param: UpdateParam = {
+    name,
+    description,
+    twitterId,
+    facebookId,
+    updatedAt: new Date(),
   }
-  await db.collection('users').doc(uid).set(
-    {
-      name,
-      description,
-      twitterId,
-      facebookId,
-      imageUrl,
-      updatedAt: new Date(),
-    },
-    {merge: true}
-  )
+  if (imageBlob) {
+    const imageUrl = await putFile(`users/${uid}/user_image`, imageBlob)
+    param.imageUrl = imageUrl
+  }
+  await db.collection('users').doc(uid).set(param, {merge: true})
 }
 
 export const getUser = async (uid: string): Promise<User | null> => {
