@@ -19,8 +19,8 @@ export const googleLogin = async () => {
 }
 
 export const getRedirectInfo = async () => {
-  const ret = await auth.getRedirectResult()
-  return ret.user?.uid
+  const cred = await auth.getRedirectResult()
+  return {uid: cred.user?.uid, isNewUser: cred.additionalUserInfo?.isNewUser}
 }
 
 export const logout = async () => {

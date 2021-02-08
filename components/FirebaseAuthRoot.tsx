@@ -4,7 +4,6 @@ import {userState} from 'store/userState'
 import {purchasedCollectionsInfoState} from 'store/purchasedCollectionsInfoState'
 import {loginInfoState} from 'store/loginInfoState'
 import {
-  getUser,
   createUser,
   getPurchasedCollectionIds,
   snapshotToUser,
@@ -26,17 +25,16 @@ export default function FirebaseAuthRoot({children}: any) {
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState)
 
   useEffect(() => {
-    getRedirectInfo().then(async (uid) => {
-      if (uid) {
-        const user = await getUser(uid)
-        if (!user) {
-          await createUser(uid)
+    getRedirectInfo().then(async (info) => {
+      if (info.uid) {
+        if (info.isNewUser) {
+          await createUser(info.uid)
         }
         if (loginInfo && loginInfo.urlAfterLogin) {
           router.push(loginInfo.urlAfterLogin)
           setLoginInfo(null)
         } else {
-          router.push(`/users/${uid}`)
+          router.push(`/users/${info.uid}`)
         }
       }
     })
