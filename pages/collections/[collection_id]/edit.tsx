@@ -8,6 +8,7 @@ import ImageCrop from 'components/ImageCrop'
 import {useForm} from 'react-hook-form'
 import {useRecoilValue} from 'recoil'
 import {userState} from 'store/userState'
+import MaxStringLength from 'components/MaxStringLength'
 
 const MAX_TAG_COUNT = 5
 
@@ -92,32 +93,71 @@ export default function CollectionEditPage() {
     )
     router.push(`/collections/${collection_id as string}`)
   }
+
+  const titleLength = watch('title')?.length
+  const descriptionLength = watch('description')?.length
+
   return (
     <Layout>
       <main className="p-4 bg-white">
         <form onSubmit={handleSubmit(update)}>
-          <div className="my-2">
-            <label>
-              <span>タイトル</span>
-              <input
-                type="text"
-                className="p-2 border w-full"
-                name="title"
-                ref={register({required: true})}
-              />
-            </label>
+          <div className="my-4">
+            <div>
+              <label>
+                <span>タイトル</span>
+                <input
+                  type="text"
+                  className="p-2 border w-full"
+                  name="title"
+                  ref={register({
+                    required: 'タイトルが入力されていません',
+                    maxLength: {
+                      value: 50,
+                      message: 'タイトルは50文字まで使用できます',
+                    },
+                  })}
+                />
+              </label>
+            </div>
+            <div className="float-right">
+              <MaxStringLength max={50} current={titleLength}></MaxStringLength>
+            </div>
+            {errors.title && (
+              <span className="text-red-400 text-sm">
+                {errors.title.message}
+              </span>
+            )}
           </div>
-          <div className="my-2">
-            <label>
-              <span>説明</span>
-              <textarea
-                className="p-2 border w-full"
-                name="description"
-                ref={register()}
-              />
-            </label>
+          <div className="my-4">
+            <div>
+              <label>
+                <span>説明</span>
+                <textarea
+                  className="p-2 border w-full"
+                  name="description"
+                  rows={4}
+                  ref={register({
+                    maxLength: {
+                      value: 2000,
+                      message: '説明は2000文字まで使用できます',
+                    },
+                  })}
+                />
+              </label>
+            </div>
+            <div className="float-right">
+              <MaxStringLength
+                max={2000}
+                current={descriptionLength}
+              ></MaxStringLength>
+            </div>
+            {errors.description && (
+              <span className="text-red-400 text-sm">
+                {errors.description.message}
+              </span>
+            )}
           </div>
-          <div className="my-2">
+          {/* <div className="my-2">
             <span>タグ</span>
             <div className="w-full">
               <input
@@ -149,11 +189,16 @@ export default function CollectionEditPage() {
                 )
               })}
             </div>
-          </div>
-          <div className="mt-2 p-2">
+          </div> */}
+          <div className="mt-4 p-2">
             <ImageCrop setImageBlob={setImageBlob}></ImageCrop>
+            {collection.imageUrl && !imageBlob && (
+              <div className="my-4">
+                <img src={collection.imageUrl}></img>
+              </div>
+            )}
           </div>
-          <div className="my-2">
+          <div className="my-4">
             <p>公開</p>
             <label>
               <input
@@ -174,7 +219,7 @@ export default function CollectionEditPage() {
               <span>公開する</span>
             </label>
           </div>
-          <div className="my-2">
+          <div className="my-4">
             <p>有料問題</p>
             <label>
               <input
@@ -196,7 +241,7 @@ export default function CollectionEditPage() {
             </label>
           </div>
           {needPayment && (
-            <div className="my-2">
+            <div className="my-4">
               <label>
                 <span>価格</span>
                 <input

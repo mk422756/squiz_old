@@ -70,15 +70,15 @@ export default function CreateCollectionPage() {
             name="description"
             ref={register({
               maxLength: {
-                value: 1000,
-                message: '説明は1000文字まで使用できます',
+                value: 2000,
+                message: '説明は2000文字まで使用できます',
               },
             })}
           />
         </label>
         <div className="float-right">
           <MaxStringLength
-            max={1000}
+            max={2000}
             current={descriptionLength}
           ></MaxStringLength>
         </div>

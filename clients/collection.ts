@@ -23,6 +23,19 @@ export const createCollection = async (
   return id
 }
 
+type UpdateParam = {
+  title: string
+  description: string
+  creatorId: string
+  isPublic: boolean
+  needPayment: boolean
+  price: number
+  tags: string[]
+  imageUrl?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export const updateCollection = async (
   id: string,
   title: string,
@@ -34,24 +47,27 @@ export const updateCollection = async (
   tags: string[],
   imageBlob?: Blob
 ) => {
-  const imageUrl = imageBlob
-    ? await putFile(`collections/${id}/collection_image`, imageBlob)
-    : ''
-  await db.collection('collections').doc(id).set(
-    {
-      title,
-      description,
-      creatorId,
-      isPublic,
-      needPayment,
-      price,
-      tags,
-      imageUrl,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {merge: true}
-  )
+  const param: UpdateParam = {
+    title,
+    description,
+    creatorId,
+    isPublic,
+    needPayment,
+    price,
+    tags,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
+  if (imageBlob) {
+    const imageUrl = await putFile(
+      `collections/${id}/collection_image`,
+      imageBlob
+    )
+    param.imageUrl = imageUrl
+  }
+
+  await db.collection('collections').doc(id).set(param, {merge: true})
   return id
 }
 
