@@ -5807,10 +5807,10 @@ react-google-button@^0.7.2:
   dependencies:
     prop-types "^15.7.2"
 
-react-hook-form@^6.15.2:
-  version "6.15.2"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.15.2.tgz#3dd4eecfb6ebc261d4372df57d166c6bf893d246"
-  integrity sha512-2yAn+vjYaM1jDqhsZdL9964wyNUZhVWC+epEYh4f3sUKaDYxmewp1fqQyF1kaIjuaQWG3OMoM81RkXeHCsQvig==
+react-hook-form@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.0.4.tgz#efd800289f3e6aa237fde5121f4ef7ba7653fb3b"
+  integrity sha512-4LN1bagvQPWdn17gXDo917GZLSCNtKR5Wd4D05VMnCdGkJp31mYWN7RlhQUg6tSBbIB8KqPfkmYbxET4SgAkqQ==
 
 react-image-crop@^8.6.6:
   version "8.6.6"
