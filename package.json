@@ -21,7 +21,7 @@
     "@testing-library/react-hooks": "^5.0.3",
     "autoprefixer": "^10.2.4",
     "cuid": "^2.1.8",
-    "date-fns": "^2.17.0",
+    "date-fns": "^2.20.1",
     "dayjs": "^1.10.4",
     "disable-browser-back-navigation": "^0.1.0",
     "firebase": "^8.2.8",
