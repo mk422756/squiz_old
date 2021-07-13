@@ -43,7 +43,7 @@
     "react-modal": "^3.12.1",
     "react-sidebar": "^3.0.2",
     "react-twitter-embed": "^3.0.3",
-    "recharts": "^2.0.7",
+    "recharts": "^2.0.10",
     "recoil": "^0.1.2",
     "tailwindcss": "^2.0.3",
     "ts-jest": "^26.5.1"
