@@ -985,10 +985,10 @@
   dependencies:
     prop-types "^15.7.2"
 
-"@stripe/stripe-js@^1.12.1":
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.12.1.tgz#baa5f1d8cfdbda174a0419cb42d2f1c8d622a7eb"
-  integrity sha512-CE602Mzx6DnUHGrL+S9Kk7UK6674BCYlklh9F2NWU6ue0xdVzRTfFCuL5LHvs7Plicw5rsjuDhJ9sIdwFBVCIQ==
+"@stripe/stripe-js@^1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.17.1.tgz#afcb7e86d0b05d1a7af53af89111abd2e8d437ae"
+  integrity sha512-c9MyDvdi5Xou0j0JPNy86NebtTDfh9o62Ifuzx6GSm2YO0oedBpy51WSyOue2L8Fb+mqESS5gd6mGVEIPUnXsA==
 
 "@testing-library/dom@^7.28.1":
   version "7.29.4"
